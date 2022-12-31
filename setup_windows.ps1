@@ -102,7 +102,7 @@ Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.Mi
 Get-AppxPackage "Microsoft.WindowsSoundRecorder" -AllUsers | Remove-AppxPackage
 Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.WindowsSoundRecorder" | Remove-AppxProvisionedPackage -Online
 
-Write-Host "Install apps and tools..." -ForegroundColor "Yellow"
+Write-Host "Installing apps and tools..." -ForegroundColor "Yellow"
 
 # Install Chocolatey
 # https://docs.chocolatey.org/en-us/choco/setup#install-with-powershell.exe
@@ -260,11 +260,11 @@ Get-Service ssh-agent | Set-Service -StartupType Automatic
 Start-Service ssh-agent
 Get-Service ssh-agent
 
-Write-Output "Create SSH key..."
+Write-Output "Creating SSH key..."
 New-Item -Path "$env:USERPROFILE\.ssh" -ItemType Directory -Force
 ssh-keygen -t ed25519 -C "$GIT_EMAIL" -f "$SSH_KEY"
 ssh-add "$SSH_KEY"
 
-Write-Host "Add SSH key to GitHub..." -ForegroundColor "Yellow"
+Write-Host "Adding SSH key to GitHub..." -ForegroundColor "Yellow"
 gh auth login --web --hostname github.com --git-protocol https --scopes admin:public_key
 gh ssh-key add "$SSH_KEY_PUB" --title "$env:computername"
