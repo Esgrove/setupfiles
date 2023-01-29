@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eo pipefail
 
 # Setup new personal Mac
 
@@ -11,7 +11,7 @@ GPG_KEY_ID="2696E274A2E739B7A5B6FB589A95370F12C4825C"
 SHELL_PROFILE="$HOME/.zprofile"
 # Computer ID to use in GitHub
 # For example: Esgrove MacBookPro18,1 2022-12-30
-COMPUTER_ID="Esgrove $(sysctl hw.model | awk '{print $2}') $(date +%Y-%m-%d)"
+COMPUTER_ID="$GIT_NAME $(sysctl hw.model | awk '{print $2}') $(date +%Y-%m-%d)"
 
 # ANSI colours
 COL_BOLD='\033[1m'
@@ -22,19 +22,19 @@ print_bold() {
 }
 
 print_green() {
-    printf "\e[1;49;32m%s\e[0m\n" $1
+    printf "\e[1;49;32m%s\e[0m\n" "$1"
 }
 
 print_magenta() {
-    printf "\e[1;49;35m%\e[0m\n" $1
+    printf "\e[1;49;35m%\e[0m\n" "$1"
 }
 
 print_red() {
-    printf "\e[1;49;31m%\e[0m\n" $1
+    printf "\e[1;49;31m%\e[0m\n" "$1"
 }
 
 print_yellow() {
-    printf "\e[1;49;33m%\e[0m\n" $1
+    printf "\e[1;49;33m%\e[0m\n" "$1"
 }
 
 # Print an error and exit
@@ -45,7 +45,7 @@ print_error_and_exit() {
 }
 
 press_enter_to_continue() {
-    read -p "Press [Enter] key to continue..."
+    read -r -p "Press [Enter] key to continue..."
 }
 
 brew_install_or_upgrade() {
@@ -241,7 +241,7 @@ fi
 if is_apple_silicon; then
     echo "Loading brew paths..."
     eval "$("$(brew --prefix)/bin/brew" shellenv)"
-    if ! cat "$SHELL_PROFILE" | grep -q 'eval "$(/opt/homebrew/bin/brew shellenv)"'; then
+    if ! grep -q 'eval "$(/opt/homebrew/bin/brew shellenv)"' < "$SHELL_PROFILE"; then
         echo "Adding homebrew to PATH for Apple Silicon..."
         echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$SHELL_PROFILE"
     fi
@@ -255,11 +255,11 @@ fi
 
 # UTF8
 touch "$SHELL_PROFILE"
-if ! cat "$SHELL_PROFILE" | grep -q "export LC_ALL=en_US.UTF-8"; then
+if ! grep -q "export LC_ALL=en_US.UTF-8" < "$SHELL_PROFILE"; then
     echo "Adding 'export LC_ALL=en_US.UTF-8' to $SHELL_PROFILE"
     echo "export LC_ALL=en_US.UTF-8" >> "$SHELL_PROFILE"
 fi
-if ! cat "$SHELL_PROFILE" | grep -q "export LANG=en_US.UTF-8"; then
+if ! grep -q "export LANG=en_US.UTF-8" < "$SHELL_PROFILE"; then
     echo "Adding 'export LANG=en_US.UTF-8' to $SHELL_PROFILE"
     echo "export LANG=en_US.UTF-8" >> "$SHELL_PROFILE"
 fi
