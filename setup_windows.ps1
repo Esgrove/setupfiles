@@ -130,8 +130,6 @@ Invoke-CommandOrThrow choco install 7zip
 Invoke-CommandOrThrow choco install ninja
 # https://community.chocolatey.org/packages/jq
 Invoke-CommandOrThrow choco install jq
-# https://community.chocolatey.org/packages/vscode
-Invoke-CommandOrThrow choco install vscode
 # https://community.chocolatey.org/packages/sublimetext4
 Invoke-CommandOrThrow choco install sublimetext4
 # https://community.chocolatey.org/packages/sublimemerge
@@ -140,8 +138,15 @@ Invoke-CommandOrThrow choco install sublimemerge
 Invoke-CommandOrThrow choco install dotnet-sdk --version=6.0.404
 # https://community.chocolatey.org/packages/Temurin
 Invoke-CommandOrThrow choco install temurin
+# https://community.chocolatey.org/packages/ruby
+Invoke-CommandOrThrow choco install ruby
+# Needed for Ruby gems
+# https://community.chocolatey.org/packages/msys2
+Invoke-CommandOrThrow choco install msys2 --params "/NoUpdate"
 # https://community.chocolatey.org/packages/rustup.install
 Invoke-CommandOrThrow choco install rustup.install
+# https://community.chocolatey.org/packages/vscode
+Invoke-CommandOrThrow choco install vscode
 # https://community.chocolatey.org/packages/visualstudio2022buildtools
 # Invoke-CommandOrThrow choco install visualstudio2022buildtools --package-parameters '--add Microsoft.VisualStudio.Workload.VCTools;includeRecommended --add Microsoft.VisualStudio.Component.VC.ATL'
 # https://community.chocolatey.org/packages/visualstudio2022community
@@ -152,6 +157,16 @@ Invoke-CommandOrThrow choco install visualstudio2022community --package-paramete
 #winget install --id Kitware.CMake -e
 
 Update-Path
+
+Write-Output "Choco installs finished, refreshing env variables..."
+# Make `refreshenv` available right away, by defining the $env:ChocolateyInstall
+# variable and importing the Chocolatey profile module.
+# Note: Using `. $PROFILE` instead *may* work, but isn't guaranteed to.
+$env:ChocolateyInstall = Convert-Path "$((Get-Command choco).Path)\..\.."
+Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+# refresh environment vars
+# https://docs.chocolatey.org/en-us/create/functions/update-sessionenvironment
+refreshenv
 
 Write-Host "Checking package versions..." -ForegroundColor "Yellow"
 cmake --version
@@ -200,6 +215,17 @@ Invoke-CommandOrThrow python.exe -m pip install -r python_packages.txt
 Update-Path
 black --version
 
+# Needed for Ruby gems: use Ruby ridk to update the system and install development toolchain
+ridk install 2 3
+
+Update-SessionEnvironment
+Update-Path
+
+Write-Output "Installing Bundler and Fastlane"
+gem update --system
+gem install bundler --no-document
+gem install fastlane --no-document
+
 Write-Host "Setup git..." -ForegroundColor "Yellow"
 
 $global_ignore_file = Join-Path $env:USERPROFILE -ChildPath ".gitignore"
@@ -246,6 +272,12 @@ git config --global user.name "$GIT_NAME"
 
 Write-Host "git config:"
 git config --global --list
+
+Write-Host "Creating bash profile..."
+New-Item ~\.bashrc -Type File -Value @"
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+"@
 
 # Install OpenSSH and setup SSH key
 Write-Host "Setup SSH..." -ForegroundColor "Yellow"
