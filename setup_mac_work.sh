@@ -337,6 +337,7 @@ brew_cask_install_or_upgrade sublime-merge
 brew_cask_install_or_upgrade suspicious-package
 brew_cask_install_or_upgrade temurin
 brew_cask_install_or_upgrade tex-live-utility
+brew_cask_install_or_upgrade tg-pro
 brew_cask_install_or_upgrade visual-studio-code
 brew_cask_install_or_upgrade vlc
 
@@ -395,8 +396,8 @@ tqdm
 typer
 virtualenv
 webdriver-manager
-yt-dlp" > python_packages.txt
-"$(brew --prefix)/bin/python3" -m pip install -r python_packages.txt
+yt-dlp" > ~/python_packages.txt
+"$(brew --prefix)/bin/python3" -m pip install -r ~/python_packages.txt
 
 print_magenta "Install Rust"
 rustup-init -y

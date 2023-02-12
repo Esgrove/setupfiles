@@ -337,12 +337,13 @@ pytest
 pyupgrade
 requests
 rich
+ruff
 selenium
 tqdm
 typer
 webdriver-manager
-yt-dlp" > python_packages.txt
-"$(brew --prefix)/bin/python3" -m pip install -r python_packages.txt
+yt-dlp" > ~/python_packages.txt
+"$(brew --prefix)/bin/python3" -m pip install -r ~/python_packages.txt
 
 print_magenta "Installing Rust..."
 rustup-init -y
