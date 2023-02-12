@@ -226,7 +226,12 @@ defaults write com.apple.dock show-recents -bool false
 sudo tmutil disable
 
 # Disable Sound Effects on Boot
+# One of these should work :(
 sudo nvram SystemAudioVolume=" "
+#sudo nvram SystemAudioVolume=%80
+#sudo nvram SystemAudioVolume=%01
+#sudo nvram SystemAudioVolume=%00
+#sudo nvram SystemAudioVolume=0
 
 # Install homebrew if needed
 if [ -z $(command -v brew) ]; then
@@ -263,6 +268,9 @@ if ! grep -q "export LANG=en_US.UTF-8" < "$SHELL_PROFILE"; then
     echo "Adding 'export LANG=en_US.UTF-8' to $SHELL_PROFILE"
     echo "export LANG=en_US.UTF-8" >> "$SHELL_PROFILE"
 fi
+
+# Create deveoper dir
+mkdir -p "$HOME/Developer"
 
 print_magenta "Installing tools and libraries..."
 brew_install_or_upgrade cmake
