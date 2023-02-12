@@ -11,7 +11,7 @@ which should be copied to `~/.zshrc`.
 
 # Windows
 
-Powershell script for setting up a new Windows machine, using choco as the "package manager".
+Powershell script for setting up a new Windows machine, using [choco](https://chocolatey.org/) as the "package manager".
 Bash profile for Git Bash, which should be copied to `~/.bashrc`.
 
 # Code formatting configs
