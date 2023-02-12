@@ -1,0 +1,23 @@
+# Config for Ruby and Fastlane code formatting
+# https://docs.rubocop.org/rubocop/cops.html
+
+AllCops:
+    NewCops: enable
+
+Layout/IndentationWidth:
+    Width: 4
+
+Layout/MultilineMethodCallBraceLayout:
+    EnforcedStyle: new_line
+
+Layout/MultilineMethodCallIndentation:
+    EnforcedStyle: indented
+
+Layout/MultilineAssignmentLayout:
+    EnforcedStyle: same_line
+
+Layout/EndAlignment:
+    EnforcedStyleAlignWith: variable
+
+Style/TrailingCommaInArguments:
+    EnforcedStyleForMultiline: comma
