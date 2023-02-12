@@ -130,6 +130,8 @@ Invoke-CommandOrThrow choco install 7zip
 Invoke-CommandOrThrow choco install ninja
 # https://community.chocolatey.org/packages/jq
 Invoke-CommandOrThrow choco install jq
+# https://community.chocolatey.org/packages/shellcheck
+Invoke-CommandOrThrow shellcheck
 # https://community.chocolatey.org/packages/sublimetext4
 Invoke-CommandOrThrow choco install sublimetext4
 # https://community.chocolatey.org/packages/sublimemerge
