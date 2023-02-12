@@ -6,10 +6,12 @@ $GIT_EMAIL = "esgrove@outlook.com"
 $SSH_KEY="$env:USERPROFILE\.ssh\id_ed25519"
 $SSH_KEY_PUB = "$SSH_KEY.pub"
 
+# Reload PATH
 function Update-Path {
     $Env:PATH = [Environment]::GetEnvironmentVariable('PATH', 'Machine') + ';' + [Environment]::GetEnvironmentVariable('PATH', 'User')
 }
 
+# Add path to system PATH
 function Add-Path {
     param(
         [Parameter()]
@@ -20,9 +22,8 @@ function Add-Path {
     [Environment]::SetEnvironmentVariable('PATH', $newPath, 'Machine')
 }
 
+# Run a command and throw an error if the exit code is non-zero.
 function Invoke-CommandOrThrow() {
-    # Run a command and throw an error if the exit code is non-zero.
-
     if ($args.Count -eq 0) {
         throw 'No arguments given.'
     }
@@ -41,6 +42,7 @@ function Invoke-CommandOrThrow() {
     }
 }
 
+# Check for admin Powershell
 function Test-Elevated {
     # Get the ID and security principal of the current user account
     $myIdentity = [System.Security.Principal.WindowsIdentity]::GetCurrent()
