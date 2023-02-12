@@ -2,19 +2,19 @@
 
 Setup scripts and configs for my computers.
 
-# Mac
+## Mac
 
 Shell scripts for setting up a new Mac, using [homebrew](https://brew.sh/) as the "package manager".
 
 Shell profile for [oh-my-zsh](https://ohmyz.sh/), which includes my custom shell aliases and functions,
 which should be copied to `~/.zshrc`.
 
-# Windows
+## Windows
 
 Powershell script for setting up a new Windows machine, using [choco](https://chocolatey.org/) as the "package manager".
 Bash profile for Git Bash, which should be copied to `~/.bashrc`.
 
-# Code formatting configs
+## Code formatting configs
 
 Configs for various code formatting and linting tools that I regurarly use.
 The dot prefix has been removed from some of the files here so they are easier to interact with in Finder for example.
