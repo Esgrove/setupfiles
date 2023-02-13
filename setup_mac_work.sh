@@ -253,7 +253,7 @@ if ! grep -q "export LANG=en_US.UTF-8" < "$SHELL_PROFILE"; then
     echo "export LANG=en_US.UTF-8" >> "$SHELL_PROFILE"
 fi
 
-# Create deveoper dir
+# Create developer dir
 mkdir -p "$HOME/Developer"
 
 print_magenta "Installing tools and libraries..."

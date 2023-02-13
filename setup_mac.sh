@@ -234,7 +234,7 @@ sudo nvram SystemAudioVolume=" "
 #sudo nvram SystemAudioVolume=0
 
 # Install homebrew if needed
-if [ -z $(command -v brew) ]; then
+if [ -z "$(command -v brew)" ]; then
     print_magenta "Installing homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 else
@@ -269,7 +269,7 @@ if ! grep -q "export LANG=en_US.UTF-8" < "$SHELL_PROFILE"; then
     echo "export LANG=en_US.UTF-8" >> "$SHELL_PROFILE"
 fi
 
-# Create deveoper dir
+# Create developer dir
 mkdir -p "$HOME/Developer"
 
 print_magenta "Installing tools and libraries..."

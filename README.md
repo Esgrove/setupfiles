@@ -17,7 +17,7 @@ Bash profile for Git Bash, which should be copied to `~/.bashrc`.
 ## Code formatting configs
 
 Configs for various code formatting and linting tools that I regurarly use.
-The dot prefix has been removed from some of the files here so they are easier to interact with in Finder for example.
+The dot prefix has been removed from some of the files here, so they are easier to interact with in Finder for example.
 
 * Python: [pyproject.toml](./pyproject.toml) for [Black](https://github.com/psf/black) and [Ruff](https://github.com/charliermarsh/ruff) (combining flake8, isort and others)
 * C++: [.clang-format](./clang-format)
