@@ -243,6 +243,11 @@ eject() {
     osascript -e 'tell application "Finder" to eject (every disk whose ejectable is true)'
 }
 
+# Search history
+hist() {
+    history | grep "$1"
+}
+
 # Zip given file
 zipf() {
     zip -r "$1".zip "$1"
