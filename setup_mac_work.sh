@@ -442,16 +442,6 @@ echo ":backtrace: false
 gem: --no-document" > ~/.gemrc
 chmod 600 ~/.gemrc
 
-print_magenta "Setting up git..."
-git --version
-git-lfs --version
-git lfs install --system
-git config --global user.name "$GIT_NAME"
-git config --global user.email "$GIT_EMAIL"
-git config --global core.pager 'less -+-R -FRX --mouse'
-git config --global core.autocrlf input
-git config --global core.editor nano
-git config --global advice.detachedHead false
 echo "Creating global gitignore..."
 echo "__pycache__/
 .DS_Store
@@ -481,7 +471,22 @@ echo "__pycache__/
 *.user
 *.vspscc
 Thumbs.db" > ~/.gitignore
+
+print_magenta "Setting up git..."
+git --version
+git-lfs --version
+git lfs install --system
+
+git config --global advice.detachedHead false
+git config --global core.autocrlf input
+git config --global core.editor nano
 git config --global core.excludesfile ~/.gitignore
+git config --global core.pager 'less -+-R -FRX --mouse'
+git config --global fetch.parallel 0
+git config --global fetch.prune true
+git config --global fetch.prunetags true
+git config --global user.email "$GIT_EMAIL"
+git config --global user.name "$GIT_NAME"
 
 print_magenta "git config:"
 git config --global --list
