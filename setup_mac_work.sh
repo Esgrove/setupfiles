@@ -399,6 +399,9 @@ webdriver-manager
 yt-dlp" > ~/python_packages.txt
 "$(brew --prefix)/bin/python3" -m pip install -r ~/python_packages.txt
 
+# Add alias for python
+echo 'alias python=python3' >> "$SHELL_PROFILE"
+
 print_magenta "Install Rust"
 rustup-init -y
 source "$HOME/.cargo/env"

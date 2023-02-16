@@ -382,6 +382,9 @@ echo "__pycache__/
 *.vspscc
 Thumbs.db" > ~/.gitignore
 
+# Add alias for python
+echo 'alias python=python3' >> "$SHELL_PROFILE"
+
 print_magenta "Setting up git..."
 git --version
 git-lfs --version
