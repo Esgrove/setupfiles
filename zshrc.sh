@@ -1,3 +1,4 @@
+#!/bin/bash
 # Mac zsh profile for oh-my-zsh
 
 # If you come from bash you might have to change your $PATH.
@@ -117,6 +118,11 @@ alias gitprune='git remote prune origin'
 alias gittag='git describe --abbrev=0'
 alias githead='git rev-parse HEAD'
 
+alias gsub=gitsub
+alias gprune=gitprune
+alias gtag=gittag
+alias ghead=githead
+
 # general
 alias c='clear'
 alias cleanDS="find . -type f -name '*.DS_Store' -ls -delete"
@@ -143,11 +149,11 @@ alias pirq="python3 -m pip install -r requirements.txt"
 alias piu="python3 -m pip install --upgrade"
 alias piup="python3 -m pip install --upgrade pip setuptools wheel"
 alias pyfreeze="python3 -m pip freeze > requirements.txt"
-alias pyinst="pyenv install --list | egrep \\s+3\."
+alias pyinst='pyenv install --list | grep -Ev "dev|a" | grep -E \\s+3\.'
 alias pylist="pyenv versions"
 alias pynot="python3 -m pip list --outdated --not-required"
 alias pyout="python3 -m pip list --outdated"
-alias pyupg="python3 -m pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install --upgrade"
+alias pyupg="python3 -m pip list --not-required --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install --upgrade"
 
 # Print a message with red color
 print_red() {
@@ -230,7 +236,7 @@ cdf() {
 EOT
     )
     echo "cd to \"$window_path\""
-    cd "$window_path"
+    cd "$window_path" || echo "failed to ch to $window_path"
 }
 
 # remove Dropbox conflicted copies
