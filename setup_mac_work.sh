@@ -42,19 +42,19 @@ press_enter_to_continue() {
 
 brew_install_or_upgrade() {
     if brew ls --versions "$1" >/dev/null; then
-        HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade "$1"
+        brew upgrade "$1"
     else
         print_magenta "Installing $1"
-        HOMEBREW_NO_AUTO_UPDATE=1 brew install "$1"
+        brew install "$1"
     fi
 }
 
 brew_cask_install_or_upgrade() {
     if brew ls --versions "$1" >/dev/null; then
-        HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade --cask "$1"
+        brew upgrade --cask "$1"
     else
         print_magenta "Installing $1"
-        HOMEBREW_NO_AUTO_UPDATE=1 brew install --cask "$1"
+        brew install --cask "$1"
     fi
 }
 
