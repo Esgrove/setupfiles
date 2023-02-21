@@ -254,6 +254,46 @@ hist() {
     history | grep "$1"
 }
 
+print_green() {
+    printf "\e[1;49;32m%s\e[0m\n" "$1"
+}
+
+print_magenta() {
+    printf "\e[1;49;35m%\e[0m\n" "$1"
+}
+
+print_red() {
+    printf "\e[1;49;31m%\e[0m\n" "$1"
+}
+
+print_yellow() {
+    printf "\e[1;49;33m%\e[0m\n" "$1"
+}
+
+# Print an error and exit
+print_error_and_exit() {
+    print_red "ERROR: $1"
+    # use exit code if given as argument, otherwise default to 1
+    exit "${2:-1}"
+}
+
+# Update all git repoes under ~/Developer
+repo_update() {
+    pushd ~/Developer >/dev/null || print_error_and_exit "Failed to cd to ~/Developer"
+    for directory in */; do
+        pushd "$directory" >/dev/null
+        print_magenta "Fetching $(basename "$directory")"
+        git fetch --jobs=8 --all --prune --tags --prune-tags
+        branch=$(git branch --show-current)
+        if [ "$branch" = "main" ] || [ "$branch" = "master" ]; then
+            echo "Pulling..."
+            git pull
+        fi
+        popd >/dev/null
+    done
+    popd >/dev/null
+}
+
 # Zip given file
 zipf() {
     zip -r "$1".zip "$1"
