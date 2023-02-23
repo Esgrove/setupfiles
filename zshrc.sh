@@ -28,7 +28,7 @@ ZSH_THEME="robbyrussell"
 
 # Uncomment one of the following lines to change the auto-update behavior
 # zstyle ':omz:update' mode disabled  # disable automatic updates
-zstyle ':omz:update' mode auto      # update automatically without asking
+zstyle ':omz:update' mode auto        # update automatically without asking
 # zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
 # Uncomment the following line to change how often to auto-update (in days).
@@ -50,7 +50,7 @@ zstyle ':omz:update' frequency 7
 # You can also set it to another string to have that shown instead of the default red dots.
 # e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
 # Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
-# COMPLETION_WAITING_DOTS="true"
+COMPLETION_WAITING_DOTS="true"
 
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
@@ -73,7 +73,7 @@ HIST_STAMPS="dd.mm.yyyy"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(brew git macos vscode)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -123,15 +123,18 @@ alias gprune=gitprune
 alias gtag=gittag
 alias ghead=githead
 
+alias reup=repo_update
+
 # general
 alias c='clear'
 alias cleanDS="find . -type f -name '*.DS_Store' -ls -delete"
+alias dev="cd ~/Developer && ll"
 alias fetch="git fetch --jobs=8 --all --prune --tags --prune-tags"
 alias l='ls -Aho'
 alias ll='ls -ho'
 alias num='echo $(ls -1 | wc -l)'
 alias o='open .'
-alias outdated="brc && echo -e '\033[1mPython:\033[0m' && pyout"
+alias outdated="brc && echo -e '\033[1mPython:\033[0m' && pynot"
 alias path='echo -e ${PATH//:/\\n}'
 alias reload='source ~/.zshrc'
 alias trd="tre -d"
@@ -183,6 +186,13 @@ print_warn() {
     print_yellow "WARNING: $1"
 }
 
+# Print an error and exit
+print_error_and_exit() {
+    print_red "ERROR: $1"
+    # use exit code if given as argument, otherwise default to 1
+    exit "${2:-1}"
+}
+
 # activate Python virtual env
 act() {
     # try to get venv name from first argument, otherwise default to 'venv'
@@ -224,7 +234,8 @@ bri() {
 # cd to current top finder window in shell
 cdf() {
     local window_path
-    window_path=$(/usr/bin/osascript << EOT
+    window_path=$(
+        /usr/bin/osascript <<EOT
         tell application "Finder"
             try
                 set currFolder to (folder of the front window as alias)
@@ -237,6 +248,11 @@ EOT
     )
     echo "cd to \"$window_path\""
     cd "$window_path" || echo "failed to ch to $window_path"
+}
+
+# cd to developer dir
+cdd() {
+    cd "$HOME/Developer"
 }
 
 # remove Dropbox conflicted copies
@@ -254,30 +270,7 @@ hist() {
     history | grep "$1"
 }
 
-print_green() {
-    printf "\e[1;49;32m%s\e[0m\n" "$1"
-}
-
-print_magenta() {
-    printf "\e[1;49;35m%\e[0m\n" "$1"
-}
-
-print_red() {
-    printf "\e[1;49;31m%\e[0m\n" "$1"
-}
-
-print_yellow() {
-    printf "\e[1;49;33m%\e[0m\n" "$1"
-}
-
-# Print an error and exit
-print_error_and_exit() {
-    print_red "ERROR: $1"
-    # use exit code if given as argument, otherwise default to 1
-    exit "${2:-1}"
-}
-
-# Update all git repoes under ~/Developer
+# Update all git repos under ~/Developer
 repo_update() {
     pushd ~/Developer >/dev/null || print_error_and_exit "Failed to cd to ~/Developer"
     for directory in */; do
