@@ -256,7 +256,11 @@ fi
 # Create developer dir
 mkdir -p "$HOME/Developer"
 
+# Create AWS CLI dir
+mkdir -p "$HOME/.aws"
+
 print_magenta "Installing tools and libraries..."
+brew tap hashicorp/tap
 brew_install_or_upgrade aria2
 brew_install_or_upgrade awscli
 brew_install_or_upgrade bazelisk
@@ -277,6 +281,7 @@ brew_install_or_upgrade git-lfs
 brew_install_or_upgrade gnupg
 brew_install_or_upgrade go
 brew_install_or_upgrade groovy
+brew_install_or_upgrade hashicorp/tap/packer
 brew_install_or_upgrade htop
 brew_install_or_upgrade imagemagick
 brew_install_or_upgrade jq
@@ -353,7 +358,8 @@ sudo xcodes install --latest
 print_magenta "Installing Python packages..."
 "$(brew --prefix)/bin/python3" --version
 "$(brew --prefix)/bin/python3" -m pip install --upgrade pip setuptools wheel
-echo "aws-mfa
+echo "ansible
+aws-mfa
 beautifulsoup4
 black
 boto3
