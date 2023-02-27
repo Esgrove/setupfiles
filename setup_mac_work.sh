@@ -289,6 +289,7 @@ brew_install_or_upgrade node
 brew_install_or_upgrade p7zip
 brew_install_or_upgrade pandoc
 brew_install_or_upgrade pinentry-mac
+brew_install_or_upgrade pipx
 brew_install_or_upgrade portaudio
 brew_install_or_upgrade portmidi
 brew_install_or_upgrade postgresql
