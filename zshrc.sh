@@ -101,6 +101,8 @@ fi
 
 alias zshconfig="code ~/.zshrc"
 alias ohmyzsh="code ~/.oh-my-zsh"
+alias zprofile="code ~/.zprofile"
+alias bprofile="code ~/.profile"
 
 # homebrew
 alias brewcheck="brew update && echo -e '\033[1mbrew:\033[0m' && brew outdated && echo '\033[1mcask:\033[0m' && brew outdated --cask"
@@ -253,6 +255,10 @@ EOT
 # cd to developer dir
 cdd() {
     cd "$HOME/Developer"
+}
+
+cdc() {
+    cd "$HOME/Dropbox/CODE"
 }
 
 # remove Dropbox conflicted copies
