@@ -4,8 +4,76 @@
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
+alias bprofile="code ~/.profile"
+
 # Add alias for python3 since Windows defaults to just 'python'
 alias python3=python
+
+# git
+alias gitsub='git submodule update --init --recursive'
+alias gitprune='git remote prune origin'
+alias gittag='git describe --abbrev=0'
+alias githead='git rev-parse HEAD'
+
+alias gsub=gitsub
+alias gprune=gitprune
+alias gtag=gittag
+alias ghead=githead
+
+# general
+alias c='clear'
+alias fetch="git fetch --jobs=8 --all --prune --tags --prune-tags"
+alias l='ls -Aho'
+alias ll='ls -ho'
+alias num='echo $(ls -1 | wc -l)'
+alias path='echo -e ${PATH//:/\\n}'
+alias reload='source ~/.profile'
+
+# python
+alias pirq="python -m pip install -r requirements.txt"
+alias piu="python -m pip install --upgrade"
+alias piup="python -m pip install --upgrade pip setuptools wheel"
+alias pyfreeze="python -m pip freeze > requirements.txt"
+alias pynot="python -m pip list --outdated --not-required"
+alias pyout="python -m pip list --outdated"
+alias pyupg="python -m pip list --not-required --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install --upgrade"
+
+# cd to developer dir
+cdd() {
+    cd "$HOME/Developer"
+}
+
+cdc() {
+    cd "/d/Dropbox/CODE"
+}
+
+# Search history
+hist() {
+    history | grep "$1"
+}
+
+# Activate Python virtual env
+act() {
+    # try to get venv name from first argument, otherwise default to 'venv'
+    local NAME=${1:-venv}
+    if [ -e "$HOME/venv/$NAME/Scripts/activate" ]; then
+        echo "Activating $HOME/venv/$NAME"
+        source "$HOME/venv/$NAME/Scripts/activate"
+    elif [ -e "$NAME"/Scripts/activate ]; then
+        echo "Activating $(pwd)/$NAME"
+        source "$NAME/Scripts/activate"
+    else
+        print_error "Could not find venv '$NAME'"
+    fi
+}
+
+# Create new Python virtual env
+venv() {
+    # try to get venv name from first argument, otherwise default to 'venv'
+    local NAME=${1:-venv}
+    python3 -m venv --clear "$HOME/venv/$NAME"
+    source "$HOME/venv/$NAME/Scripts/activate"
+}
 
 # Run ssh-agent automatically when you open bash.
 # https://docs.github.com/en/authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases?platform=windows
