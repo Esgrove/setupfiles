@@ -115,11 +115,13 @@ alias brn=brewclean
 alias bru=brewupg
 
 # git
+alias gitconf="git config --global --list | sort"
 alias gitsub='git submodule update --init --recursive'
 alias gitprune='git remote prune origin'
 alias gittag='git describe --abbrev=0'
 alias githead='git rev-parse HEAD'
 
+alias gconf=gitconf
 alias gsub=gitsub
 alias gprune=gitprune
 alias gtag=gittag
