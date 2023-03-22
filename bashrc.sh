@@ -86,7 +86,7 @@ agent_load_env() {
 }
 
 agent_start() {
-    (   
+    (
         umask 077
         ssh-agent >| "$env"
     )
