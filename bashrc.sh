@@ -82,22 +82,22 @@ venv() {
 env=~/.ssh/agent.env
 
 agent_load_env() {
-    test -f "$env" && . "$env" >|/dev/null
+    test -f "$env" && . "$env" >| /dev/null
 }
 
 agent_start() {
-    (
+    (   
         umask 077
-        ssh-agent >|"$env"
+        ssh-agent >| "$env"
     )
-    . "$env" >|/dev/null
+    . "$env" >| /dev/null
 }
 
 agent_load_env
 
 # agent_run_state: 0=agent running w/ key; 1=agent w/o key; 2=agent not running
 agent_run_state=$(
-    ssh-add -l >|/dev/null 2>&1
+    ssh-add -l >| /dev/null 2>&1
     echo $?
 )
 

@@ -41,7 +41,7 @@ press_enter_to_continue() {
 }
 
 brew_install_or_upgrade() {
-    if brew ls --versions "$1" >/dev/null; then
+    if brew ls --versions "$1" > /dev/null; then
         brew upgrade "$1"
     else
         print_magenta "Installing $1"
@@ -50,7 +50,7 @@ brew_install_or_upgrade() {
 }
 
 brew_cask_install_or_upgrade() {
-    if brew ls --versions "$1" >/dev/null; then
+    if brew ls --versions "$1" > /dev/null; then
         brew upgrade --cask "$1"
     else
         print_magenta "Installing $1"
@@ -102,7 +102,11 @@ press_enter_to_continue
 sudo -v
 
 # Keep-alive: update existing sudo time stamp until the script has finished
-while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2> /dev/null &
+while true; do
+    sudo -n true
+    sleep 60
+    kill -0 "$$" || exit
+done 2> /dev/null &
 
 # Remove unneeded apps
 sudo rm -rf /Applications/GarageBand.app
@@ -408,6 +412,11 @@ yt-dlp" > ~/python_packages.txt
 
 # Add alias for python
 echo 'alias python=python3' >> "$SHELL_PROFILE"
+
+if brew ls --versions llvm; then
+    # link clang-tidy to path
+    ln -s "$(brew --prefix)/opt/llvm/bin/clang-tidy" "$(brew --prefix)/bin/clang-tidy"
+fi
 
 print_magenta "Install Rust"
 rustup-init -y

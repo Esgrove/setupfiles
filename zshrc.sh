@@ -221,7 +221,7 @@ venv() {
 }
 
 brew_install_or_upgrade() {
-    if brew ls --versions "$1" >/dev/null; then
+    if brew ls --versions "$1" > /dev/null; then
         brew upgrade "$1"
     else
         brew install "$1"
@@ -239,7 +239,7 @@ bri() {
 cdf() {
     local window_path
     window_path=$(
-        /usr/bin/osascript <<EOT
+        /usr/bin/osascript << EOT
         tell application "Finder"
             try
                 set currFolder to (folder of the front window as alias)
@@ -280,9 +280,9 @@ hist() {
 
 # Update all git repos under ~/Developer
 repo_update() {
-    pushd ~/Developer >/dev/null || print_error_and_exit "Failed to cd to ~/Developer"
+    pushd ~/Developer > /dev/null || print_error_and_exit "Failed to cd to ~/Developer"
     for directory in */; do
-        pushd "$directory" >/dev/null
+        pushd "$directory" > /dev/null
         print_magenta "Updating $(basename "$directory")"
         git fetch --jobs=8 --all --prune --tags --prune-tags
         git status
@@ -291,7 +291,7 @@ repo_update() {
             branch=$(git branch --show-current)
             if [ -n "$(git branch --quiet --list master)" ] && [ "$branch" != "master" ]; then
                 git switch master
-            elif [ -n "$(git branch --quiet --list main)" ]&& [ "$branch" != "main" ]; then
+            elif [ -n "$(git branch --quiet --list main)" ] && [ "$branch" != "main" ]; then
                 git switch main
             fi
             git pull --rebase
@@ -299,9 +299,9 @@ repo_update() {
         else
             echo "Uncommited changes, skipping pull..."
         fi
-        popd >/dev/null
+        popd > /dev/null
     done
-    popd >/dev/null
+    popd > /dev/null
 }
 
 # Zip given file
