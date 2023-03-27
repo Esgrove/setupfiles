@@ -282,12 +282,11 @@ hist() {
 repo_update() {
     pushd ~/Developer > /dev/null || print_error_and_exit "Failed to cd to ~/Developer"
     for directory in */; do
-        pushd "$directory" > /dev/null
+        pushd "$directory" > /dev/null || :
         print_magenta "Updating $(basename "$directory")"
         git fetch --jobs=8 --all --prune --tags --prune-tags
         git status
         if git diff --quiet && git diff --cached --quiet; then
-            echo "Pulling..."
             branch=$(git branch --show-current)
             if [ -n "$(git branch --quiet --list master)" ] && [ "$branch" != "master" ]; then
                 git switch master
@@ -295,13 +294,15 @@ repo_update() {
                 git switch main
             fi
             git pull --rebase
-            git switch $branch
+            if [ "$(git branch --show-current)" != "$branch" ]; then
+                git switch "$branch"
+            fi
         else
-            echo "Uncommited changes, skipping pull..."
+            print_yellow "Uncommited changes, skipping pull..."
         fi
-        popd > /dev/null
+        popd > /dev/null || :
     done
-    popd > /dev/null
+    popd > /dev/null || :
 }
 
 # Zip given file
