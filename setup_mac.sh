@@ -403,6 +403,7 @@ git config --global core.pager 'less -+-R -FRX --mouse'
 git config --global fetch.parallel 0
 git config --global fetch.prune true
 git config --global fetch.prunetags true
+git config --global init.defaultBranch main
 git config --global user.email "$GIT_EMAIL"
 git config --global user.name "$GIT_NAME"
 
