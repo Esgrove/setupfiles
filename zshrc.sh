@@ -312,3 +312,19 @@ repo_update() {
 zipf() {
     zip -r "$1".zip "$1"
 }
+
+# Go up one or more directories
+up() {
+    local limit="$1"
+
+    # Default to limit of 1
+    if [ -z "$limit" ] || [ "$limit" -le 0 ]; then
+        limit=1
+    fi
+
+    for ((i = 1; i <= limit; i++)); do
+        if ! cd "$(pwd)"/../; then
+            echo "Failed to go up from current directory"
+        fi
+    done
+}
