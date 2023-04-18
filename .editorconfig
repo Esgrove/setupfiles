@@ -19,9 +19,5 @@ shell_variant = bash
 space_redirects = true
 switch_case_indent = true
 
-[*.{yml,yaml}]
+[*.{yml,yaml,json}]
 indent_size = 2
-
-# Ignore the entire "third_party" directory.
-[third_party/**]
-ignore = true
