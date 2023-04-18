@@ -145,6 +145,9 @@ alias trd="tre -d"
 alias tre="tree -C -I 'node_modules|venv|__pycache__'"
 alias xdir='open ~/Library/Developer/Xcode/DerivedData'
 
+# yt-dlp aka youtube-dl
+alias ytd="yt-dlp --extract-audio --audio-format wav"
+
 # move files out of subdirectiories
 alias nosubdirs="find . -type f -mindepth 2 -exec mv -i -- {} . \;"
 

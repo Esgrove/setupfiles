@@ -32,6 +32,9 @@ alias num='echo $(ls -1 | wc -l)'
 alias path='echo -e ${PATH//:/\\n}'
 alias reload='source ~/.profile'
 
+# yt-dlp aka youtube-dl
+alias ytd="yt-dlp --extract-audio --audio-format wav"
+
 # python
 alias pirq="python -m pip install -r requirements.txt"
 alias piu="python -m pip install --upgrade"
