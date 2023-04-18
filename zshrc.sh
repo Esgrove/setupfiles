@@ -329,6 +329,7 @@ up() {
         fi
         if ! cd "$(pwd)"/../; then
             echo "Failed to go up from current directory"
+            break
         fi
     done
     pwd
