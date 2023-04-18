@@ -313,7 +313,7 @@ zipf() {
     zip -r "$1".zip "$1"
 }
 
-# Go up one or more directories
+# Go up one or more directories, up to user home
 up() {
     local limit="$1"
 
@@ -322,9 +322,14 @@ up() {
         limit=1
     fi
 
+    pwd
     for ((i = 1; i <= limit; i++)); do
+        if [ "$(pwd)" = "$HOME" ]; then
+            break
+        fi
         if ! cd "$(pwd)"/../; then
             echo "Failed to go up from current directory"
         fi
     done
+    pwd
 }
