@@ -315,19 +315,16 @@ zipf() {
 
 # Go up one or more directories, up to user home
 up() {
-    local limit="$1"
-
-    # Default to limit of 1
-    if [ -z "$limit" ] || [ "$limit" -le 0 ]; then
+    local limit="${1:-1}"
+    if [ "$limit" -le 0 ]; then
         limit=1
     fi
-
     pwd
     for ((i = 1; i <= limit; i++)); do
-        if [ "$(pwd)" = "$HOME" ]; then
+        if [ "$PWD" = "$HOME" ]; then
             break
         fi
-        if ! cd "$(pwd)"/../; then
+        if ! cd "$PWD"/../; then
             echo "Failed to go up from current directory"
             break
         fi
