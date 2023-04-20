@@ -185,6 +185,10 @@ $(7z i)[0..5]
 Write-Host "Installing Rust..." -ForegroundColor "Yellow"
 rustup update
 
+# Install Poetry
+# https://python-poetry.org/docs/master/#installing-with-the-official-installer
+(Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python -
+
 Write-Host "Installing Python packages..." -ForegroundColor "Yellow"
 python.exe -m pip install --upgrade pip setuptools wheel
 Add-Path "C:\Users\Administrator\AppData\Roaming\Python\Python310\Scripts"
@@ -201,7 +205,6 @@ numpy
 pandas
 pillow
 playwright
-poetry
 psutil
 pygments
 pytest
