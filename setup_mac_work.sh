@@ -404,7 +404,7 @@ ruff
 scipy
 selenium
 tqdm
-typer
+typer[all]
 virtualenv
 webdriver-manager
 yt-dlp" > ~/python_packages.txt

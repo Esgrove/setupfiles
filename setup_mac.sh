@@ -345,7 +345,7 @@ rich
 ruff
 selenium
 tqdm
-typer
+typer[all]
 webdriver-manager
 yt-dlp" > ~/python_packages.txt
 "$(brew --prefix)/bin/python3" -m pip install -r ~/python_packages.txt

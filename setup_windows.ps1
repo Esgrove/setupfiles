@@ -213,7 +213,7 @@ requests
 rich
 selenium
 tqdm
-typer
+typer[all]
 webdriver-manager
 yt-dlp
 "@
