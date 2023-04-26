@@ -321,6 +321,9 @@ brew_install_or_upgrade xcbeautify
 brew_install_or_upgrade zlib
 brew_install_or_upgrade zsh
 
+brew tap hashicorp/tap
+brew_install_or_upgrade hashicorp/tap/terraform
+
 print_magenta "Installing apps..."
 brew tap homebrew/cask-fonts
 brew tap homebrew/cask-drivers
