@@ -259,13 +259,20 @@ EOT
     cd "$window_path" || echo "failed to ch to $window_path"
 }
 
+# cd to code dir
+cdc() {
+    cd "$HOME/Dropbox/CODE"
+    if [ -n "$1" ] && [ -e "$1" ]; then
+        cd "$1" || echo "Failed to cd to $1"
+    fi
+}
+
 # cd to developer dir
 cdd() {
     cd "$HOME/Developer"
-}
-
-cdc() {
-    cd "$HOME/Dropbox/CODE"
+    if [ -n "$1" ] && [ -e "$1" ]; then
+        cd "$1" || echo "Failed to cd to $1"
+    fi
 }
 
 # remove Dropbox conflicted copies
@@ -283,12 +290,22 @@ hist() {
     history | grep "$1"
 }
 
-# Update all git repos under ~/Developer
+# Update all git repos under ~/Developer or given root path
 repo_update() {
-    pushd ~/Developer > /dev/null || print_error_and_exit "Failed to cd to ~/Developer"
-    for directory in */; do
-        pushd "$directory" > /dev/null || :
+    local root="$HOME/Developer"
+    if [ -n "$1" ]; then
+        root="$(readlink -f "$1")"
+    fi
+    pushd "$root" > /dev/null || print_error_and_exit "Failed to cd to: $root"
+    # sort directories
+    for directory in $(find ./* -type d -maxdepth 0 | sort -f | xargs); do
         print_magenta "Updating $(basename "$directory")"
+        pushd "$directory" > /dev/null || :
+        if ! git rev-parse --git-dir > /dev/null 2>&1; then
+            print_yellow "Not a git repository, skipping..."
+            popd > /dev/null || :
+            continue
+        fi
         git fetch --jobs=8 --all --prune --tags --prune-tags
         git status
         if git diff --quiet && git diff --cached --quiet; then
