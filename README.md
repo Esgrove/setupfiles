@@ -12,14 +12,17 @@ which should be copied to `~/.zshrc`.
 ## Windows
 
 Powershell script for setting up a new Windows machine, using [choco](https://chocolatey.org/) as the "package manager".
-Bash profile for Git Bash, which should be copied to `~/.bashrc`.
+
+Bash profile for Git Bash (for Windows), which should be copied to `~/.bashrc`.
 
 ## Tool configs
 
-Configs for various code formatting and linting tools that I regurarly use.
-The dot prefix has been removed from some of the files here, so they are easier to interact with in Finder for example.
+Configs for various code formatting and linting tools that I use regularly.
+The dot prefix has been removed from some of the files here,
+so they are easier to interact with in Finder for example.
 
-* Python: [pyproject.toml](./pyproject.toml) for [Black](https://github.com/psf/black) and [Ruff](https://github.com/charliermarsh/ruff) (combining flake8, isort and others)
+* Python: [pyproject.toml](./pyproject.toml)
+  for [Black](https://github.com/psf/black) and [Ruff](https://github.com/charliermarsh/ruff) (combining flake8, isort and others)
 * C++: [.clang-format](./.clang-format)
 * Rust: [.rustfmt.toml](./.rustfmt.toml)
 * Ruby: [.rubocop.yml](./.rubocop.yml) for [rubocop](https://github.com/rubocop/rubocop)
