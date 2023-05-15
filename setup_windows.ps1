@@ -212,6 +212,7 @@ pyupgrade
 requests
 rich
 selenium
+speedtest-cli
 tqdm
 typer[all]
 webdriver-manager

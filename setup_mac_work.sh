@@ -406,6 +406,7 @@ rich
 ruff
 scipy
 selenium
+speedtest-cli
 tqdm
 typer[all]
 virtualenv

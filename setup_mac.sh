@@ -344,6 +344,7 @@ requests
 rich
 ruff
 selenium
+speedtest-cli
 tqdm
 typer[all]
 webdriver-manager
