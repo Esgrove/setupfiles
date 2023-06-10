@@ -107,7 +107,7 @@ alias zprofile="code ~/.zprofile"
 alias bprofile="code ~/.profile"
 
 # homebrew
-alias brewcheck="brew update && echo -e '\033[1mbrew:\033[0m' && brew outdated && echo '\033[1mcask:\033[0m' && brew outdated --cask"
+alias brewcheck="brew update && echo -e '\033[1mbrew:\033[0m' && brew outdated"
 alias brewclean="brew cleanup -ns && brew cleanup -s"
 alias brewlist="echo -e '\033[1mbrew:\033[0m' && brew list && echo '\033[1mcask:\033[0m' && brew list --cask"
 alias brewupg="brew upgrade && brew upgrade --cask && brewclean"
