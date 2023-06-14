@@ -133,7 +133,9 @@ Invoke-CommandOrThrow choco install ninja
 # https://community.chocolatey.org/packages/jq
 Invoke-CommandOrThrow choco install jq
 # https://community.chocolatey.org/packages/shellcheck
-Invoke-CommandOrThrow shellcheck
+Invoke-CommandOrThrow choco install shellcheck
+# https://community.chocolatey.org/packages/shfmt/
+Invoke-CommandOrThrow choco install shfmt
 # https://community.chocolatey.org/packages/sublimetext4
 Invoke-CommandOrThrow choco install sublimetext4
 # https://community.chocolatey.org/packages/sublimemerge
