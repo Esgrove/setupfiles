@@ -23,7 +23,7 @@ so they are easier to interact with in Finder for example.
 
 * Python: [pyproject.toml](./pyproject.toml)
   for [Black](https://github.com/psf/black) and [Ruff](https://github.com/charliermarsh/ruff) (combining flake8, isort and others)
-* C++: [.clang-format](./.clang-format)
+* C++: [.clang-format](./.clang-format) and [.clang-tidy](./.clang-tidy)
 * Rust: [.rustfmt.toml](./.rustfmt.toml)
 * Ruby: [.rubocop.yml](./.rubocop.yml) for [rubocop](https://github.com/rubocop/rubocop)
   * Primarily for [Fastlane](https://github.com/fastlane/fastlane)
