@@ -134,6 +134,8 @@ alias reup=repo_update
 # general
 alias c='clear'
 alias cleanDS="find . -type f -name '*.DS_Store' -ls -delete"
+alias calendar="cal -y || python -m calendar"
+alias ncalendar="ncal -wy -s FI"
 alias dev="cd ~/Developer && ll"
 alias fetch="git fetch --jobs=8 --all --prune --tags --prune-tags"
 alias l='ls -Aho'
@@ -261,7 +263,7 @@ EOT
 
 # cd to code dir
 cdc() {
-    cd "$HOME/Dropbox/CODE"
+    cd "$HOME/Dropbox/CODE" || echo "failed to cd to $HOME/Dropbox/CODE"
     if [ -n "$1" ] && [ -e "$1" ]; then
         cd "$1" || echo "Failed to cd to $1"
     fi
@@ -269,7 +271,19 @@ cdc() {
 
 # cd to developer dir
 cdd() {
-    cd "$HOME/Developer"
+    cd "$HOME/Developer" || echo "failed to cd to $HOME/Developer"
+    if [ -n "$1" ] && [ -e "$1" ]; then
+        cd "$1" || echo "Failed to cd to $1"
+    fi
+}
+
+# cd to Dropbox dir
+cdx() {
+    if [ -e "$HOME/Library/CloudStorage/Dropbox" ]; then
+        cd "$HOME/Library/CloudStorage/Dropbox" || echo "failed to cd to $HOME/Library/CloudStorage/Dropbox"
+    else
+        cd "$HOME/Dropbox" || echo "failed to cd to $HOME/Dropbox"
+    fi
     if [ -n "$1" ] && [ -e "$1" ]; then
         cd "$1" || echo "Failed to cd to $1"
     fi

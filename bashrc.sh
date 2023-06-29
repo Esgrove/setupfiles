@@ -25,6 +25,7 @@ alias ghead=githead
 
 # general
 alias c='clear'
+alias calendar="python -m calendar"
 alias fetch="git fetch --jobs=8 --all --prune --tags --prune-tags"
 alias l='ls -Aho'
 alias ll='ls -ho'
@@ -44,13 +45,28 @@ alias pynot="python -m pip list --outdated --not-required"
 alias pyout="python -m pip list --outdated"
 alias pyupg="python -m pip list --not-required --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install --upgrade"
 
-# cd to developer dir
-cdd() {
-    cd "$HOME/Developer"
+# cd to code dir
+cdc() {
+    cd "/d/Dropbox/CODE" || echo "failed to cd to /d/Dropbox/CODE"
+    if [ -n "$1" ] && [ -e "$1" ]; then
+        cd "$1" || echo "Failed to cd to $1"
+    fi
 }
 
-cdc() {
-    cd "/d/Dropbox/CODE"
+# cd to developer dir
+cdd() {
+    cd "$HOME/Developer" || echo "failed to cd to $HOME/Developer"
+    if [ -n "$1" ] && [ -e "$1" ]; then
+        cd "$1" || echo "Failed to cd to $1"
+    fi
+}
+
+# cd to Dropbox dir
+cdx() {
+    cd "/d/Dropbox" || echo "failed to cd to /d/Dropbox"
+    if [ -n "$1" ] && [ -e "$1" ]; then
+        cd "$1" || echo "Failed to cd to $1"
+    fi
 }
 
 # Search history
