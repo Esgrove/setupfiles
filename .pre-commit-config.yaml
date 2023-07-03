@@ -1,4 +1,9 @@
 exclude: ^(.idea|.vscode)/
+default_stages: [push]
+fail_fast: false
+default_language_version:
+  python: python3.11
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
@@ -18,7 +23,7 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: "v0.0.261"
+    rev: "v0.0.275"
     hooks:
       - id: ruff
         name: python ruff
@@ -38,7 +43,7 @@ repos:
         name: python isort
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.3.1
+    rev: v3.8.0
     hooks:
       - id: pyupgrade
         name: python pyupgrade
