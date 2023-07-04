@@ -7,10 +7,15 @@ extend-exclude = '''venv*'''
 
 [tool.ruff]
 # https://github.com/charliermarsh/ruff#configuration
+include = ["*.py", "*.pyi", "**/pyproject.toml"]
 target-version = "py311"
 line-length = 120
-select = ["E", "F", "W", "N", "UP"] # "I"
+select = ["E", "F", "W", "N", "UP"]
 ignore = []
+per-file-ignores = {}
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
 fixable = [
@@ -83,10 +88,6 @@ exclude = [
     "node_modules",
     "venv*",
 ]
-per-file-ignores = {}
-
-# Allow unused variables when underscore-prefixed.
-dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 [tool.ruff.isort]
 # https://beta.ruff.rs/docs/settings/#isort
