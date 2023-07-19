@@ -141,7 +141,8 @@ Invoke-CommandOrThrow choco install shellcheck
 Invoke-CommandOrThrow choco install shfmt
 # https://community.chocolatey.org/packages/Ghostscript
 Invoke-CommandOrThrow choco install ghostscript
-
+# https://community.chocolatey.org/packages/ffmpeg
+Invoke-CommandOrThrow choco install ffmpeg
 # https://community.chocolatey.org/packages/sublimemerge
 Invoke-CommandOrThrow choco install sublimemerge
 # https://community.chocolatey.org/packages/dotnet-sdk
@@ -155,6 +156,8 @@ Invoke-CommandOrThrow choco install ruby
 Invoke-CommandOrThrow choco install msys2 --params "/NoUpdate"
 # https://community.chocolatey.org/packages/rustup.install
 Invoke-CommandOrThrow choco install rustup.install
+# https://community.chocolatey.org/packages/golang
+Invoke-CommandOrThrow choco install golang
 # https://community.chocolatey.org/packages/wiztree
 Invoke-CommandOrThrow choco install wiztree
 # https://community.chocolatey.org/packages/vlc
