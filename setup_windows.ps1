@@ -57,7 +57,6 @@ if (!(Test-Elevated)) {
     $newProcess.Arguments = $myInvocation.MyCommand.Definition;
     $newProcess.Verb = "runas";
     [System.Diagnostics.Process]::Start($newProcess);
-
     exit
 }
 
@@ -120,10 +119,14 @@ Invoke-CommandOrThrow choco install git
 Invoke-CommandOrThrow choco install gh
 # https://community.chocolatey.org/packages/cmake
 Invoke-CommandOrThrow choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
+# https://community.chocolatey.org/packages/GoogleChrome
+Invoke-CommandOrThrow choco install googlechrome
+# https://community.chocolatey.org/packages/Firefox
+Invoke-CommandOrThrow choco install firefox
 # https://community.chocolatey.org/packages/InnoSetup
 Invoke-CommandOrThrow choco install innosetup
 # https://community.chocolatey.org/packages/python
-Invoke-CommandOrThrow choco install python --version=3.10.8
+Invoke-CommandOrThrow choco install python --version=3.11.4
 # https://community.chocolatey.org/packages/ccache
 Invoke-CommandOrThrow choco install ccache
 # https://community.chocolatey.org/packages/7zip
@@ -136,12 +139,13 @@ Invoke-CommandOrThrow choco install jq
 Invoke-CommandOrThrow choco install shellcheck
 # https://community.chocolatey.org/packages/shfmt/
 Invoke-CommandOrThrow choco install shfmt
-# https://community.chocolatey.org/packages/sublimetext4
-Invoke-CommandOrThrow choco install sublimetext4
+# https://community.chocolatey.org/packages/Ghostscript
+Invoke-CommandOrThrow choco install ghostscript
+
 # https://community.chocolatey.org/packages/sublimemerge
 Invoke-CommandOrThrow choco install sublimemerge
 # https://community.chocolatey.org/packages/dotnet-sdk
-Invoke-CommandOrThrow choco install dotnet-sdk --version=6.0.404
+Invoke-CommandOrThrow choco install dotnet-sdk --version=7.0.306
 # https://community.chocolatey.org/packages/Temurin
 Invoke-CommandOrThrow choco install temurin
 # https://community.chocolatey.org/packages/ruby
@@ -151,6 +155,10 @@ Invoke-CommandOrThrow choco install ruby
 Invoke-CommandOrThrow choco install msys2 --params "/NoUpdate"
 # https://community.chocolatey.org/packages/rustup.install
 Invoke-CommandOrThrow choco install rustup.install
+# https://community.chocolatey.org/packages/wiztree
+Invoke-CommandOrThrow choco install wiztree
+# https://community.chocolatey.org/packages/vlc
+Invoke-CommandOrThrow choco install vlc
 # https://community.chocolatey.org/packages/vscode
 Invoke-CommandOrThrow choco install vscode
 # https://community.chocolatey.org/packages/visualstudio2022buildtools
@@ -200,6 +208,7 @@ black
 certifi
 click
 colorama
+fastapi[all]
 flake8
 isort
 matplotlib
@@ -213,6 +222,7 @@ pytest
 pyupgrade
 requests
 rich
+ruff
 selenium
 speedtest-cli
 tqdm
@@ -289,6 +299,7 @@ New-Item ~\.bashrc -Type File -Value @"
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 "@
+Copy-Item -Path .\bashrc.sh -Destination ~\.bashrc -Force
 
 # Install OpenSSH and setup SSH key
 Write-Host "Setup SSH..." -ForegroundColor "Yellow"
