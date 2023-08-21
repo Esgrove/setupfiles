@@ -325,3 +325,18 @@ ssh-add "$SSH_KEY"
 Write-Host "Adding SSH key to GitHub..." -ForegroundColor "Yellow"
 gh auth login --web --hostname github.com --git-protocol https --scopes admin:public_key
 gh ssh-key add "$SSH_KEY_PUB" --title "$env:computername"
+
+Write-Host "Cloning repos..." -ForegroundColor "Yellow"
+New-Item -Path ~\Developer -ItemType Directory
+Set-Location -Path ~\Developer
+git clone "https://github.com/Esgrove/AudioBatch"
+git clone "https://github.com/Esgrove/Esgrove"
+git clone "https://github.com/Esgrove/fastapi-template"
+git clone "https://github.com/Esgrove/fdo_randomizer"
+git clone "https://github.com/Esgrove/JUCE"
+git clone "https://github.com/Esgrove/latex-template"
+git clone "https://github.com/Esgrove/Oscilloscope"
+git clone "https://github.com/Esgrove/othellogame"
+git clone "https://github.com/Esgrove/playlist_formatter"
+git clone "https://github.com/Esgrove/recordpool-dl"
+git clone "https://github.com/Esgrove/rust-axum-example"
