@@ -307,6 +307,7 @@ brew_install_or_upgrade pre-commit
 brew_install_or_upgrade pyenv
 brew_install_or_upgrade python
 brew_install_or_upgrade readline
+brew_install_or_upgrade ripgrep
 brew_install_or_upgrade ruby
 brew_install_or_upgrade rustup-init
 brew_install_or_upgrade shellcheck

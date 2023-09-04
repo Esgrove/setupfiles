@@ -290,6 +290,7 @@ brew_install_or_upgrade pinentry-mac
 brew_install_or_upgrade pipx
 brew_install_or_upgrade poetry
 brew_install_or_upgrade python
+brew_install_or_upgrade ripgrep
 brew_install_or_upgrade rustup-init
 brew_install_or_upgrade shellcheck
 brew_install_or_upgrade shfmt

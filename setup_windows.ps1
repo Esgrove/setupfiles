@@ -135,6 +135,8 @@ Invoke-CommandOrThrow choco install 7zip
 Invoke-CommandOrThrow choco install ninja
 # https://community.chocolatey.org/packages/jq
 Invoke-CommandOrThrow choco install jq
+# https://community.chocolatey.org/packages/ripgrep
+Invoke-CommandOrThrow choco install ripgrep
 # https://community.chocolatey.org/packages/shellcheck
 Invoke-CommandOrThrow choco install shellcheck
 # https://community.chocolatey.org/packages/shfmt/
