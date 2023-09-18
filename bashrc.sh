@@ -30,6 +30,7 @@ alias fetch="git fetch --jobs=8 --all --prune --tags --prune-tags"
 alias l='ls -Aho'
 alias ll='ls -ho'
 alias num='echo $(ls -1 | wc -l)'
+alias o='start .'
 alias path='echo -e ${PATH//:/\\n}'
 alias reload='source ~/.profile'
 
