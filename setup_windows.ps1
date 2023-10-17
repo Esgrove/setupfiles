@@ -141,6 +141,10 @@ Invoke-CommandOrThrow choco install ripgrep
 Invoke-CommandOrThrow choco install shellcheck
 # https://community.chocolatey.org/packages/shfmt/
 Invoke-CommandOrThrow choco install shfmt
+# https://community.chocolatey.org/packages/gradle
+Invoke-CommandOrThrow choco install gradle
+# https://community.chocolatey.org/packages/openssl
+Invoke-CommandOrThrow choco install openssl
 # https://community.chocolatey.org/packages/Ghostscript
 Invoke-CommandOrThrow choco install ghostscript
 # https://community.chocolatey.org/packages/ffmpeg
