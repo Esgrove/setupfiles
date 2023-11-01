@@ -303,10 +303,7 @@ Write-Host "git config:"
 git config --global --list
 
 Write-Host "Creating bash profile..."
-New-Item ~\.bashrc -Type File -Value @"
-export LC_ALL=en_US.UTF-8
-export LANG=en_US.UTF-8
-"@
+New-Item ~\.bashrc -Type File
 Copy-Item -Path .\bashrc.sh -Destination ~\.bashrc -Force
 
 # Install OpenSSH and setup SSH key
@@ -328,12 +325,15 @@ ssh-keygen -t ed25519 -C "$GIT_EMAIL" -f "$SSH_KEY"
 ssh-add "$SSH_KEY"
 
 Write-Host "Adding SSH key to GitHub..." -ForegroundColor "Yellow"
+# Uses GitHub CLI
 gh auth login --web --hostname github.com --git-protocol https --scopes admin:public_key
 gh ssh-key add "$SSH_KEY_PUB" --title "$env:computername"
 
 Write-Host "Cloning repos..." -ForegroundColor "Yellow"
 New-Item -Path ~\Developer -ItemType Directory
 Set-Location -Path ~\Developer
+# Note to self: get full list of repos using
+# gh repo list --json url | jq -r '.[].url'
 git clone "https://github.com/Esgrove/AudioBatch"
 git clone "https://github.com/Esgrove/Esgrove"
 git clone "https://github.com/Esgrove/fastapi-template"
