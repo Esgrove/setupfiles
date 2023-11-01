@@ -6,7 +6,7 @@ default_language_version:
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     # https://github.com/pre-commit/pre-commit-hooks
     hooks:
       - id: check-added-large-files
@@ -23,14 +23,14 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: "v0.0.276"
+    rev: "v0.1.2"
     hooks:
       - id: ruff
         name: python ruff
         args: [--fix, --exit-non-zero-on-fix]
 
   - repo: https://github.com/psf/black
-    rev: 23.3.0
+    rev: 23.10.1
     hooks:
       - id: black
         name: python black
@@ -43,7 +43,7 @@ repos:
         name: python isort
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.8.0
+    rev: "v3.15.0"
     hooks:
       - id: pyupgrade
         name: python pyupgrade
@@ -51,17 +51,17 @@ repos:
 
   - repo: local
     hooks:
-      - id: rust-fmt
+      - id: cargo-fmt
         name: rust format
-        description: Run cargo fmt on files included in the commit. rustfmt should be installed before-hand.
+        description: Run Cargo fmt on files included in the commit. rustfmt should be installed before-hand.
         entry: bash -c 'cargo fmt'
         pass_filenames: true
         types: [file, rust]
         language: system
 
-      - id: rust-clippy
+      - id: cargo-clippy
         name: rust lint
-        description: Run cargo clippy on files included in the commit. clippy should be installed before-hand.
+        description: Run Cargo clippy on files included in the commit. clippy should be installed before-hand.
         entry: bash -c 'cargo clippy'
         pass_filenames: false
         types: [file, rust]
