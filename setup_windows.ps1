@@ -152,7 +152,7 @@ Invoke-CommandOrThrow choco install ffmpeg
 # https://community.chocolatey.org/packages/sublimemerge
 Invoke-CommandOrThrow choco install sublimemerge
 # https://community.chocolatey.org/packages/dotnet-sdk
-Invoke-CommandOrThrow choco install dotnet-sdk --version=7.0.306
+Invoke-CommandOrThrow choco install dotnet-sdk --version=7.0.403
 # https://community.chocolatey.org/packages/Temurin
 Invoke-CommandOrThrow choco install temurin
 # https://community.chocolatey.org/packages/ruby
