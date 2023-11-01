@@ -218,7 +218,6 @@ certifi
 click
 colorama
 fastapi[all]
-flake8
 isort
 matplotlib
 numpy
