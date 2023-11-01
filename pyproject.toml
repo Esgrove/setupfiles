@@ -1,7 +1,7 @@
 [tool.black]
 # https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file
 line-length = 120
-target-version = ['py311']
+target-version = ['py311', 'py312']
 include = '\.pyi?$'
 extend-exclude = '''venv*'''
 
@@ -10,7 +10,7 @@ extend-exclude = '''venv*'''
 include = ["*.py", "*.pyi", "**/pyproject.toml"]
 target-version = "py311"
 line-length = 120
-select = ["E", "F", "W", "N", "UP"]
+select = ["E4", "E7", "E9", "F", "W", "N", "UP"]
 ignore = []
 per-file-ignores = {}
 
