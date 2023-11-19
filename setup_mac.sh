@@ -91,7 +91,7 @@ is_apple_silicon() {
 print_green "Setting up a Mac for $GIT_NAME <$GIT_EMAIL>"
 
 # Print hardware info
-system_profiler SPHardwareDataType
+system_profiler SPHardwareDataType | sed '1,4d' | awk '{$1=$1; print}'
 
 echo "Platform: $(uname -mp), CPU: $CPU_NAME"
 if is_apple_silicon; then
@@ -141,7 +141,7 @@ defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
 defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
 defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
 
-# Disable the “Are you sure you want to open this application?” dialog
+# Disable the "Are you sure you want to open this application?" dialog
 defaults write com.apple.LaunchServices LSQuarantine -bool false
 
 # Disable automatic capitalization as it's annoying when typing code
@@ -208,7 +208,7 @@ defaults write com.apple.finder QuitMenuItem -bool true
 chflags nohidden ~/Library && xattr -d com.apple.FinderInfo ~/Library
 
 # Expand the following File Info panes:
-# “General”, “Open with”, and “Sharing & Permissions”
+# "General", "Open with", and "Sharing & Permissions"
 defaults write com.apple.finder FXInfoPanesExpanded -dict \
     General -bool true \
     OpenWith -bool true \

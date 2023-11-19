@@ -83,7 +83,7 @@ is_apple_silicon() {
 print_green "Setting up a Mac for $GIT_NAME <$GIT_EMAIL>"
 
 # Print hardware info
-system_profiler SPHardwareDataType
+system_profiler SPHardwareDataType | sed '1,4d' | awk '{$1=$1; print}'
 
 echo "Platform: $(uname -mp), CPU: $CPU_NAME"
 if is_apple_silicon; then
