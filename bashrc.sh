@@ -7,6 +7,9 @@ export TERM="xterm-256color"
 
 alias bprofile="code ~/.profile"
 
+export PATH="$PATH:/c/ProgramData/chocolatey/bin/"
+export PATH="$HOME/AppData/Roaming/pypoetry/venv/Scripts:$PATH"
+
 # Add alias for python3 since Windows defaults to just 'python'
 alias python3=python
 
