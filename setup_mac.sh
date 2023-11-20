@@ -288,7 +288,6 @@ brew_install_or_upgrade neofetch
 brew_install_or_upgrade ninja
 brew_install_or_upgrade pinentry-mac
 brew_install_or_upgrade pipx
-brew_install_or_upgrade poetry
 brew_install_or_upgrade python
 brew_install_or_upgrade ripgrep
 brew_install_or_upgrade rustup-init
@@ -391,6 +390,8 @@ Thumbs.db" > ~/.gitignore
 
 # Add alias for python
 echo 'alias python=python3' >> "$SHELL_PROFILE"
+
+pipx install poetry
 
 print_magenta "Setting up git..."
 git --version

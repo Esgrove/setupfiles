@@ -299,7 +299,6 @@ brew_install_or_upgrade p7zip
 brew_install_or_upgrade pandoc
 brew_install_or_upgrade pinentry-mac
 brew_install_or_upgrade pipx
-brew_install_or_upgrade poetry
 brew_install_or_upgrade portaudio
 brew_install_or_upgrade portmidi
 brew_install_or_upgrade postgresql
@@ -417,6 +416,8 @@ yt-dlp" > ~/python_packages.txt
 
 # Add alias for python
 echo 'alias python=python3' >> "$SHELL_PROFILE"
+
+pipx install poetry
 
 if brew ls --versions llvm; then
     # link clang-tidy to path
