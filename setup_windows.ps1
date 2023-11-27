@@ -333,15 +333,16 @@ Write-Host "Cloning repos..." -ForegroundColor "Yellow"
 New-Item -Path ~\Developer -ItemType Directory
 Set-Location -Path ~\Developer
 # Note to self: get full list of repos using
-# gh repo list --json url | jq -r '.[].url'
-git clone "https://github.com/Esgrove/AudioBatch"
-git clone "https://github.com/Esgrove/Esgrove"
-git clone "https://github.com/Esgrove/fastapi-template"
-git clone "https://github.com/Esgrove/fdo_randomizer"
-git clone "https://github.com/Esgrove/JUCE"
-git clone "https://github.com/Esgrove/latex-template"
-git clone "https://github.com/Esgrove/Oscilloscope"
-git clone "https://github.com/Esgrove/othellogame"
-git clone "https://github.com/Esgrove/playlist_formatter"
-git clone "https://github.com/Esgrove/recordpool-dl"
-git clone "https://github.com/Esgrove/rust-axum-example"
+# > gh repo list --json url | jq -r '.[].url'
+# get ssh clone urls with:
+# > for file in $(gh repo list --json nameWithOwner --jq '.[].nameWithOwner'); do echo \"git@github.com:$file\"; done
+git clone "git@github.com:Esgrove/AudioBatch"
+git clone "git@github.com:Esgrove/Esgrove"
+git clone "git@github.com:Esgrove/fastapi-template"
+git clone "git@github.com:Esgrove/fdo_randomizer"
+git clone "git@github.com:Esgrove/JUCE"
+git clone "git@github.com:Esgrove/othellogame"
+git clone "git@github.com:Esgrove/playlist_formatter"
+git clone "git@github.com:Esgrove/recordpool-dl"
+git clone "git@github.com:Esgrove/rust-axum-example"
+git clone "git@github.com:Esgrove/track-rename"

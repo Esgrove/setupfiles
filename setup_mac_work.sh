@@ -267,6 +267,7 @@ print_magenta "Installing tools and libraries..."
 brew tap hashicorp/tap
 brew_install_or_upgrade aria2
 brew_install_or_upgrade awscli
+brew_install_or_upgrade azure-cli
 brew_install_or_upgrade bazelisk
 brew_install_or_upgrade boost
 brew_install_or_upgrade ccache
@@ -596,17 +597,16 @@ else
 fi
 
 print_magenta "Cloning repositories..."
-git clone "https://github.com/Esgrove/AudioBatch"
-git clone "https://github.com/Esgrove/Esgrove"
-git clone "https://github.com/Esgrove/fastapi-template"
-git clone "https://github.com/Esgrove/fdo_randomizer"
-git clone "https://github.com/Esgrove/JUCE"
-git clone "https://github.com/Esgrove/latex-template"
-git clone "https://github.com/Esgrove/Oscilloscope"
-git clone "https://github.com/Esgrove/othellogame"
-git clone "https://github.com/Esgrove/playlist_formatter"
-git clone "https://github.com/Esgrove/recordpool-dl"
-git clone "https://github.com/Esgrove/rust-axum-example"
+git clone "git@github.com:Esgrove/AudioBatch"
+git clone "git@github.com:Esgrove/Esgrove"
+git clone "git@github.com:Esgrove/fastapi-template"
+git clone "git@github.com:Esgrove/fdo_randomizer"
+git clone "git@github.com:Esgrove/JUCE"
+git clone "git@github.com:Esgrove/othellogame"
+git clone "git@github.com:Esgrove/playlist_formatter"
+git clone "git@github.com:Esgrove/recordpool-dl"
+git clone "git@github.com:Esgrove/rust-axum-example"
+git clone "git@github.com:Esgrove/track-rename"
 
 print_green "Installation done!"
 neofetch
