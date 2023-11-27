@@ -179,6 +179,8 @@ Invoke-CommandOrThrow choco install visualstudio2022community --package-paramete
 #winget install --id Git.Git -e --source winget
 #winget install --id Kitware.CMake -e
 
+winget install -e --id Microsoft.AzureCLI
+
 Update-Path
 
 Write-Output "Choco installs finished, refreshing env variables..."
