@@ -126,7 +126,7 @@ Invoke-CommandOrThrow choco install firefox
 # https://community.chocolatey.org/packages/InnoSetup
 Invoke-CommandOrThrow choco install innosetup
 # https://community.chocolatey.org/packages/python
-Invoke-CommandOrThrow choco install python --version=3.11.4
+Invoke-CommandOrThrow choco install python
 # https://community.chocolatey.org/packages/ccache
 Invoke-CommandOrThrow choco install ccache
 # https://community.chocolatey.org/packages/7zip
@@ -152,7 +152,7 @@ Invoke-CommandOrThrow choco install ffmpeg
 # https://community.chocolatey.org/packages/sublimemerge
 Invoke-CommandOrThrow choco install sublimemerge
 # https://community.chocolatey.org/packages/dotnet-sdk
-Invoke-CommandOrThrow choco install dotnet-sdk --version=7.0.403
+Invoke-CommandOrThrow choco install dotnet-sdk --version=8.0.100
 # https://community.chocolatey.org/packages/Temurin
 Invoke-CommandOrThrow choco install temurin
 # https://community.chocolatey.org/packages/ruby
@@ -176,10 +176,11 @@ Invoke-CommandOrThrow choco install vscode
 Invoke-CommandOrThrow choco install visualstudio2022community --package-parameters '--add Microsoft.VisualStudio.Workload.VCTools;includeRecommended --add Microsoft.VisualStudio.Component.VC.ATL'
 
 # Winget for reference, choco still seems the better choice for now (12/2022)...
-#winget install --id Git.Git -e --source winget
-#winget install --id Kitware.CMake -e
+#winget install -e --id Git.Git --source winget
+#winget install -e --id Kitware.CMake
 
 winget install -e --id Microsoft.AzureCLI
+winget install -e --id Swift.Toolchain
 
 Update-Path
 
