@@ -391,7 +391,12 @@ Thumbs.db" > ~/.gitignore
 # Add alias for python
 echo 'alias python=python3' >> "$SHELL_PROFILE"
 
+# Install Poetry
 pipx install poetry
+
+# Poetry tab completion for Oh My Zsh
+mkdir "$ZSH_CUSTOM/plugins/poetry"
+poetry completions zsh > "$ZSH_CUSTOM/plugins/poetry/_poetry"
 
 print_magenta "Setting up git..."
 git --version

@@ -75,9 +75,10 @@ HIST_STAMPS="dd.mm.yyyy"
 # Add wisely, as too many plugins slow down shell startup.
 
 # z: https://github.com/agkozak/zsh-z
-plugins=(macos z)
+plugins=(macos poetry z)
 
-source $ZSH/oh-my-zsh.sh
+# shellcheck disable=SC1091
+source "$ZSH/oh-my-zsh.sh"
 
 # User configuration
 
