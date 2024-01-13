@@ -96,6 +96,10 @@ while true; do
     kill -0 "$$" || exit
 done 2> /dev/null &
 
+# Fix locale
+sudo locale-gen en_US.UTF-8
+locale -a
+
 # Get rid of Ubuntu Pro adverts
 sudo pro config set apt_news=false
 sudo systemctl disable ubuntu-advantage
