@@ -10,10 +10,10 @@ GIT_NAME="Esgrove"
 GIT_EMAIL="esgrove@outlook.com"
 SSH_KEY="$HOME/.ssh/id_ed25519"
 GPG_KEY="$HOME/esgrove-gpg-wsl-private-key.asc"
-GPG_KEY_ID="2696E274A2E739B7A5B6FB589A95370F12C4825C"
+GPG_KEY_ID=""
 SHELL_PROFILE="$HOME/.profile"
 # Computer ID to use in GitHub
-COMPUTER_ID="$GIT_NAME $(hostnamectl | grep "Static hostname" | awk '{print $3}') WSL $(date +%Y-%m-%d))"
+COMPUTER_ID="$GIT_NAME $(hostnamectl | grep "Static hostname" | awk '{print $3}') WSL $(date +%Y-%m-%d)"
 
 print_bold() {
     printf "\e[1m%s\e[0m\n" "$1"
@@ -49,13 +49,20 @@ press_enter_to_continue() {
 # Function to install or upgrade a package
 install_or_upgrade() {
     if sudo apt list --installed "$1" &> /dev/null; then
+        print_yellow "Updating $1"
         sudo apt upgrade "$1" -y
     else
+        print_yellow "Installing $1"
         sudo apt install "$1" -y
     fi
 }
 
 print_green "Setting up WSL Ubuntu for $GIT_NAME <$GIT_EMAIL>"
+echo "ID: $COMPUTER_ID"
+
+cd ~
+echo "$(whoami) $(pwd)"
+source ~/.profile
 
 # Print info
 hostnamectl
@@ -71,15 +78,15 @@ while true; do
     kill -0 "$$" || exit
 done 2> /dev/null &
 
-# UTF8
-touch "$SHELL_PROFILE"
-if ! grep -q "export LC_ALL=en_US.UTF-8" < "$SHELL_PROFILE"; then
-    echo "Adding 'export LC_ALL=en_US.UTF-8' to $SHELL_PROFILE"
-    echo "export LC_ALL=en_US.UTF-8" >> "$SHELL_PROFILE"
-fi
-if ! grep -q "export LANG=en_US.UTF-8" < "$SHELL_PROFILE"; then
-    echo "Adding 'export LANG=en_US.UTF-8' to $SHELL_PROFILE"
-    echo "export LANG=en_US.UTF-8" >> "$SHELL_PROFILE"
+print_magenta "Setup shell profile..."
+if [ -e wsl_profile.sh ]; then
+    if grep -qF 'alias pirq' ~/.profile; then
+        print_yellow "shell profile already contains configs, skipping..."
+    else
+        tail -n +3 wsl_profile.sh >> ~/.profile
+    fi
+else
+    print_yellow "Missing shell profile 'wsl_profile.sh', skipping"
 fi
 
 # Create developer dir
@@ -95,8 +102,9 @@ install_or_upgrade git-lfs
 install_or_upgrade gnupg
 install_or_upgrade jq
 install_or_upgrade neofetch
-install_or_upgrade pinentry-curses
+install_or_upgrade neofetch
 install_or_upgrade ninja-build
+install_or_upgrade pinentry-curses
 install_or_upgrade python3
 install_or_upgrade python3-pip
 install_or_upgrade pipx
@@ -131,9 +139,13 @@ webdriver-manager
 yt-dlp" > ~/python_packages.txt
 python3 -m pip install -r ~/python_packages.txt
 
-print_magenta "Installing Rust..."
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-source "$HOME/.cargo/env"
+if [ -z "$(command -v rustup)" ]; then
+    print_magenta "Installing Rust..."
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    source "$HOME/.cargo/env"
+else
+    print_yellow "rustup already installed, updating rustc..."
+fi
 rustup --version
 rustup update
 rustc --version
@@ -167,6 +179,7 @@ echo "__pycache__/
 *.user
 *.vspscc
 Thumbs.db" > ~/.gitignore
+cat ~/.gitignore
 
 print_magenta "Installing Poetry..."
 pipx install poetry
@@ -174,7 +187,7 @@ pipx install poetry
 print_magenta "Setting up git..."
 git --version
 git-lfs --version
-git lfs install --system
+sudo git lfs install --system
 
 git config --global advice.detachedHead false
 git config --global core.autocrlf input
@@ -213,15 +226,39 @@ Host *
   IdentityFile $SSH_KEY" >> ~/.ssh/config
 fi
 
-echo "SSH public key:"
-cat "$SSH_KEY.pub"
-echo
-
-print_magenta "Setup shell profile..."
-if [ -e wsl_profile.sh ]; then
-    tail -n +3 wsl_profile.sh >> ~/.profile
+print_magenta "Adding ssh key to GitHub..."
+if [ ! -e "$SSH_KEY.pub" ]; then
+    print_error_and_exit "Public key not found: $SSH_KEY.pub"
 else
-    print_yellow "Missing shell profile 'wsl_profile.sh', skipping"
+    echo "SSH public key:"
+    cat "$SSH_KEY.pub"
 fi
 
-press_enter_to_continue
+print_bold "Create access token for gh and copy-paste here:"
+read -r token
+
+if [ -z "$token" ]; then
+    print_yellow "Empty access token, skipping github cli auth and repo cloning..."
+else
+    export GITHUB_TOKEN=$token
+
+    echo "Adding ssh key with name: $COMPUTER_ID"
+    gh ssh-key add "$SSH_KEY.pub" --title "$COMPUTER_ID"
+
+    print_magenta "Cloning repositories..."
+
+    cd "$HOME/Developer"
+    echo "Cloning to $(pwd)"
+
+    # Note to self: get full list of repos using
+    # > gh repo list --json url | jq -r '.[].url'
+    # get ssh clone urls with:
+    # > for file in $(gh repo list --json nameWithOwner --jq '.[].nameWithOwner'); do echo \"git@github.com:$file\"; done
+    git clone "git@github.com:Esgrove/fastapi-template"
+    git clone "git@github.com:Esgrove/othellogame"
+    git clone "git@github.com:Esgrove/playlist_formatter"
+    git clone "git@github.com:Esgrove/rust-axum-example"
+fi
+
+print_green "Installation done!"
+neofetch
