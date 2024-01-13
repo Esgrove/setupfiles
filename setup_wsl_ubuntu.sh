@@ -125,6 +125,7 @@ install_or_upgrade build-essential
 install_or_upgrade clang-format
 install_or_upgrade clang-tidy
 install_or_upgrade cmake
+install_or_upgrade ccache
 install_or_upgrade default-jdk
 install_or_upgrade ffmpeg
 install_or_upgrade gh
@@ -136,6 +137,8 @@ install_or_upgrade jq
 install_or_upgrade neofetch
 install_or_upgrade neofetch
 install_or_upgrade ninja-build
+install_or_upgrade openssl
+install_or_upgrade libssl-dev
 install_or_upgrade pinentry-curses
 install_or_upgrade pipx
 install_or_upgrade python3
