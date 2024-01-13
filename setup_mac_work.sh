@@ -605,6 +605,13 @@ else
 fi
 
 print_magenta "Cloning repositories..."
+cd "$HOME/Developer"
+echo "Cloning to $(pwd)"
+
+# Note to self: get full list of repos using
+# > gh repo list --json url | jq -r '.[].url'
+# get ssh clone urls with:
+# > for file in $(gh repo list --json nameWithOwner --jq '.[].nameWithOwner'); do echo \"git@github.com:$file\"; done
 git clone "git@github.com:Esgrove/AudioBatch"
 git clone "git@github.com:Esgrove/Esgrove"
 git clone "git@github.com:Esgrove/fastapi-template"

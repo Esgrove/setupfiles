@@ -440,6 +440,9 @@ fi
 print_magenta "Adding ssh key to GitHub..."
 if [ ! -e "$SSH_KEY.pub" ]; then
     print_error_and_exit "Public key not found: $SSH_KEY.pub"
+else
+    echo "SSH public key:"
+    cat "$SSH_KEY.pub"
 fi
 
 # use GitHub CLI if available
@@ -493,6 +496,9 @@ else
 fi
 
 print_magenta "Cloning repositories..."
+cd "$HOME/Developer"
+echo "Cloning to $(pwd)"
+
 # Note to self: get full list of repos using
 # > gh repo list --json url | jq -r '.[].url'
 # get ssh clone urls with:
