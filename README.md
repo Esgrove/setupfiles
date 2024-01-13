@@ -6,14 +6,21 @@ Setup scripts and configs for my computers.
 
 Shell scripts for setting up a new Mac, using [homebrew](https://brew.sh/) as the "package manager".
 
-Shell profile for [oh-my-zsh](https://ohmyz.sh/), which includes my custom shell aliases and functions,
+Shell profile [zshrc.sh](./zshrc.sh) for [oh-my-zsh](https://ohmyz.sh/), which includes my custom shell aliases and functions,
 which should be copied to `~/.zshrc`.
 
 ## Windows
 
 Powershell script for setting up a new Windows machine, using [choco](https://chocolatey.org/) as the "package manager".
 
-Bash profile for Git Bash (for Windows), which should be copied to `~/.bashrc`.
+Bash profile [bashrc.sh](./bashrc.sh) for Git Bash (for Windows),
+which should be copied to `~/.bashrc`.
+
+## Ubuntu (WSL)
+
+Powershell script which in turns runs a shell script to setup Ubuntu for Windows Subsystem for Linux.
+
+Bash profile [wsl_profile.sh](./wsl_profile.sh).
 
 ## Tool configs
 
