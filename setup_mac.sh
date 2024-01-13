@@ -13,12 +13,8 @@ SHELL_PROFILE="$HOME/.zprofile"
 # For example: Esgrove MacBookPro18,1 2022-12-30
 COMPUTER_ID="$GIT_NAME $(sysctl hw.model | awk '{print $2}') $(date +%Y-%m-%d)"
 
-# ANSI colours
-COL_BOLD='\033[1m'
-COL_OFF='\033[0m'
-
 print_bold() {
-    echo -e "${COL_BOLD}${1}${COL_OFF}"
+    printf "\e[1m%s\e[0m\n" "$1"
 }
 
 print_green() {
@@ -26,15 +22,15 @@ print_green() {
 }
 
 print_magenta() {
-    printf "\e[1;49;35m%\e[0m\n" "$1"
+    printf "\e[1;49;35m%s\e[0m\n" "$1"
 }
 
 print_red() {
-    printf "\e[1;49;31m%\e[0m\n" "$1"
+    printf "\e[1;49;31m%s\e[0m\n" "$1"
 }
 
 print_yellow() {
-    printf "\e[1;49;33m%\e[0m\n" "$1"
+    printf "\e[1;49;33m%s\e[0m\n" "$1"
 }
 
 # Print an error and exit
@@ -45,24 +41,24 @@ print_error_and_exit() {
 }
 
 press_enter_to_continue() {
-    read -r -p "Press [Enter] key to continue..."
+    read -r -p "Press [Enter] to continue..."
 }
 
 brew_install_or_upgrade() {
     if brew ls --versions "$1" > /dev/null; then
-        HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade "$1"
+        brew upgrade "$1"
     else
         print_magenta "Installing $1"
-        HOMEBREW_NO_AUTO_UPDATE=1 brew install "$1"
+        brew install "$1"
     fi
 }
 
 brew_cask_install_or_upgrade() {
     if brew ls --versions "$1" > /dev/null; then
-        HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade --cask "$1"
+        brew upgrade --cask "$1"
     else
         print_magenta "Installing $1"
-        HOMEBREW_NO_AUTO_UPDATE=1 brew install --cask "$1"
+        brew install --cask "$1"
     fi
 }
 
@@ -358,7 +354,7 @@ source "$HOME/.cargo/env"
 "$HOME/.cargo/bin/rustup" update
 "$HOME/.cargo/bin/rustc" --version
 
-echo "Creating global gitignore..."
+print_magenta "Creating global gitignore..."
 echo "__pycache__/
 .DS_Store
 .idea/
@@ -391,7 +387,7 @@ Thumbs.db" > ~/.gitignore
 # Add alias for python
 echo 'alias python=python3' >> "$SHELL_PROFILE"
 
-# Install Poetry
+print_magenta "Installing Poetry..."
 pipx install poetry
 
 # Poetry tab completion for Oh My Zsh

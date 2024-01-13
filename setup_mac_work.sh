@@ -13,20 +13,24 @@ SHELL_PROFILE="$HOME/.zprofile"
 # For example: Nitor MacBookPro18,1 2022-12-30
 COMPUTER_ID="Nitor $(sysctl hw.model | awk '{print $2}') $(date +%Y-%m-%d)"
 
+print_bold() {
+    printf "\e[1m%s\e[0m\n" "$1"
+}
+
 print_green() {
     printf "\e[1;49;32m%s\e[0m\n" "$1"
 }
 
 print_magenta() {
-    printf "\e[1;49;35m%\e[0m\n" "$1"
+    printf "\e[1;49;35m%s\e[0m\n" "$1"
 }
 
 print_red() {
-    printf "\e[1;49;31m%\e[0m\n" "$1"
+    printf "\e[1;49;31m%s\e[0m\n" "$1"
 }
 
 print_yellow() {
-    printf "\e[1;49;33m%\e[0m\n" "$1"
+    printf "\e[1;49;33m%s\e[0m\n" "$1"
 }
 
 # Print an error and exit
@@ -418,7 +422,7 @@ yt-dlp" > ~/python_packages.txt
 # Add alias for python
 echo 'alias python=python3' >> "$SHELL_PROFILE"
 
-# Install Poetry
+print_magenta "Installing Poetry..."
 pipx install poetry
 
 # Poetry tab completion for Oh My Zsh
