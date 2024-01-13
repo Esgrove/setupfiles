@@ -56,6 +56,7 @@ install_or_upgrade() {
 }
 
 install_dotnet() {
+    print_yellow "Installing dotnet"
     # https://learn.microsoft.com/en-us/dotnet/core/install/linux-ubuntu#register-the-microsoft-package-repository
 
     # Get Ubuntu version
@@ -67,13 +68,11 @@ install_dotnet() {
     # Install Microsoft signing key and repository
     sudo dpkg -i packages-microsoft-prod.deb
 
-    # Clean up
     rm packages-microsoft-prod.deb
 
-    # Update packages
     sudo apt update
 
-    sudo apt upgrade dotnet-sdk-8.0
+    sudo apt upgrade dotnet-sdk-8.0 -y
 }
 
 print_green "Setting up WSL Ubuntu for $GIT_NAME <$GIT_EMAIL>"
@@ -96,6 +95,10 @@ while true; do
     sleep 60
     kill -0 "$$" || exit
 done 2> /dev/null &
+
+# Get rid of Ubuntu Pro adverts
+sudo pro config set apt_news=false
+sudo systemctl disable ubuntu-advantage
 
 print_magenta "Setup shell profile..."
 if [ -e wsl_profile.sh ]; then
