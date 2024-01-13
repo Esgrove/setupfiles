@@ -385,7 +385,6 @@ coverage
 credstash
 docutils
 faker
-flake8
 grpcio
 grpcio-tools
 isort

@@ -325,7 +325,6 @@ echo "black
 certifi
 click
 colorama
-flake8
 isort
 matplotlib
 numpy
