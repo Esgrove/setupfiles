@@ -49,6 +49,11 @@ alias pynot="python -m pip list --outdated --not-required"
 alias pyout="python -m pip list --outdated"
 alias pyupg="python -m pip list --not-required --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install --upgrade"
 
+# Print message with bold
+print_bold() {
+    printf "\e[1m%s\e[0m\n" "$1"
+}
+
 # Print a message with red color
 print_red() {
     printf "\e[1;49;31m%s\e[0m\n" "$1"
@@ -137,7 +142,7 @@ venv() {
 }
 
 # Run ssh-agent automatically when you open bash.
-# https://docs.github.com/en/authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases?platform=windows
+# https://docs.github.com/en/authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases#auto-launching-ssh-agent-on-git-for-windows
 env=~/.ssh/agent.env
 
 agent_load_env() {
@@ -168,5 +173,3 @@ elif [ "$SSH_AUTH_SOCK" ] && [ $agent_run_state = 1 ]; then
 fi
 
 unset env
-
-export PATH="$PATH:/c/ProgramData/chocolatey/bin/"

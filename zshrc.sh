@@ -170,6 +170,11 @@ alias pynot="python3 -m pip list --outdated --not-required"
 alias pyout="python3 -m pip list --outdated"
 alias pyupg="python3 -m pip list --not-required --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install --upgrade"
 
+# Print message with bold
+print_bold() {
+    printf "\e[1m%s\e[0m\n" "$1"
+}
+
 # Print a message with red color
 print_red() {
     printf "\e[1;49;31m%s\e[0m\n" "$1"
