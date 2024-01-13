@@ -75,6 +75,68 @@ install_dotnet() {
     sudo apt upgrade dotnet-sdk-8.0 -y
 }
 
+install_go() {
+    # "apt install golang-go" is outdated and broken :(
+
+    # Fetch Go versions
+    GO_VERSION=$(curl -s https://go.dev/dl/ | grep -oP -m 1 'go[0-9]+\.[0-9]+(\.[0-9]+)?')
+
+    # Ensure that we got a version number
+    if [ -z "$GO_VERSION" ]; then
+        print_error "Failed to get the latest Go version."
+    else
+        print_bold "Latest Go version: $GO_VERSION"
+    fi
+
+    # Download Go binary
+    wget "https://go.dev/dl/${GO_VERSION}.linux-amd64.tar.gz"
+
+    # Remove any previous installation
+    sudo rm -rf /usr/local/go
+
+    # Extract the downloaded archive
+    sudo tar -C /usr/local -xzf "${GO_VERSION}.linux-amd64.tar.gz"
+
+    # Clean up downloaded tarball
+    rm "${GO_VERSION}.linux-amd64.tar.gz"
+
+    if ! grep -q "export GOROOT=/usr/local/go" < "$SHELL_PROFILE"; then
+        echo "Adding Go variables to path..."
+        # Set up environment variables
+        echo "export GOROOT=/usr/local/go" >> "$SHELL_PROFILE"
+        echo "export GOPATH=$HOME/go" >> "$SHELL_PROFILE"
+        echo "export PATH=\"\$PATH\":/usr/local/go/bin:$GOPATH/bin" >> "$SHELL_PROFILE"
+        source "$HOME/.profile"
+    fi
+
+    # Verify the installation
+    which go
+    go version
+}
+
+install_swift() {
+    SWIFT_VERSION="5.9.2"
+
+    # Download Swift
+    SWIFT_URL="https://download.swift.org/swift-${SWIFT_VERSION}-release/ubuntu2204/swift-${SWIFT_VERSION}-RELEASE/swift-${SWIFT_VERSION}-RELEASE-ubuntu22.04.tar.gz"
+    wget "$SWIFT_URL"
+
+    # Extract Swift
+    tar xzf swift-${SWIFT_VERSION}-RELEASE-ubuntu22.04.tar.gz
+
+    # Move Swift to /usr/local
+    sudo mv swift-${SWIFT_VERSION}-RELEASE-ubuntu22.04 /usr/local/swift
+
+    sudo ln -s /usr/local/swift/usr/bin/swift /usr/bin/swift
+
+    # Clean up downloaded tarball
+    rm swift-${SWIFT_VERSION}-RELEASE-ubuntu22.04.tar.gz
+
+    # Verify the installation
+    which swift
+    swift --version
+}
+
 print_green "Setting up WSL Ubuntu for $GIT_NAME <$GIT_EMAIL>"
 echo "ID: $COMPUTER_ID"
 
@@ -122,10 +184,11 @@ print_magenta "Installing packages..."
 sudo apt update && sudo apt upgrade
 # build-essential: g++ etc...
 install_or_upgrade build-essential
+install_or_upgrade ccache
+install_or_upgrade clang
 install_or_upgrade clang-format
 install_or_upgrade clang-tidy
 install_or_upgrade cmake
-install_or_upgrade ccache
 install_or_upgrade default-jdk
 install_or_upgrade ffmpeg
 install_or_upgrade gh
@@ -134,13 +197,15 @@ install_or_upgrade git-lfs
 install_or_upgrade gnupg
 install_or_upgrade golang-go
 install_or_upgrade jq
+install_or_upgrade libicu-dev
+install_or_upgrade libssl-dev
 install_or_upgrade neofetch
 install_or_upgrade neofetch
 install_or_upgrade ninja-build
 install_or_upgrade openssl
-install_or_upgrade libssl-dev
 install_or_upgrade pinentry-curses
 install_or_upgrade pipx
+install_or_upgrade pkg-config
 install_or_upgrade python3
 install_or_upgrade python3-pip
 install_or_upgrade ripgrep
@@ -148,6 +213,8 @@ install_or_upgrade shellcheck
 install_or_upgrade zsh
 
 install_dotnet
+install_go
+install_swift
 
 print_magenta "Installing Python packages..."
 # Install Python packages
