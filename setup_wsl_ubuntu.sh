@@ -9,8 +9,6 @@ set -eo pipefail
 GIT_NAME="Esgrove"
 GIT_EMAIL="esgrove@outlook.com"
 SSH_KEY="$HOME/.ssh/id_ed25519"
-GPG_KEY="$HOME/esgrove-gpg-wsl-private-key.asc"
-GPG_KEY_ID=""
 SHELL_PROFILE="$HOME/.profile"
 # Computer ID to use in GitHub
 COMPUTER_ID="$GIT_NAME $(hostnamectl | grep "Static hostname" | awk '{print $3}') WSL $(date +%Y-%m-%d)"
@@ -57,12 +55,33 @@ install_or_upgrade() {
     fi
 }
 
+install_dotnet() {
+    # https://learn.microsoft.com/en-us/dotnet/core/install/linux-ubuntu#register-the-microsoft-package-repository
+
+    # Get Ubuntu version
+    repo_version=$(if command -v lsb_release &> /dev/null; then lsb_release -r -s; else grep -oP '(?<=^VERSION_ID=).+' /etc/os-release | tr -d '"'; fi)
+
+    # Download Microsoft signing key and repository
+    wget https://packages.microsoft.com/config/ubuntu/$repo_version/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+
+    # Install Microsoft signing key and repository
+    sudo dpkg -i packages-microsoft-prod.deb
+
+    # Clean up
+    rm packages-microsoft-prod.deb
+
+    # Update packages
+    sudo apt update
+
+    sudo apt upgrade dotnet-sdk-8.0
+}
+
 print_green "Setting up WSL Ubuntu for $GIT_NAME <$GIT_EMAIL>"
 echo "ID: $COMPUTER_ID"
 
-cd ~
+cd "$HOME"
 echo "$(whoami) $(pwd)"
-source ~/.profile
+source "$HOME/.profile"
 
 # Print info
 hostnamectl
@@ -80,13 +99,13 @@ done 2> /dev/null &
 
 print_magenta "Setup shell profile..."
 if [ -e wsl_profile.sh ]; then
-    if grep -qF 'alias pirq' ~/.profile; then
+    if grep -qF 'alias pirq' "$SHELL_PROFILE"; then
         print_yellow "shell profile already contains configs, skipping..."
     else
-        tail -n +3 wsl_profile.sh >> ~/.profile
+        tail -n +3 wsl_profile.sh >> "$SHELL_PROFILE"
     fi
 else
-    print_yellow "Missing shell profile 'wsl_profile.sh', skipping"
+    print_yellow "Missing shell profile 'wsl_profile.sh', skipping..."
 fi
 
 # Create developer dir
@@ -94,23 +113,31 @@ mkdir -p "$HOME/Developer"
 
 print_magenta "Installing packages..."
 sudo apt update && sudo apt upgrade
+# build-essential: g++ etc...
+install_or_upgrade build-essential
+install_or_upgrade clang-format
+install_or_upgrade clang-tidy
 install_or_upgrade cmake
+install_or_upgrade default-jdk
 install_or_upgrade ffmpeg
 install_or_upgrade gh
 install_or_upgrade git
 install_or_upgrade git-lfs
 install_or_upgrade gnupg
+install_or_upgrade golang-go
 install_or_upgrade jq
 install_or_upgrade neofetch
 install_or_upgrade neofetch
 install_or_upgrade ninja-build
 install_or_upgrade pinentry-curses
+install_or_upgrade pipx
 install_or_upgrade python3
 install_or_upgrade python3-pip
-install_or_upgrade pipx
 install_or_upgrade ripgrep
 install_or_upgrade shellcheck
 install_or_upgrade zsh
+
+install_dotnet
 
 print_magenta "Installing Python packages..."
 # Install Python packages
@@ -217,16 +244,17 @@ if [ -e "$SSH_KEY" ]; then
 else
     print_magenta "Creating SSH key..."
     ssh-keygen -t ed25519 -C "$GIT_EMAIL" -f "$SSH_KEY"
-    eval "$(ssh-agent -s)"
-    ssh-add "$SSH_KEY"
     echo "Setting ssh config..."
     echo "
 Host *
   AddKeysToAgent yes
   IdentityFile $SSH_KEY" >> ~/.ssh/config
 fi
+eval "$(ssh-agent -s)"
+ssh-add "$SSH_KEY"
+ssh-add -l
 
-print_magenta "Adding ssh key to GitHub..."
+
 if [ ! -e "$SSH_KEY.pub" ]; then
     print_error_and_exit "Public key not found: $SSH_KEY.pub"
 else
@@ -242,8 +270,22 @@ if [ -z "$token" ]; then
 else
     export GITHUB_TOKEN=$token
 
-    echo "Adding ssh key with name: $COMPUTER_ID"
-    gh ssh-key add "$SSH_KEY.pub" --title "$COMPUTER_ID"
+    github_ssh_keys=$(gh ssh-key list)
+
+    pub_ssh_key=$(awk '{print $2}' < "$SSH_KEY.pub")
+
+    echo "Existing SSH keys:"
+    echo "$github_ssh_keys"
+
+    if echo "$github_ssh_keys" | grep -Fq "$pub_ssh_key"; then
+        print_yellow "SSH key already exists in GitHub..."
+    else
+        print_magenta "Adding ssh key to GitHub..."
+        echo "Using key name: $COMPUTER_ID"
+        if ! gh ssh-key add "$SSH_KEY.pub" --title "$COMPUTER_ID"; then
+            print_error "SSH key not added"
+        fi
+    fi
 
     print_magenta "Cloning repositories..."
 

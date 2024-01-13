@@ -170,10 +170,11 @@ Invoke-CommandOrThrow choco install wiztree
 Invoke-CommandOrThrow choco install vlc
 # https://community.chocolatey.org/packages/vscode
 Invoke-CommandOrThrow choco install vscode
-# https://community.chocolatey.org/packages/visualstudio2022buildtools
-# Invoke-CommandOrThrow choco install visualstudio2022buildtools --package-parameters '--add Microsoft.VisualStudio.Workload.VCTools;includeRecommended --add Microsoft.VisualStudio.Component.VC.ATL'
 # https://community.chocolatey.org/packages/visualstudio2022community
 Invoke-CommandOrThrow choco install visualstudio2022community --package-parameters '--add Microsoft.VisualStudio.Workload.VCTools;includeRecommended --add Microsoft.VisualStudio.Component.VC.ATL'
+# Alternatively just the MSVC build tools without IDE...
+# https://community.chocolatey.org/packages/visualstudio2022buildtools
+# Invoke-CommandOrThrow choco install visualstudio2022buildtools --package-parameters '--add Microsoft.VisualStudio.Workload.VCTools;includeRecommended --add Microsoft.VisualStudio.Component.VC.ATL'
 
 # Winget for reference, choco still seems the better choice for now (12/2022)...
 #winget install -e --id Git.Git --source winget
