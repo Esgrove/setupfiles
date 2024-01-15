@@ -1,6 +1,11 @@
 # PowerShell script to copy files from Windows to WSL and execute setup script in WSL
 
-# Run:
+# First install / update WSL before running this script:
+# wsl --install
+# wsl --update
+# wsl --shutdown
+
+# Run this script:
 # Set-ExecutionPolicy Unrestricted -Scope CurrentUser
 # .\setup_wsl.ps1
 
