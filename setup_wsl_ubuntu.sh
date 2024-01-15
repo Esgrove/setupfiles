@@ -3,9 +3,6 @@ set -eo pipefail
 
 # Setup WSL Ubuntu
 
-# Copy files to Ubuntu
-# cp /mnt/c/Users/YourUsername/Desktop/yourscript.sh ~/
-
 GIT_NAME="Esgrove"
 GIT_EMAIL="esgrove@outlook.com"
 SSH_KEY="$HOME/.ssh/id_ed25519"
@@ -106,12 +103,21 @@ install_go() {
         echo "export GOROOT=/usr/local/go" >> "$SHELL_PROFILE"
         echo "export GOPATH=$HOME/go" >> "$SHELL_PROFILE"
         echo "export PATH=\"\$PATH\":/usr/local/go/bin:$GOPATH/bin" >> "$SHELL_PROFILE"
-        source "$HOME/.profile"
+        source "$SHELL_PROFILE"
     fi
 
     # Verify the installation
     which go
     go version
+}
+
+install_kotlin() {
+    # https://sdkman.io/install
+    curl -s "https://get.sdkman.io" | bash
+    source "$HOME/.sdkman/bin/sdkman-init.sh"
+    sdk version
+    sdk install kotlin
+    sdk install ktlint
 }
 
 install_swift() {
@@ -135,6 +141,20 @@ install_swift() {
     # Verify the installation
     which swift
     swift --version
+}
+
+install_rust() {
+    if [ -z "$(command -v rustup)" ]; then
+        print_magenta "Installing Rust..."
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+        source "$HOME/.cargo/env"
+    else
+        print_yellow "rustup already installed, updating rustc..."
+    fi
+    rustup --version
+    rustup self update
+    rustup update
+    rustc --version
 }
 
 print_green "Setting up WSL Ubuntu for $GIT_NAME <$GIT_EMAIL>"
@@ -174,7 +194,7 @@ if [ -e wsl_profile.sh ]; then
         tail -n +3 wsl_profile.sh >> "$SHELL_PROFILE"
     fi
 else
-    print_yellow "Missing shell profile 'wsl_profile.sh', skipping..."
+    print_error "Missing shell profile 'wsl_profile.sh', skipping..."
 fi
 
 # Create developer dir
@@ -189,17 +209,16 @@ install_or_upgrade clang
 install_or_upgrade clang-format
 install_or_upgrade clang-tidy
 install_or_upgrade cmake
+install_or_upgrade curl
 install_or_upgrade default-jdk
 install_or_upgrade ffmpeg
 install_or_upgrade gh
 install_or_upgrade git
 install_or_upgrade git-lfs
 install_or_upgrade gnupg
-install_or_upgrade golang-go
 install_or_upgrade jq
 install_or_upgrade libicu-dev
 install_or_upgrade libssl-dev
-install_or_upgrade neofetch
 install_or_upgrade neofetch
 install_or_upgrade ninja-build
 install_or_upgrade openssl
@@ -214,10 +233,12 @@ install_or_upgrade zsh
 
 install_dotnet
 install_go
+install_kotlin
 install_swift
+install_rust
 
 print_magenta "Installing Python packages..."
-# Install Python packages
+# Install common Python packages
 python3 --version
 python3 -m pip install --upgrade pip setuptools wheel
 echo "black
@@ -242,17 +263,6 @@ typer[all]
 webdriver-manager
 yt-dlp" > ~/python_packages.txt
 python3 -m pip install -r ~/python_packages.txt
-
-if [ -z "$(command -v rustup)" ]; then
-    print_magenta "Installing Rust..."
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-    source "$HOME/.cargo/env"
-else
-    print_yellow "rustup already installed, updating rustc..."
-fi
-rustup --version
-rustup update
-rustc --version
 
 print_magenta "Creating global gitignore..."
 echo "__pycache__/
@@ -331,7 +341,6 @@ eval "$(ssh-agent -s)"
 ssh-add "$SSH_KEY"
 ssh-add -l
 
-
 if [ ! -e "$SSH_KEY.pub" ]; then
     print_error_and_exit "Public key not found: $SSH_KEY.pub"
 else
@@ -348,7 +357,6 @@ else
     export GITHUB_TOKEN=$token
 
     github_ssh_keys=$(gh ssh-key list)
-
     pub_ssh_key=$(awk '{print $2}' < "$SSH_KEY.pub")
 
     echo "Existing SSH keys:"
