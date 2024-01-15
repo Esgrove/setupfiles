@@ -2,22 +2,22 @@
 # https://docs.rubocop.org/rubocop/cops.html
 
 AllCops:
-    NewCops: enable
+  NewCops: enable
 
 Layout/IndentationWidth:
-    Width: 4
+  Width: 4
 
 Layout/MultilineMethodCallBraceLayout:
-    EnforcedStyle: new_line
+  EnforcedStyle: new_line
 
 Layout/MultilineMethodCallIndentation:
-    EnforcedStyle: indented
+  EnforcedStyle: indented
 
 Layout/MultilineAssignmentLayout:
-    EnforcedStyle: same_line
+  EnforcedStyle: same_line
 
 Layout/EndAlignment:
-    EnforcedStyleAlignWith: variable
+  EnforcedStyleAlignWith: variable
 
 Style/TrailingCommaInArguments:
-    EnforcedStyleForMultiline: comma
+  EnforcedStyleForMultiline: comma
