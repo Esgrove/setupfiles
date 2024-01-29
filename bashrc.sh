@@ -113,6 +113,10 @@ cdx() {
     fi
 }
 
+aiffrename() {
+    find . -type f -name "*.aiff" -print -exec bash -c 'mv "$0" "${0%.aiff}.aif"' {} \;
+}
+
 # Search history
 hist() {
     history | grep "$1"

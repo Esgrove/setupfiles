@@ -225,6 +225,10 @@ act() {
     fi
 }
 
+aiffrename() {
+    find . -type f -name "*.aiff" -print -exec bash -c 'mv "$0" "${0%.aiff}.aif"' {} \;
+}
+
 # Create new Python virtual env
 venv() {
     # try to get venv name from first argument, otherwise default to 'venv'
