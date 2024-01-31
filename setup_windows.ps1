@@ -212,9 +212,11 @@ rustup update
 # https://python-poetry.org/docs/master/#installing-with-the-official-installer
 (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python -
 
+Add-Path "C:\Users\faksu\AppData\Roaming\Python\Scripts"
+
 Write-Host "Installing Python packages..." -ForegroundColor "Yellow"
 python.exe -m pip install --upgrade pip setuptools wheel
-Add-Path "C:\Users\Administrator\AppData\Roaming\Python\Python310\Scripts"
+
 # Write Python requirements file
 New-Item python_packages.txt -Type File -Force -Value @"
 black
@@ -246,6 +248,7 @@ Invoke-CommandOrThrow python.exe -m pip install -r python_packages.txt
 # Verify that Python packages are found
 Update-Path
 black --version
+poetry --version
 
 # Needed for Ruby gems: use Ruby ridk to update the system and install development toolchain
 ridk install 2 3
