@@ -200,6 +200,21 @@ fi
 # Create developer dir
 mkdir -p "$HOME/Developer"
 
+# Use case-insensitive auto-completion
+SETTING="set completion-ignore-case on"
+FILE="$HOME/.inputrc"
+
+if [ ! -f "$FILE" ]; then
+    echo "$SETTING" > "$FILE"
+else
+    if ! grep -q "$SETTING" "$FILE"; then
+        echo "$SETTING" >> "$FILE"
+        echo "Enabled case-insensitive bash completion"
+    fi
+fi
+# Apply the changes to the current session
+bind -f "$FILE"
+
 print_magenta "Installing packages..."
 sudo apt update && sudo apt upgrade
 # build-essential: g++ etc...
