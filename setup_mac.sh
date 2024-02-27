@@ -318,40 +318,25 @@ print_magenta "Finish brewing..."
 brew cleanup -ns
 brew cleanup -s
 
-print_magenta "Installing Python packages..."
-"$(brew --prefix)/bin/python3" --version
-"$(brew --prefix)/bin/python3" -m pip install --upgrade pip setuptools wheel
-echo "black
-certifi
-click
-colorama
-isort
-matplotlib
-numpy
-osascript
-pandas
-pillow
-playwright
-pygments
-pytest
-pyupgrade
-requests
-rich
-ruff
-selenium
-speedtest-cli
-tqdm
-typer[all]
-webdriver-manager
-yt-dlp" > ~/python_packages.txt
-"$(brew --prefix)/bin/python3" -m pip install -r ~/python_packages.txt
-
 print_magenta "Installing Rust..."
 rustup-init -y
 source "$HOME/.cargo/env"
 "$HOME/.cargo/bin/rustup" --version
 "$HOME/.cargo/bin/rustup" update
 "$HOME/.cargo/bin/rustc" --version
+
+print_magenta "Installing Python packages..."
+"$(brew --prefix)/bin/python3" --version
+brew_install_or_upgrade black
+brew_install_or_upgrade isort
+brew_install_or_upgrade rich
+brew_install_or_upgrade ruff
+brew_install_or_upgrade uv
+brew_install_or_upgrade yt-dlp
+
+pipx install poetry
+pipx install pygments
+pipx install pytest
 
 print_magenta "Creating global gitignore..."
 echo "__pycache__/

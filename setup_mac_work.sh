@@ -368,66 +368,6 @@ print_magenta "Installing Xcode..."
 brew robotsandpencils/made/xcodes
 sudo xcodes install --latest
 
-print_magenta "Installing Python packages..."
-"$(brew --prefix)/bin/python3" --version
-"$(brew --prefix)/bin/python3" -m pip install --upgrade pip setuptools wheel
-echo "ansible
-aws-mfa
-beautifulsoup4
-black
-boto3
-certifi
-click
-cmake-format
-cmakelang
-colorama
-coverage
-credstash
-docutils
-faker
-grpcio
-grpcio-tools
-isort
-lxml
-matplotlib
-mypy
-mypy-extensions
-numpy
-osascript
-pandas
-pillow
-playwright
-polars
-protobuf
-pydantic
-pygments
-pytest
-python-Levenshtein
-pyupgrade
-PyYAML
-requests
-rich
-ruff
-scipy
-selenium
-speedtest-cli
-tqdm
-typer[all]
-virtualenv
-webdriver-manager
-yt-dlp" > ~/python_packages.txt
-"$(brew --prefix)/bin/python3" -m pip install -r ~/python_packages.txt
-
-# Add alias for python
-echo 'alias python=python3' >> "$SHELL_PROFILE"
-
-print_magenta "Installing Poetry..."
-pipx install poetry
-
-# Poetry tab completion for Oh My Zsh
-mkdir "$ZSH_CUSTOM/plugins/poetry"
-poetry completions zsh > "$ZSH_CUSTOM/plugins/poetry/_poetry"
-
 if brew ls --versions llvm; then
     # link clang-tidy to path
     ln -s "$(brew --prefix)/opt/llvm/bin/clang-tidy" "$(brew --prefix)/bin/clang-tidy"
@@ -439,6 +379,32 @@ source "$HOME/.cargo/env"
 "$HOME/.cargo/bin/rustup" --version
 "$HOME/.cargo/bin/rustup" update
 "$HOME/.cargo/bin/rustc" --version
+
+print_magenta "Installing Python packages..."
+"$(brew --prefix)/bin/python3" --version
+# Brew now manages the global python environment,
+# and to install system-wide packages, you need to use brew (or pipx)
+brew_install_or_upgrade ansible
+brew_install_or_upgrade black
+brew_install_or_upgrade isort
+brew_install_or_upgrade rich
+brew_install_or_upgrade ruff
+brew_install_or_upgrade uv
+brew_install_or_upgrade yt-dlp
+
+pipx install aws-mfa
+pipx install cmakelang
+pipx install coverage
+pipx install poetry
+pipx install pygments
+pipx install pytest
+
+# Add alias for python
+echo 'alias python=python3' >> "$SHELL_PROFILE"
+
+# Poetry tab completion for Oh My Zsh
+mkdir "$ZSH_CUSTOM/plugins/poetry"
+poetry completions zsh > "$ZSH_CUSTOM/plugins/poetry/_poetry"
 
 print_magenta "Setup PATH..."
 if ! grep -q "$(brew --prefix)/opt/ruby/bin" < "$SHELL_PROFILE"; then
