@@ -170,6 +170,9 @@ alias pynot="python3 -m pip list --outdated --not-required"
 alias pyout="python3 -m pip list --outdated"
 alias pyupg="python3 -m pip list --not-required --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install --upgrade"
 
+# Rust
+alias cargocheck="cargo fmt && cargo clippy --fix --allow-dirty && cargo fmt && cargo build && cargo test"
+
 # Print message with bold
 print_bold() {
     printf "\e[1m%s\e[0m\n" "$1"
@@ -227,6 +230,24 @@ act() {
 
 aiffrename() {
     find . -type f -name "*.aiff" -print -exec bash -c 'mv "$0" "${0%.aiff}.aif"' {} \;
+}
+
+toaif() {
+    local input
+    input=$1
+    if [ -z "$input" ]; then
+        echo "Give audio file path to convert"
+        exit 1
+    fi
+    output="${input%.*}.aif"
+    echo "Converting to: $output"
+    ffmpeg -v error \
+        -n -i "$input" \
+        -codec:a pcm_s16be \
+        -map_metadata 0 \
+        -write_id3v2 1 \
+        -id3v2_version 4 \
+        "$output"
 }
 
 # Create new Python virtual env
