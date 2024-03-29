@@ -326,6 +326,8 @@ brew_install_or_upgrade xcbeautify
 brew_install_or_upgrade zlib
 brew_install_or_upgrade zsh
 
+brew install oven-sh/bun/bun
+
 brew tap hashicorp/tap
 brew_install_or_upgrade hashicorp/tap/terraform
 
