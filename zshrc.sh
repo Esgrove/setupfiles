@@ -75,7 +75,7 @@ HIST_STAMPS="dd.mm.yyyy"
 # Add wisely, as too many plugins slow down shell startup.
 
 # z: https://github.com/agkozak/zsh-z
-plugins=(macos poetry z)
+plugins=(poetry)
 
 # shellcheck disable=SC1091
 source "$ZSH/oh-my-zsh.sh"
@@ -375,6 +375,10 @@ repo_update() {
 # Zip given file
 zipf() {
     zip -r "$1".zip "$1"
+}
+
+tags() {
+    ffprobe -v quiet -print_format json -show_format "$@"
 }
 
 # Go up one or more directories, up to user home

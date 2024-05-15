@@ -52,26 +52,6 @@ install_or_upgrade() {
     fi
 }
 
-install_dotnet() {
-    print_yellow "Installing dotnet"
-    # https://learn.microsoft.com/en-us/dotnet/core/install/linux-ubuntu#register-the-microsoft-package-repository
-
-    # Get Ubuntu version
-    repo_version=$(if command -v lsb_release &> /dev/null; then lsb_release -r -s; else grep -oP '(?<=^VERSION_ID=).+' /etc/os-release | tr -d '"'; fi)
-
-    # Download Microsoft signing key and repository
-    wget https://packages.microsoft.com/config/ubuntu/$repo_version/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-
-    # Install Microsoft signing key and repository
-    sudo dpkg -i packages-microsoft-prod.deb
-
-    rm packages-microsoft-prod.deb
-
-    sudo apt update
-
-    sudo apt upgrade dotnet-sdk-8.0 -y
-}
-
 install_go() {
     # "apt install golang-go" is outdated and broken :(
 
@@ -121,22 +101,22 @@ install_kotlin() {
 }
 
 install_swift() {
-    SWIFT_VERSION="5.9.2"
+    SWIFT_VERSION="5.10"
 
     # Download Swift
     SWIFT_URL="https://download.swift.org/swift-${SWIFT_VERSION}-release/ubuntu2204/swift-${SWIFT_VERSION}-RELEASE/swift-${SWIFT_VERSION}-RELEASE-ubuntu22.04.tar.gz"
     wget "$SWIFT_URL"
 
     # Extract Swift
-    tar xzf swift-${SWIFT_VERSION}-RELEASE-ubuntu22.04.tar.gz
+    tar xzf swift-${SWIFT_VERSION}-RELEASE-ubuntu24.04.tar.gz
 
     # Move Swift to /usr/local
-    sudo mv swift-${SWIFT_VERSION}-RELEASE-ubuntu22.04 /usr/local/swift
+    sudo mv swift-${SWIFT_VERSION}-RELEASE-ubuntu24.04 /usr/local/swift
 
     sudo ln -s /usr/local/swift/usr/bin/swift /usr/bin/swift
 
     # Clean up downloaded tarball
-    rm swift-${SWIFT_VERSION}-RELEASE-ubuntu22.04.tar.gz
+    rm swift-${SWIFT_VERSION}-RELEASE-ubuntu24.04.tar.gz
 
     # Verify the installation
     which swift
@@ -155,6 +135,25 @@ install_rust() {
     rustup self update
     rustup update
     rustc --version
+}
+
+install_docker() {
+    # https://docs.docker.com/desktop/install/linux-install/
+    # Add Docker's official GPG key:
+    sudo apt-get update
+    sudo apt-get install ca-certificates curl
+    sudo install -m 0755 -d /etc/apt/keyrings
+    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+    sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+    # Add the repository to Apt sources:
+    echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    sudo apt-get update
+
+    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 }
 
 print_green "Setting up WSL Ubuntu for $GIT_NAME <$GIT_EMAIL>"
@@ -216,7 +215,7 @@ fi
 bind -f "$FILE"
 
 print_magenta "Installing packages..."
-sudo apt update && sudo apt upgrade
+sudo apt update && sudo apt upgrade -y
 # build-essential: g++ etc...
 install_or_upgrade build-essential
 install_or_upgrade ccache
@@ -246,11 +245,13 @@ install_or_upgrade ripgrep
 install_or_upgrade shellcheck
 install_or_upgrade zsh
 
-install_dotnet
+install_or_upgrade dotnet-sdk-8.0
+
 install_go
 install_kotlin
-install_swift
+#install_swift
 install_rust
+install_docker
 
 print_magenta "Installing Python packages..."
 # Install common Python packages
@@ -398,8 +399,6 @@ else
     # > for file in $(gh repo list --json nameWithOwner --jq '.[].nameWithOwner'); do echo \"git@github.com:$file\"; done
     git clone "git@github.com:Esgrove/fastapi-template"
     git clone "git@github.com:Esgrove/othellogame"
-    git clone "git@github.com:Esgrove/playlist_formatter"
-    git clone "git@github.com:Esgrove/rust-axum-example"
 fi
 
 print_green "Installation done!"

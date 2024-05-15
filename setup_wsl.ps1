@@ -1,6 +1,15 @@
 # PowerShell script to copy files from Windows to WSL and execute setup script in WSL
 
-# First install / update WSL before running this script:
+# See available WSL distributions:
+# wsl --list --verbose
+
+# Set default:
+# wsl --set-default Ubuntu-24.04
+
+# Remove old:
+# wsl --unregister Ubuntu-22.04
+
+# Install / update WSL before running this script:
 # wsl --install
 # wsl --update
 # wsl --shutdown

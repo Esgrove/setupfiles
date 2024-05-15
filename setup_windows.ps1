@@ -183,6 +183,10 @@ Invoke-CommandOrThrow choco install visualstudio2022community --package-paramete
 winget install -e --id Microsoft.AzureCLI
 winget install -e --id Swift.Toolchain
 
+# https://scoop.sh/
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+
 Update-Path
 
 Write-Output "Choco installs finished, refreshing env variables..."
@@ -204,6 +208,9 @@ java -version
 python --version
 rustup --version
 $(7z i)[0..5]
+
+scoop install pipx
+scoop install wget
 
 Write-Host "Installing Rust..." -ForegroundColor "Yellow"
 rustup update
