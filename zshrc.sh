@@ -322,7 +322,7 @@ cdx() {
 
 # remove Dropbox conflicted copies
 conflicted() {
-    find "$HOME/Dropbox/" -path "*(*'s conflicted copy [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]*" -exec rm -f {} \;
+    find "$HOME/Dropbox/" -path "*(*'s conflicted copy [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]*" -print -exec rm -f {} \;
 }
 
 # Eject all disk images
