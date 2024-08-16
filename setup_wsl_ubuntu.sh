@@ -56,7 +56,7 @@ install_go() {
     # "apt install golang-go" is outdated and broken :(
 
     # Fetch Go versions
-    GO_VERSION=$(curl -s https://go.dev/dl/ | grep -oP -m 1 'go[0-9]+\.[0-9]+(\.[0-9]+)?')
+    GO_VERSION="$(curl -s https://go.dev/dl/ | grep -oP -m 1 'go[0-9]+\.[0-9]+(\.[0-9]+)?')"
 
     # Ensure that we got a version number
     if [ -z "$GO_VERSION" ]; then
@@ -97,14 +97,26 @@ install_kotlin() {
     source "$HOME/.sdkman/bin/sdkman-init.sh"
     sdk version
     sdk install kotlin
-    sdk install ktlint
+    sdk install gradle
 }
 
 install_swift() {
-    SWIFT_VERSION="5.10"
+    UBUNTU_OS="ubuntu2404"
+    UBUNTU_VER="ubuntu24.04"
+    SWIFT_VERSION="5.10.1"
+
+    if [ -n "$(command -v swift)" ]; then
+        local EXISTING_SWIFT_VERSION
+        EXISTING_SWIFT_VERSION=$(swift --version | grep -oP 'Swift version \K[0-9]+\.[0-9]+\.[0-9]+')
+        if [ "$EXISTING_SWIFT_VERSION" = "$SWIFT_VERSION" ]; then
+            print_yellow "Swift $SWIFT_VERSION already installed, skipping..."
+            return
+        fi
+    fi
 
     # Download Swift
-    SWIFT_URL="https://download.swift.org/swift-${SWIFT_VERSION}-release/ubuntu2204/swift-${SWIFT_VERSION}-RELEASE/swift-${SWIFT_VERSION}-RELEASE-ubuntu22.04.tar.gz"
+    # https://download.swift.org/swift-5.10.1-release/ubuntu2404/swift-5.10.1-RELEASE/swift-5.10.1-RELEASE-ubuntu24.04.tar.gz
+    SWIFT_URL="https://download.swift.org/swift-${SWIFT_VERSION}-release/${UBUNTU_OS}/swift-${SWIFT_VERSION}-RELEASE/swift-${SWIFT_VERSION}-RELEASE-${UBUNTU_VER}.tar.gz"
     wget "$SWIFT_URL"
 
     # Extract Swift
@@ -116,7 +128,7 @@ install_swift() {
     sudo ln -s /usr/local/swift/usr/bin/swift /usr/bin/swift
 
     # Clean up downloaded tarball
-    rm swift-${SWIFT_VERSION}-RELEASE-ubuntu24.04.tar.gz
+    rm swift-${SWIFT_VERSION}-RELEASE-${UBUNTU_VER}.tar.gz
 
     # Verify the installation
     which swift
@@ -140,8 +152,8 @@ install_rust() {
 install_docker() {
     # https://docs.docker.com/desktop/install/linux-install/
     # Add Docker's official GPG key:
-    sudo apt-get update
-    sudo apt-get install ca-certificates curl
+    sudo apt-get update -y
+    sudo apt-get install -y ca-certificates curl
     sudo install -m 0755 -d /etc/apt/keyrings
     sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
     sudo chmod a+r /etc/apt/keyrings/docker.asc
@@ -151,9 +163,8 @@ install_docker() {
     "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
     $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
     sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    sudo apt-get update
-
-    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    sudo apt-get update -y
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 }
 
 print_green "Setting up WSL Ubuntu for $GIT_NAME <$GIT_EMAIL>"
@@ -216,69 +227,62 @@ bind -f "$FILE"
 
 print_magenta "Installing packages..."
 sudo apt update && sudo apt upgrade -y
-# build-essential: g++ etc...
-install_or_upgrade build-essential
-install_or_upgrade ccache
-install_or_upgrade clang
-install_or_upgrade clang-format
-install_or_upgrade clang-tidy
-install_or_upgrade cmake
-install_or_upgrade curl
-install_or_upgrade default-jdk
-install_or_upgrade ffmpeg
-install_or_upgrade gh
-install_or_upgrade git
-install_or_upgrade git-lfs
-install_or_upgrade gnupg
-install_or_upgrade jq
-install_or_upgrade libicu-dev
-install_or_upgrade libssl-dev
-install_or_upgrade neofetch
-install_or_upgrade ninja-build
-install_or_upgrade openssl
-install_or_upgrade pinentry-curses
-install_or_upgrade pipx
-install_or_upgrade pkg-config
-install_or_upgrade python3
-install_or_upgrade python3-pip
-install_or_upgrade ripgrep
-install_or_upgrade shellcheck
-install_or_upgrade zsh
+sudo apt install -y \
+    build-essential \
+    ccache \
+    clang \
+    clang-format \
+    clang-tidy \
+    cmake \
+    curl \
+    default-jdk \
+    dotnet-sdk-8.0 \
+    ffmpeg \
+    gh \
+    git \
+    git-lfs \
+    gnupg \
+    jq \
+    libicu-dev \
+    libssl-dev \
+    neofetch \
+    ninja-build \
+    openssl \
+    pinentry-curses \
+    pipx \
+    pkg-config \
+    python3 \
+    python3-pip \
+    ripgrep \
+    shellcheck \
+    unzip \
+    zip \
+    zsh
 
-install_or_upgrade dotnet-sdk-8.0
-
-install_go
+#install_go
 install_kotlin
-#install_swift
+install_swift
 install_rust
 install_docker
 
+if ! grep -q "$HOME/.local/bin" < "$SHELL_PROFILE"; then
+    echo "Adding pipx to path..."
+    # Set up environment variables
+    echo "export PATH=\"\$PATH\":$HOME/.local/bin" >> "$SHELL_PROFILE"
+    source "$SHELL_PROFILE"
+fi
+
 print_magenta "Installing Python packages..."
 # Install common Python packages
-python3 --version
-python3 -m pip install --upgrade pip setuptools wheel
-echo "black
-certifi
-click
-colorama
-isort
-matplotlib
-numpy
-pandas
-pillow
-playwright
-pygments
-pytest
-pyupgrade
-requests
-rich
-selenium
-speedtest-cli
-tqdm
-typer[all]
-webdriver-manager
-yt-dlp" > ~/python_packages.txt
-python3 -m pip install -r ~/python_packages.txt
+echo "$(python3 --version) from $(which python3)"
+echo "pipx $(pipx --version) from $(which pipx)"
+
+pipx install poetry
+pipx install pygments
+pipx install pytest
+pipx install ruff
+pipx install uv
+pipx install yt-dlp
 
 print_magenta "Creating global gitignore..."
 echo "__pycache__/
@@ -310,9 +314,6 @@ echo "__pycache__/
 *.vspscc
 Thumbs.db" > ~/.gitignore
 cat ~/.gitignore
-
-print_magenta "Installing Poetry..."
-pipx install poetry
 
 print_magenta "Setting up git..."
 git --version
@@ -364,7 +365,7 @@ else
     cat "$SSH_KEY.pub"
 fi
 
-print_bold "Create access token for gh and copy-paste here:"
+print_bold "Create access token for gh at https://github.com/settings/tokens and copy-paste here:"
 read -r token
 
 if [ -z "$token" ]; then
@@ -397,8 +398,10 @@ else
     # > gh repo list --json url | jq -r '.[].url'
     # get ssh clone urls with:
     # > for file in $(gh repo list --json nameWithOwner --jq '.[].nameWithOwner'); do echo \"git@github.com:$file\"; done
+    git clone "git@github.com:Esgrove/cli-tools"
     git clone "git@github.com:Esgrove/fastapi-template"
     git clone "git@github.com:Esgrove/othellogame"
+    git clone "git@github.com:Esgrove/rust-axum-example"
 fi
 
 print_green "Installation done!"

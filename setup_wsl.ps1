@@ -36,3 +36,5 @@ wsl cp "`"$shell_profile`"" "~/"
 # Run the setup script in WSL
 wsl bash -c "chmod +x ~/setup_wsl_ubuntu.sh"
 wsl bash -c "./setup_wsl_ubuntu.sh"
+
+Read-Host -Prompt "Press Enter to exit"

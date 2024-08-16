@@ -384,15 +384,6 @@ source "$HOME/.cargo/env"
 
 print_magenta "Installing Python packages..."
 "$(brew --prefix)/bin/python3" --version
-# Brew now manages the global python environment,
-# and to install system-wide packages, you need to use brew (or pipx)
-brew_install_or_upgrade ansible
-brew_install_or_upgrade black
-brew_install_or_upgrade isort
-brew_install_or_upgrade rich
-brew_install_or_upgrade ruff
-brew_install_or_upgrade uv
-brew_install_or_upgrade yt-dlp
 
 pipx install aws-mfa
 pipx install cmakelang
@@ -400,6 +391,9 @@ pipx install coverage
 pipx install poetry
 pipx install pygments
 pipx install pytest
+pipx install ruff
+pipx install uv
+pipx install yt-dlp
 
 # Add alias for python
 echo 'alias python=python3' >> "$SHELL_PROFILE"

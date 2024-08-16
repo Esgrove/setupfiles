@@ -327,16 +327,13 @@ source "$HOME/.cargo/env"
 
 print_magenta "Installing Python packages..."
 "$(brew --prefix)/bin/python3" --version
-brew_install_or_upgrade black
-brew_install_or_upgrade isort
-brew_install_or_upgrade rich
-brew_install_or_upgrade ruff
-brew_install_or_upgrade uv
-brew_install_or_upgrade yt-dlp
 
 pipx install poetry
 pipx install pygments
 pipx install pytest
+pipx install ruff
+pipx install uv
+pipx install yt-dlp
 
 print_magenta "Creating global gitignore..."
 echo "__pycache__/
