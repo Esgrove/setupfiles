@@ -283,7 +283,6 @@ brew_install_or_upgrade jq
 brew_install_or_upgrade neofetch
 brew_install_or_upgrade ninja
 brew_install_or_upgrade pinentry-mac
-brew_install_or_upgrade pipx
 brew_install_or_upgrade python
 brew_install_or_upgrade ripgrep
 brew_install_or_upgrade rustup-init
@@ -291,10 +290,10 @@ brew_install_or_upgrade shellcheck
 brew_install_or_upgrade shfmt
 brew_install_or_upgrade speedtest-cli
 brew_install_or_upgrade tree
+brew_install_or_upgrade uv
 brew_install_or_upgrade zsh
 
 print_magenta "Installing apps..."
-brew tap homebrew/cask-fonts
 brew tap homebrew/cask-drivers
 brew_cask_install_or_upgrade ableton-live-suite
 brew_cask_install_or_upgrade dropbox
@@ -327,13 +326,13 @@ source "$HOME/.cargo/env"
 
 print_magenta "Installing Python packages..."
 "$(brew --prefix)/bin/python3" --version
+echo "$(uv --version) from $(which uv)"
 
-pipx install poetry
-pipx install pygments
-pipx install pytest
-pipx install ruff
-pipx install uv
-pipx install yt-dlp
+uv tool install poetry
+uv tool install pygments
+uv tool install pytest
+uv tool install ruff
+uv tool install yt-dlp
 
 print_magenta "Creating global gitignore..."
 echo "__pycache__/
@@ -367,9 +366,6 @@ Thumbs.db" > ~/.gitignore
 
 # Add alias for python
 echo 'alias python=python3' >> "$SHELL_PROFILE"
-
-print_magenta "Installing Poetry..."
-pipx install poetry
 
 # Poetry tab completion for Oh My Zsh
 mkdir "$ZSH_CUSTOM/plugins/poetry"

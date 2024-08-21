@@ -303,7 +303,6 @@ brew_install_or_upgrade node
 brew_install_or_upgrade p7zip
 brew_install_or_upgrade pandoc
 brew_install_or_upgrade pinentry-mac
-brew_install_or_upgrade pipx
 brew_install_or_upgrade portaudio
 brew_install_or_upgrade portmidi
 brew_install_or_upgrade postgresql
@@ -321,6 +320,7 @@ brew_install_or_upgrade sqlite
 brew_install_or_upgrade swiftlint
 brew_install_or_upgrade taglib
 brew_install_or_upgrade tree
+brew_install_or_upgrade uv
 brew_install_or_upgrade wget
 brew_install_or_upgrade xcbeautify
 brew_install_or_upgrade zlib
@@ -332,7 +332,6 @@ brew tap hashicorp/tap
 brew_install_or_upgrade hashicorp/tap/terraform
 
 print_magenta "Installing apps..."
-brew tap homebrew/cask-fonts
 brew tap homebrew/cask-drivers
 brew_cask_install_or_upgrade chromedriver
 brew_cask_install_or_upgrade docker
@@ -384,16 +383,16 @@ source "$HOME/.cargo/env"
 
 print_magenta "Installing Python packages..."
 "$(brew --prefix)/bin/python3" --version
+echo "$(uv --version) from $(which uv)"
 
-pipx install aws-mfa
-pipx install cmakelang
-pipx install coverage
-pipx install poetry
-pipx install pygments
-pipx install pytest
-pipx install ruff
-pipx install uv
-pipx install yt-dlp
+uv tool install aws-mfa
+uv tool install cmakelang
+uv tool install coverage
+uv tool install poetry
+uv tool install pygments
+uv tool install pytest
+uv tool install ruff
+uv tool install yt-dlp
 
 # Add alias for python
 echo 'alias python=python3' >> "$SHELL_PROFILE"

@@ -209,53 +209,24 @@ python --version
 rustup --version
 $(7z i)[0..5]
 
-scoop install pipx
 scoop install wget
+
+powershell -c "irm https://astral.sh/uv/0.3.0/install.ps1 | iex"
 
 Write-Host "Installing Rust..." -ForegroundColor "Yellow"
 rustup update
-
-# Install Poetry
-# https://python-poetry.org/docs/master/#installing-with-the-official-installer
-(Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python -
 
 Add-Path "C:\Users\faksu\AppData\Roaming\Python\Scripts"
 
 Write-Host "Installing Python packages..." -ForegroundColor "Yellow"
 python.exe -m pip install --upgrade pip setuptools wheel
 
-# Write Python requirements file
-New-Item python_packages.txt -Type File -Force -Value @"
-black
-certifi
-click
-colorama
-fastapi[all]
-isort
-matplotlib
-numpy
-pandas
-pillow
-playwright
-psutil
-pygments
-pytest
-pyupgrade
-requests
-rich
-ruff
-selenium
-speedtest-cli
-tqdm
-typer[all]
-webdriver-manager
-yt-dlp
-"@
-Invoke-CommandOrThrow python.exe -m pip install -r python_packages.txt
-# Verify that Python packages are found
-Update-Path
-black --version
-poetry --version
+# uv install python packages
+uv tool install poetry
+uv tool install pygments
+uv tool install pytest
+uv tool install ruff
+uv tool install yt-dlp
 
 # Needed for Ruby gems: use Ruby ridk to update the system and install development toolchain
 ridk install 2 3

@@ -160,9 +160,9 @@ install_docker() {
 
     # Add the repository to Apt sources:
     echo \
-    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" |
+        sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     sudo apt-get update -y
     sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 }
@@ -249,7 +249,6 @@ sudo apt install -y \
     ninja-build \
     openssl \
     pinentry-curses \
-    pipx \
     pkg-config \
     python3 \
     python3-pip \
@@ -265,9 +264,11 @@ install_swift
 install_rust
 install_docker
 
+echo "Installing uv..."
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
 if ! grep -q "$HOME/.local/bin" < "$SHELL_PROFILE"; then
-    echo "Adding pipx to path..."
-    # Set up environment variables
+    echo "Adding .local/bin to path..."
     echo "export PATH=\"\$PATH\":$HOME/.local/bin" >> "$SHELL_PROFILE"
     source "$SHELL_PROFILE"
 fi
@@ -275,14 +276,12 @@ fi
 print_magenta "Installing Python packages..."
 # Install common Python packages
 echo "$(python3 --version) from $(which python3)"
-echo "pipx $(pipx --version) from $(which pipx)"
+echo "$(uv --version) from $(which uv)"
 
-pipx install poetry
-pipx install pygments
-pipx install pytest
-pipx install ruff
-pipx install uv
-pipx install yt-dlp
+uv tool install poetry
+uv tool install pytest
+uv tool install ruff
+uv tool install yt-dlp
 
 print_magenta "Creating global gitignore..."
 echo "__pycache__/
