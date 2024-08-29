@@ -338,38 +338,71 @@ hist() {
 # Update all git repos under ~/Developer or given root path
 repo_update() {
     local root="$HOME/Developer"
+    local cwd=$(pwd)
     if [ -n "$1" ]; then
         root="$(readlink -f "$1")"
     fi
-    pushd "$root" > /dev/null || print_error_and_exit "Failed to cd to: $root"
+    cd "$root" || print_error_and_exit "Failed to cd to: $root"
     # sort directories
-    for directory in $(find ./* -type d -maxdepth 0 | sort -f | xargs); do
+    for directory in $(find "$(pwd)"/* -type d -maxdepth 0 | sort -f | xargs); do
         print_magenta "Updating $(basename "$directory")"
-        pushd "$directory" > /dev/null || :
+        cd "$directory"
         if ! git rev-parse --git-dir > /dev/null 2>&1; then
             print_yellow "Not a git repository, skipping..."
-            popd > /dev/null || :
             continue
         fi
         git fetch --jobs=8 --all --prune --tags --prune-tags
         git status
         if git diff --quiet && git diff --cached --quiet; then
             branch=$(git branch --show-current)
+            print_yellow "Current branch: $branch"
+            git pull --rebase
             if [ -n "$(git branch --quiet --list master)" ] && [ "$branch" != "master" ]; then
+                print_yellow "Switching to master"
                 git switch master
             elif [ -n "$(git branch --quiet --list main)" ] && [ "$branch" != "main" ]; then
+                print_yellow "Switching to main"
                 git switch main
             fi
             git pull --rebase
+            if [ -n "$(git branch --quiet --list dev)" ] && [ "$branch" != "dev" ]; then
+                git switch dev
+                git pull --rebase
+            fi
             if [ "$(git branch --show-current)" != "$branch" ]; then
+                print_yellow "Switching back to: $branch"
                 git switch "$branch"
             fi
         else
             print_yellow "Uncommited changes, skipping pull..."
         fi
-        popd > /dev/null || :
+        if [ -e .pre-commit-config.yaml ]; then
+            pre-commit autoupdate
+        fi
+        # Find Cargo.toml in the current directory or one level deeper
+        for dir in $(find "$directory" -maxdepth 2 -type f -name Cargo.toml -exec dirname {} \;); do
+            cd "$dir"
+            if [ -e Cargo.toml ]; then
+                echo "Updating Rust dependencies in $(pwd)"
+                cargo clean
+                cargo update
+            fi
+        done
+        cd "$directory"
+        # Find pyproject.toml in the current directory or one level deeper
+        for dir in $(find "$directory" -maxdepth 2 -type f -name pyproject.toml -exec dirname {} \;); do
+            cd "$dir" > /dev/null
+            if poetry check > /dev/null 2>&1; then
+                echo "Updating Python dependencies in $(pwd)"
+                poetry update
+            fi
+        done
+        cd "$directory"
+        if [ -n "$(git status --porcelain)" ]; then
+            smerge "$directory"
+        fi
     done
-    popd > /dev/null || :
+    cd "$cwd"
 }
 
 # Zip given file
