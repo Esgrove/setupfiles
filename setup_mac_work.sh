@@ -477,6 +477,7 @@ git config --global core.autocrlf input
 git config --global core.editor nano
 git config --global core.excludesfile ~/.gitignore
 git config --global core.pager 'less -+-R -FRX --mouse'
+git config --global credential.helper osxkeychain
 git config --global fetch.parallel 0
 git config --global fetch.prune true
 git config --global fetch.prunetags true
