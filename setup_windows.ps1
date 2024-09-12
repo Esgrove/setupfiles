@@ -113,63 +113,8 @@ Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://com
 choco --version
 choco feature enable -n allowGlobalConfirmation
 
-# https://community.chocolatey.org/packages/git
-Invoke-CommandOrThrow choco install git
-# https://community.chocolatey.org/packages/gh
-Invoke-CommandOrThrow choco install gh
-# https://community.chocolatey.org/packages/cmake
-Invoke-CommandOrThrow choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
-# https://community.chocolatey.org/packages/GoogleChrome
-Invoke-CommandOrThrow choco install googlechrome
-# https://community.chocolatey.org/packages/Firefox
-Invoke-CommandOrThrow choco install firefox
 # https://community.chocolatey.org/packages/InnoSetup
 Invoke-CommandOrThrow choco install innosetup
-# https://community.chocolatey.org/packages/python
-Invoke-CommandOrThrow choco install python
-# https://community.chocolatey.org/packages/ccache
-Invoke-CommandOrThrow choco install ccache
-# https://community.chocolatey.org/packages/7zip
-Invoke-CommandOrThrow choco install 7zip
-# https://community.chocolatey.org/packages/ninja
-Invoke-CommandOrThrow choco install ninja
-# https://community.chocolatey.org/packages/jq
-Invoke-CommandOrThrow choco install jq
-# https://community.chocolatey.org/packages/ripgrep
-Invoke-CommandOrThrow choco install ripgrep
-# https://community.chocolatey.org/packages/shellcheck
-Invoke-CommandOrThrow choco install shellcheck
-# https://community.chocolatey.org/packages/shfmt/
-Invoke-CommandOrThrow choco install shfmt
-# https://community.chocolatey.org/packages/gradle
-Invoke-CommandOrThrow choco install gradle
-# https://community.chocolatey.org/packages/openssl
-Invoke-CommandOrThrow choco install openssl
-# https://community.chocolatey.org/packages/Ghostscript
-Invoke-CommandOrThrow choco install ghostscript
-# https://community.chocolatey.org/packages/ffmpeg
-Invoke-CommandOrThrow choco install ffmpeg
-# https://community.chocolatey.org/packages/sublimemerge
-Invoke-CommandOrThrow choco install sublimemerge
-# https://community.chocolatey.org/packages/dotnet-sdk
-Invoke-CommandOrThrow choco install dotnet-sdk --version=8.0.100
-# https://community.chocolatey.org/packages/Temurin
-Invoke-CommandOrThrow choco install temurin
-# https://community.chocolatey.org/packages/ruby
-Invoke-CommandOrThrow choco install ruby
-# Needed for Ruby gems
-# https://community.chocolatey.org/packages/msys2
-Invoke-CommandOrThrow choco install msys2 --params "/NoUpdate"
-# https://community.chocolatey.org/packages/rustup.install
-Invoke-CommandOrThrow choco install rustup.install
-# https://community.chocolatey.org/packages/golang
-Invoke-CommandOrThrow choco install golang
-# https://community.chocolatey.org/packages/wiztree
-Invoke-CommandOrThrow choco install wiztree
-# https://community.chocolatey.org/packages/vlc
-Invoke-CommandOrThrow choco install vlc
-# https://community.chocolatey.org/packages/vscode
-Invoke-CommandOrThrow choco install vscode
 # https://community.chocolatey.org/packages/visualstudio2022community
 Invoke-CommandOrThrow choco install visualstudio2022community --package-parameters '--add Microsoft.VisualStudio.Workload.VCTools;includeRecommended --add Microsoft.VisualStudio.Component.VC.ATL'
 # Alternatively just the MSVC build tools without IDE...
@@ -188,6 +133,42 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 
 Update-Path
+
+scoop install 7zip
+scoop install ccache
+scoop install cmake
+scoop install dotnet-sdk
+scoop install ffmpeg
+scoop install gh
+scoop install ghostscript
+scoop install git
+scoop install go
+scoop install gradle
+scoop install gradle
+scoop install jq
+scoop install ninja
+scoop install openssl
+scoop install python
+scoop install ripgrep
+scoop install rustup
+scoop install shellcheck
+scoop install shfmt
+scoop install wget
+
+scoop bucket add extras
+scoop install extras/firefox
+scoop install extras/googlechrome
+scoop install extras/jetbrains-toolbox
+scoop install extras/sublime-merge
+scoop install extras/vlc
+scoop install extras/vscode
+scoop install extras/wiztree
+
+scoop bucket add java
+scoop install java/temurin-jdk
+
+scoop bucket add nerd-fonts
+scoop install nerd-fonts/JetBrains-Mono
 
 Write-Output "Choco installs finished, refreshing env variables..."
 # Make `refreshenv` available right away, by defining the $env:ChocolateyInstall
@@ -208,8 +189,6 @@ java -version
 python --version
 rustup --version
 $(7z i)[0..5]
-
-scoop install wget
 
 powershell -c "irm https://astral.sh/uv/0.3.0/install.ps1 | iex"
 
