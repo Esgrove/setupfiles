@@ -278,6 +278,7 @@ brew_install_or_upgrade ccache
 brew_install_or_upgrade clang-format
 brew_install_or_upgrade cmake
 brew_install_or_upgrade coreutils
+brew_install_or_upgrade deno
 brew_install_or_upgrade docker
 brew_install_or_upgrade docker-credential-helper-ecr
 brew_install_or_upgrade fastlane
@@ -300,6 +301,7 @@ brew_install_or_upgrade lua
 brew_install_or_upgrade neofetch
 brew_install_or_upgrade ninja
 brew_install_or_upgrade node
+brew_install_or_upgrade oven-sh/bun/bun
 brew_install_or_upgrade p7zip
 brew_install_or_upgrade pandoc
 brew_install_or_upgrade pinentry-mac
@@ -326,7 +328,14 @@ brew_install_or_upgrade xcbeautify
 brew_install_or_upgrade zlib
 brew_install_or_upgrade zsh
 
-brew install oven-sh/bun/bun
+# https://github.com/sharkdp/bat
+brew_install_or_upgrade bat
+# https://github.com/sharkdp/fd
+brew_install_or_upgrade fd
+# https://github.com/junegunn/fzf
+brew_install_or_upgrade fzf
+# https://github.com/sharkdp/hyperfine
+brew_install_or_upgrade hyperfine
 
 brew tap hashicorp/tap
 brew_install_or_upgrade hashicorp/tap/terraform

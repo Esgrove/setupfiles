@@ -134,7 +134,7 @@ alias reup=repo_update
 
 # general
 alias c='clear'
-alias cleanDS="find . -type f -name '*.DS_Store' -ls -delete"
+alias cleanDS="find . -type f -name '*.DS_Store' -print -delete"
 alias calendar="cal -y || python -m calendar"
 alias ncalendar="ncal -wy -s FI"
 alias dev="cd ~/Developer && ll"
@@ -154,10 +154,10 @@ alias xdir='open ~/Library/Developer/Xcode/DerivedData'
 alias ytd="yt-dlp --extract-audio --audio-format wav"
 
 # move files out of subdirectiories
-alias nosubdirs="find . -type f -mindepth 2 -exec mv -i -- {} . \;"
+alias nosubdirs="find . -mindepth 2 -type f -print -exec mv -i -- {} . \;"
 
 # remove all empty folders recursively
-alias delempty="find . -depth -mindepth 1 -type d -empty -exec rmdir {} \;"
+alias delempty="find . -depth -mindepth 1 -type d -empty -print -exec rmdir {} \;"
 
 # Python
 alias pirq="python3 -m pip install -r requirements.txt"
@@ -228,6 +228,14 @@ act() {
     fi
 }
 
+# Create new Python virtual env
+venv() {
+    # try to get venv name from first argument, otherwise default to 'venv'
+    local NAME=${1:-venv}
+    python3 -m venv --clear "$HOME/venv/$NAME"
+    source "$HOME/venv/$NAME/bin/activate"
+}
+
 aiffrename() {
     find . -type f -name "*.aiff" -print -exec bash -c 'mv "$0" "${0%.aiff}.aif"' {} \;
 }
@@ -248,14 +256,6 @@ toaif() {
         -write_id3v2 1 \
         -id3v2_version 4 \
         "$output"
-}
-
-# Create new Python virtual env
-venv() {
-    # try to get venv name from first argument, otherwise default to 'venv'
-    local NAME=${1:-venv}
-    python3 -m venv --clear "$HOME/venv/$NAME"
-    source "$HOME/venv/$NAME/bin/activate"
 }
 
 brew_install_or_upgrade() {

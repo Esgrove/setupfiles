@@ -293,6 +293,13 @@ brew_install_or_upgrade tree
 brew_install_or_upgrade uv
 brew_install_or_upgrade zsh
 
+# https://github.com/sharkdp/bat
+brew_install_or_upgrade bat
+# https://github.com/sharkdp/fd
+brew_install_or_upgrade fd
+# https://github.com/junegunn/fzf
+brew_install_or_upgrade fzf
+
 print_magenta "Installing apps..."
 brew tap homebrew/cask-drivers
 brew_cask_install_or_upgrade ableton-live-suite
