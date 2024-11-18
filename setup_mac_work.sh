@@ -277,104 +277,113 @@ mkdir -p "$HOME/.config
 
 print_magenta "Installing tools and libraries..."
 brew tap hashicorp/tap
-brew_install_or_upgrade aria2
-brew_install_or_upgrade awscli
-brew_install_or_upgrade azure-cli
-brew_install_or_upgrade bat  # https://github.com/sharkdp/bat
-brew_install_or_upgrade boost
-brew_install_or_upgrade brotli
-brew_install_or_upgrade bun
-brew_install_or_upgrade cargo-lambda
-brew_install_or_upgrade cargo-nextest
-brew_install_or_upgrade ccache
-brew_install_or_upgrade checkov
-brew_install_or_upgrade clang-format
-brew_install_or_upgrade clojure
-brew_install_or_upgrade cmake
-brew_install_or_upgrade cmake-docs
-brew_install_or_upgrade coreutils
-brew_install_or_upgrade deno
-brew_install_or_upgrade docker
-brew_install_or_upgrade docker-completion
-brew_install_or_upgrade docker-credential-helper-ecr
-brew_install_or_upgrade erdtree
-brew_install_or_upgrade fastlane
-brew_install_or_upgrade fd   # https://github.com/sharkdp/fd
-brew_install_or_upgrade ffmpeg
-brew_install_or_upgrade flac
-brew_install_or_upgrade fmt
-brew_install_or_upgrade fzf  # https://github.com/junegunn/fzf
-brew_install_or_upgrade gh
-brew_install_or_upgrade ghc
-brew_install_or_upgrade ghostscript
-brew_install_or_upgrade git
-brew_install_or_upgrade git-lfs
-brew_install_or_upgrade gnupg
-brew_install_or_upgrade go
-brew_install_or_upgrade golangci-lint
-brew_install_or_upgrade gradle
-brew_install_or_upgrade groovy
-brew_install_or_upgrade gti
-brew_install_or_upgrade harfbuzz
-brew_install_or_upgrade helm
-brew_install_or_upgrade htop
-brew_install_or_upgrade hyperfine  # https://github.com/sharkdp/hyperfine
-brew_install_or_upgrade imagemagick
-brew_install_or_upgrade jemalloc
-brew_install_or_upgrade jq
-brew_install_or_upgrade julia
-brew_install_or_upgrade kotlin
-brew_install_or_upgrade ktlint
-brew_install_or_upgrade kubernetes-cli
-brew_install_or_upgrade latexindent
-brew_install_or_upgrade leiningen
-brew_install_or_upgrade llvm
-brew_install_or_upgrade localstack-cli
-brew_install_or_upgrade lua
-brew_install_or_upgrade meson
-brew_install_or_upgrade minikube
-brew_install_or_upgrade nghttp2
-brew_install_or_upgrade ninja
-brew_install_or_upgrade node
-brew_install_or_upgrade openssl@3
-brew_install_or_upgrade p7zip
-brew_install_or_upgrade pandoc
-brew_install_or_upgrade perl
-brew_install_or_upgrade pillow
-brew_install_or_upgrade pinentry-mac
-brew_install_or_upgrade pkgconf
-brew_install_or_upgrade pnpm
-brew_install_or_upgrade postgresql
-brew_install_or_upgrade pre-commit
-brew_install_or_upgrade protobuf
-brew_install_or_upgrade python
-brew_install_or_upgrade python@3.11
-brew_install_or_upgrade python@3.12
-brew_install_or_upgrade python@3.13
-brew_install_or_upgrade python@3.9
-brew_install_or_upgrade qt
-brew_install_or_upgrade r
-brew_install_or_upgrade ripgrep
-brew_install_or_upgrade ruby
-brew_install_or_upgrade rustup
-brew_install_or_upgrade sccache
-brew_install_or_upgrade shellcheck
-brew_install_or_upgrade shfmt
-brew_install_or_upgrade sqlite
-brew_install_or_upgrade swiftformat
-brew_install_or_upgrade swiftlint
-brew_install_or_upgrade taglib
-brew_install_or_upgrade terraform
-brew_install_or_upgrade tflint
-brew_install_or_upgrade tree
-brew_install_or_upgrade typst
+brew tap oven-sh/bun
+
+brew_install_or_upgrade autoconf
+brew_install_or_upgrade automake
+brew_install_or_upgrade gcc
+brew_install_or_upgrade git                # https://github.com/git/git
+brew_install_or_upgrade git-lfs            # https://github.com/git-lfs/git-lfs
+brew_install_or_upgrade jemalloc           # https://github.com/jemalloc/jemalloc
+brew_install_or_upgrade llvm               # https://github.com/llvm/llvm-project
+brew_install_or_upgrade pkgconf            # https://github.com/pkgconf/pkgconf
 brew_install_or_upgrade wget
-brew_install_or_upgrade wrk
-brew_install_or_upgrade xcbeautify
-brew_install_or_upgrade yarn
-brew_install_or_upgrade yazi
-brew_install_or_upgrade zig
-brew_install_or_upgrade zsh
+brew_install_or_upgrade zsh                # https://github.com/zsh-users/zsh
+
+# Libraries
+brew_install_or_upgrade flac               # https://github.com/xiph/flac
+brew_install_or_upgrade fmt                # https://github.com/fmtlib/fmt
+brew_install_or_upgrade openssl@3
+brew_install_or_upgrade qt                 # https://github.com/qt/qtbase
+
+# Programming languages and compilers
+brew_install_or_upgrade clojure            # https://github.com/clojure/clojure
+brew_install_or_upgrade ghc                # https://gitlab.haskell.org/ghc/ghc
+brew_install_or_upgrade go                 # https://github.com/golang/go
+brew_install_or_upgrade groovy             # https://github.com/apache/groovy
+brew_install_or_upgrade julia              # https://github.com/JuliaLang/julia
+brew_install_or_upgrade kotlin             # https://github.com/JetBrains/kotlin
+brew_install_or_upgrade lua                # https://github.com/lua/lua
+brew_install_or_upgrade protobuf           # https://github.com/protocolbuffers/protobuf
+brew_install_or_upgrade python             # https://github.com/python/cpython
+brew_install_or_upgrade python@3.11        # https://github.com/python/cpython
+brew_install_or_upgrade python@3.12        # https://github.com/python/cpython
+brew_install_or_upgrade python@3.13        # https://github.com/python/cpython
+brew_install_or_upgrade python@3.9         # https://github.com/python/cpython
+brew_install_or_upgrade ruby               # https://github.com/ruby/ruby
+brew_install_or_upgrade rustup             # https://github.com/rust-lang/rustup
+brew_install_or_upgrade zig                # https://github.com/ziglang/zig
+
+# Runtimes
+brew_install_or_upgrade bun                # https://github.com/oven-sh/bun
+brew_install_or_upgrade deno               # https://github.com/denoland/deno
+brew_install_or_upgrade node               # https://github.com/nodejs/node
+brew_cask_install_or_upgrade dotnet-sdk    # https://github.com/dotnet/sdk
+brew_cask_install_or_upgrade temurin       # https://adoptium.net
+
+# Managers and build tools
+brew_install_or_upgrade gradle             # https://github.com/gradle/gradle
+brew_install_or_upgrade leiningen          # https://github.com/technomancy/leiningen
+brew_install_or_upgrade pnpm               # https://github.com/pnpm/pnpm
+brew_install_or_upgrade cmake              # https://github.com/Kitware/CMake
+brew_install_or_upgrade meson              # https://github.com/mesonbuild/meson
+brew_install_or_upgrade ninja              # https://github.com/ninja-build/ninja
+
+# Databases
+brew_install_or_upgrade postgresql         # https://github.com/postgres/postgres
+brew_install_or_upgrade sqlite             # https://github.com/sqlite/sqlite
+
+# CLI tools etc
+brew_install_or_upgrade aria2              # https://github.com/aria2/aria2
+brew_install_or_upgrade awscli             # https://github.com/aws/aws-cli
+brew_install_or_upgrade azure-cli          # https://github.com/Azure/azure-cli
+brew_install_or_upgrade bat                # https://github.com/sharkdp/bat
+brew_install_or_upgrade cargo-lambda       # https://github.com/cargo-lambda/cargo-lambda
+brew_install_or_upgrade cargo-nextest      # https://github.com/nextest-rs/nextest
+brew_install_or_upgrade ccache             # https://github.com/ccache/ccache
+brew_install_or_upgrade checkov            # https://github.com/bridgecrewio/checkov
+brew_install_or_upgrade clang-format       # https://github.com/llvm/llvm-project
+brew_install_or_upgrade coreutils          # https://github.com/coreutils/coreutils
+brew_install_or_upgrade erdtree            # https://github.com/solidiquis/erdtree
+brew_install_or_upgrade fastlane           # https://github.com/fastlane/fastlane
+brew_install_or_upgrade fd                 # https://github.com/sharkdp/fd
+brew_install_or_upgrade ffmpeg             # https://github.com/FFmpeg/FFmpeg
+brew_install_or_upgrade fzf                # https://github.com/junegunn/fzf
+brew_install_or_upgrade gh                 # https://github.com/cli/cli
+brew_install_or_upgrade ghostscript        # https://www.ghostscript.com
+brew_install_or_upgrade gnupg              # https://github.com/gpg/gnupg
+brew_install_or_upgrade golangci-lint      # https://github.com/golangci/golangci-lint
+brew_install_or_upgrade gti                # https://github.com/rwos/gti
+brew_install_or_upgrade harfbuzz           # https://github.com/harfbuzz/harfbuzz
+brew_install_or_upgrade helm               # https://github.com/helm/helm
+brew_install_or_upgrade htop               # https://github.com/htop-dev/htop
+brew_install_or_upgrade hyperfine          # https://github.com/sharkdp/hyperfine
+brew_install_or_upgrade imagemagick        # https://github.com/ImageMagick/ImageMagick
+brew_install_or_upgrade jq                 # https://github.com/jqlang/jq
+brew_install_or_upgrade ktlint             # https://github.com/pinterest/ktlint
+brew_install_or_upgrade kubernetes-cli     # https://github.com/kubernetes/kubectl
+brew_install_or_upgrade localstack-cli     # https://github.com/localstack/localstack
+brew_install_or_upgrade minikube           # https://github.com/kubernetes/minikube
+brew_install_or_upgrade nghttp2            # https://github.com/nghttp2/nghttp2
+brew_install_or_upgrade pandoc             # https://github.com/jgm/pandoc
+brew_install_or_upgrade pinentry-mac       # https://github.com/GPGTools/pinentry-mac
+brew_install_or_upgrade pre-commit         # https://github.com/pre-commit/pre-commit
+brew_install_or_upgrade ripgrep            # https://github.com/BurntSushi/ripgrep
+brew_install_or_upgrade sccache            # https://github.com/mozilla/sccache
+brew_install_or_upgrade shellcheck         # https://github.com/koalaman/shellcheck
+brew_install_or_upgrade shfmt              # https://github.com/mvdan/sh
+brew_install_or_upgrade swiftformat        # https://github.com/nicklockwood/SwiftFormat
+brew_install_or_upgrade swiftlint          # https://github.com/realm/SwiftLint
+brew_install_or_upgrade taglib             # https://github.com/taglib/taglib
+brew_install_or_upgrade terraform          # https://github.com/hashicorp/terraform
+brew_install_or_upgrade tex-fmt            # https://github.com/WGUNDERWOOD/tex-fmt
+brew_install_or_upgrade tflint             # https://github.com/terraform-linters/tflint
+brew_install_or_upgrade tree
+brew_install_or_upgrade typst              # https://github.com/typst/typst
+brew_install_or_upgrade wrk                # https://github.com/wg/wrk
+brew_install_or_upgrade xcbeautify         # https://github.com/thii/xcbeautify
+brew_install_or_upgrade yarn               # https://github.com/yarnpkg/yarn
+brew_install_or_upgrade yazi               # https://github.com/sxyazi/yazi
 
 print_magenta "Installing apps..."
 brew_cask_install_or_upgrade affinity-designer
@@ -383,7 +392,6 @@ brew_cask_install_or_upgrade affinity-publisher
 brew_cask_install_or_upgrade chatgpt
 brew_cask_install_or_upgrade discord
 brew_cask_install_or_upgrade docker
-brew_cask_install_or_upgrade dotnet-sdk
 brew_cask_install_or_upgrade dropbox
 brew_cask_install_or_upgrade firefox
 brew_cask_install_or_upgrade google-chrome
@@ -404,7 +412,6 @@ brew_cask_install_or_upgrade slack-cli
 brew_cask_install_or_upgrade spotify
 brew_cask_install_or_upgrade sublime-merge
 brew_cask_install_or_upgrade suspicious-package
-brew_cask_install_or_upgrade temurin
 brew_cask_install_or_upgrade tg-pro
 brew_cask_install_or_upgrade visual-studio-code
 brew_cask_install_or_upgrade vlc
@@ -435,7 +442,7 @@ source "$HOME/.cargo/env"
 "$HOME/.cargo/bin/rustup" update
 
 print_magenta "Install Rust packages..."
-cargo install cargo-tarpaulin
+cargo install cargo-tarpaulin                                   # https://github.com/xd009642/tarpaulin
 cargo install cross --git https://github.com/cross-rs/cross
 cargo install nitor-vault
 
@@ -454,9 +461,9 @@ uv tool install pytest
 uv tool install ruff
 uv tool install yt-dlp
 
-# Poetry tab completion for Oh My Zsh
-mkdir "$ZSH_CUSTOM/plugins/poetry"
-poetry completions zsh > "$ZSH_CUSTOM/plugins/poetry/_poetry"
+print_magenta "Installing nvm..."
+# https://github.com/nvm-sh/nvm
+PROFILE=/dev/null bash -c 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash'
 
 print_magenta "Setup PATH..."
 if ! grep -q "$(brew --prefix)/opt/ruby/bin" < "$SHELL_PROFILE"; then
@@ -659,6 +666,9 @@ print_magenta "Configuring Nitor package repositories..."
 cd repository-conf
 ./configure_repos.py
 
+cd ../nameless-deploy-tools
+./faster_register_complete.sh
+
 # TODO:
 # crates.io token
 # PyPI token
@@ -670,7 +680,16 @@ print_magenta "Use brew zsh:"
 print_yellow "sudo chsh -s $(brew --prefix)/bin/zsh"
 
 print_magenta "Install oh-my-zsh:"
+# https://github.com/ohmyzsh/ohmyzsh
 print_yellow 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"'
+
+print_magenta "Poetry tab completion for Oh My Zsh:"
+print_yellow 'mkdir "$ZSH_CUSTOM/plugins/poetry"'
+print_yellow 'poetry completions zsh > "$HOME/.oh-my-zsh/custom/plugins/poetry/_poetry"'
+
+print_magenta "Vault tab completion for Oh My Zsh:"
+print_yellow 'mkdir "$ZSH_CUSTOM/plugins/vault"'
+print_yellow 'vault completion zsh > "$$HOME/.oh-my-zsh/custom/plugins/vault/_vault"'
 
 print_magenta "Restart"
 print_yellow "sudo shutdown -r now"
