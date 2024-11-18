@@ -267,116 +267,148 @@ mkdir -p "$HOME/Developer"
 # Create AWS CLI dir
 mkdir -p "$HOME/.aws"
 
+# Create config dir
+mkdir -p "$HOME/.config
+
 print_magenta "Installing tools and libraries..."
 brew tap hashicorp/tap
 brew_install_or_upgrade aria2
 brew_install_or_upgrade awscli
 brew_install_or_upgrade azure-cli
-brew_install_or_upgrade bazelisk
+brew_install_or_upgrade bat  # https://github.com/sharkdp/bat
 brew_install_or_upgrade boost
+brew_install_or_upgrade brotli
+brew_install_or_upgrade bun
+brew_install_or_upgrade cargo-lambda
+brew_install_or_upgrade cargo-nextest
 brew_install_or_upgrade ccache
+brew_install_or_upgrade checkov
 brew_install_or_upgrade clang-format
+brew_install_or_upgrade clojure
 brew_install_or_upgrade cmake
+brew_install_or_upgrade cmake-docs
 brew_install_or_upgrade coreutils
 brew_install_or_upgrade deno
 brew_install_or_upgrade docker
+brew_install_or_upgrade docker-completion
 brew_install_or_upgrade docker-credential-helper-ecr
 brew_install_or_upgrade fastlane
+brew_install_or_upgrade fd   # https://github.com/sharkdp/fd
 brew_install_or_upgrade ffmpeg
 brew_install_or_upgrade flac
 brew_install_or_upgrade fmt
+brew_install_or_upgrade fzf  # https://github.com/junegunn/fzf
 brew_install_or_upgrade gh
+brew_install_or_upgrade ghc
+brew_install_or_upgrade ghostscript
 brew_install_or_upgrade git
 brew_install_or_upgrade git-lfs
 brew_install_or_upgrade gnupg
 brew_install_or_upgrade go
+brew_install_or_upgrade golangci-lint
+brew_install_or_upgrade gradle
 brew_install_or_upgrade groovy
-brew_install_or_upgrade hashicorp/tap/packer
+brew_install_or_upgrade gti
+brew_install_or_upgrade harfbuzz
+brew_install_or_upgrade helm
 brew_install_or_upgrade htop
+brew_install_or_upgrade hyperfine  # https://github.com/sharkdp/hyperfine
 brew_install_or_upgrade imagemagick
+brew_install_or_upgrade jemalloc
 brew_install_or_upgrade jq
 brew_install_or_upgrade julia
+brew_install_or_upgrade kotlin
+brew_install_or_upgrade ktlint
+brew_install_or_upgrade kubernetes-cli
+brew_install_or_upgrade latexindent
+brew_install_or_upgrade leiningen
 brew_install_or_upgrade llvm
+brew_install_or_upgrade localstack-cli
 brew_install_or_upgrade lua
-brew_install_or_upgrade neofetch
+brew_install_or_upgrade meson
+brew_install_or_upgrade minikube
+brew_install_or_upgrade nghttp2
 brew_install_or_upgrade ninja
 brew_install_or_upgrade node
-brew_install_or_upgrade oven-sh/bun/bun
+brew_install_or_upgrade openssl@3
 brew_install_or_upgrade p7zip
 brew_install_or_upgrade pandoc
+brew_install_or_upgrade perl
+brew_install_or_upgrade pillow
 brew_install_or_upgrade pinentry-mac
-brew_install_or_upgrade portaudio
-brew_install_or_upgrade portmidi
+brew_install_or_upgrade pkgconf
+brew_install_or_upgrade pnpm
 brew_install_or_upgrade postgresql
 brew_install_or_upgrade pre-commit
-brew_install_or_upgrade pyenv
-brew_install_or_upgrade python
+brew_install_or_upgrade protobuf
+brew_install_or_upgrade python@3.11
+brew_install_or_upgrade python@3.12
+brew_install_or_upgrade python@3.13
+brew_install_or_upgrade python@3.9
+brew_install_or_upgrade qt
+brew_install_or_upgrade qt@5
+brew_install_or_upgrade r
 brew_install_or_upgrade readline
 brew_install_or_upgrade ripgrep
 brew_install_or_upgrade ruby
-brew_install_or_upgrade rustup-init
+brew_install_or_upgrade rustup
+brew_install_or_upgrade sccache
 brew_install_or_upgrade shellcheck
 brew_install_or_upgrade shfmt
-brew_install_or_upgrade speedtest-cli
 brew_install_or_upgrade sqlite
+brew_install_or_upgrade swiftformat
 brew_install_or_upgrade swiftlint
 brew_install_or_upgrade taglib
+brew_install_or_upgrade terraform
+brew_install_or_upgrade tflint
 brew_install_or_upgrade tree
-brew_install_or_upgrade uv
+brew_install_or_upgrade typst
 brew_install_or_upgrade wget
+brew_install_or_upgrade wrk
 brew_install_or_upgrade xcbeautify
-brew_install_or_upgrade zlib
+brew_install_or_upgrade xz
+brew_install_or_upgrade yarn
+brew_install_or_upgrade yazi
+brew_install_or_upgrade zig
 brew_install_or_upgrade zsh
-
-# https://github.com/sharkdp/bat
-brew_install_or_upgrade bat
-# https://github.com/sharkdp/fd
-brew_install_or_upgrade fd
-# https://github.com/junegunn/fzf
-brew_install_or_upgrade fzf
-# https://github.com/sharkdp/hyperfine
-brew_install_or_upgrade hyperfine
-
-brew tap hashicorp/tap
-brew_install_or_upgrade hashicorp/tap/terraform
 
 print_magenta "Installing apps..."
 brew tap homebrew/cask-drivers
-brew_cask_install_or_upgrade chromedriver
 brew_cask_install_or_upgrade docker
 brew_cask_install_or_upgrade dotnet-sdk
 brew_cask_install_or_upgrade dropbox
-brew_cask_install_or_upgrade fig
+brew_cask_install_or_upgrade firefox
+brew_cask_install_or_upgrade font-commit-mono
 brew_cask_install_or_upgrade font-jetbrains-mono
-brew_cask_install_or_upgrade github
 brew_cask_install_or_upgrade google-chrome
-brew_cask_install_or_upgrade istat-menus
+brew_cask_install_or_upgrade google-cloud-sdk
+brew_cask_install_or_upgrade ilok-license-manager
 brew_cask_install_or_upgrade iterm2
 brew_cask_install_or_upgrade jetbrains-toolbox
 brew_cask_install_or_upgrade libreoffice
-brew_cask_install_or_upgrade logitech-options
-brew_cask_install_or_upgrade mactex
+brew_cask_install_or_upgrade logi-options+
 brew_cask_install_or_upgrade microsoft-office
 brew_cask_install_or_upgrade microsoft-teams
 brew_cask_install_or_upgrade monodraw
 brew_cask_install_or_upgrade obs
 brew_cask_install_or_upgrade powershell
+brew_cask_install_or_upgrade r
+brew_cask_install_or_upgrade reaper
+brew_cask_install_or_upgrade slack-cli
 brew_cask_install_or_upgrade spotify
 brew_cask_install_or_upgrade sublime-merge
 brew_cask_install_or_upgrade suspicious-package
 brew_cask_install_or_upgrade temurin
-brew_cask_install_or_upgrade tex-live-utility
 brew_cask_install_or_upgrade tg-pro
 brew_cask_install_or_upgrade visual-studio-code
 brew_cask_install_or_upgrade vlc
+brew_cask_install_or_upgrade warp
+brew_cask_install_or_upgrade zed
+brew_cask_install_or_upgrade zoom
 
 print_magenta "Finish brewing..."
 brew cleanup -ns
 brew cleanup -s
-
-print_magenta "Installing Xcode..."
-brew robotsandpencils/made/xcodes
-sudo xcodes install --latest
 
 if brew ls --versions llvm; then
     # link clang-tidy to path
@@ -397,14 +429,14 @@ echo "$(uv --version) from $(which uv)"
 uv tool install aws-mfa
 uv tool install cmakelang
 uv tool install coverage
+uv tool install maturin
+uv tool install nameless-deploy-tools
+uv tool install nitor-vault
 uv tool install poetry
 uv tool install pygments
 uv tool install pytest
 uv tool install ruff
 uv tool install yt-dlp
-
-# Add alias for python
-echo 'alias python=python3' >> "$SHELL_PROFILE"
 
 # Poetry tab completion for Oh My Zsh
 mkdir "$ZSH_CUSTOM/plugins/poetry"
@@ -465,7 +497,6 @@ echo "__pycache__/
 *.ncb
 *.obj
 *.pch
-*.pdb
 *.py[cod]
 *.sbr
 *.spec
@@ -584,18 +615,39 @@ echo "Cloning to $(pwd)"
 # get ssh clone urls with:
 # > for file in $(gh repo list --json nameWithOwner --jq '.[].nameWithOwner'); do echo \"git@github.com:$file\"; done
 git clone "git@github.com:Esgrove/AudioBatch"
+git clone "git@github.com:Esgrove/axum-example"
+git clone "git@github.com:Esgrove/bandcamp-dl"
+git clone "git@github.com:Esgrove/cli-tools"
 git clone "git@github.com:Esgrove/Esgrove"
 git clone "git@github.com:Esgrove/fastapi-template"
-git clone "git@github.com:Esgrove/fdo_randomizer"
+git clone "git@github.com:Esgrove/fdo-dj-opas"
+git clone "git@github.com:Esgrove/fdo-randomizer"
+git clone "git@github.com:Esgrove/fixed_deque"
 git clone "git@github.com:Esgrove/JUCE"
 git clone "git@github.com:Esgrove/othellogame"
-git clone "git@github.com:Esgrove/playlist_formatter"
+git clone "git@github.com:Esgrove/playlist-formatter"
 git clone "git@github.com:Esgrove/recordpool-dl"
-git clone "git@github.com:Esgrove/rust-axum-example"
 git clone "git@github.com:Esgrove/track-rename"
 
+git clone "git@github.com:NitorCreations/aws-infra.git"
+git clone "git@github.com:NitorCreations/indoor-location-mist-websocket.git"
+git clone "git@github.com:NitorCreations/ironbank-web.git"
+git clone "git@github.com:NitorCreations/ironbank.git"
+git clone "git@github.com:NitorCreations/nameless-deploy-tools.git"
+git clone "git@github.com:NitorCreations/nitor-devel-backend.git"
+git clone "git@github.com:NitorCreations/pynitor.git"
+git clone "git@github.com:NitorCreations/repository-conf.git"
+git clone "git@github.com:NitorCreations/vault.git"
+
+print_magenta "Configuring Nitor package repositories..."
+cd repository-conf
+./configure_repos.py
+
+# TODO:
+# crates.io token
+# PyPI token
+
 print_green "Installation done!"
-neofetch
 
 print_magenta "Next steps:"
 print_magenta "Use brew zsh:"
