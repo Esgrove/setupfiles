@@ -84,7 +84,10 @@ plugins=(
     poetry
     rust
     vault
+    nvm
 )
+
+zstyle ':omz:plugins:nvm' lazy yes
 
 # shellcheck disable=SC1091
 source "$ZSH/oh-my-zsh.sh"
