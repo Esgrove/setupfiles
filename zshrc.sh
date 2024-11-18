@@ -122,20 +122,21 @@ alias awscred='zed ~/.aws/credentials'
 # homebrew
 alias brewcheck="brew update && echo -e '\033[1mbrew:\033[0m' && brew outdated"
 alias brewclean="brew cleanup -ns && brew cleanup -s"
-alias brewlist="echo -e '\033[1mbrew:\033[0m' && brew list"
+alias brewlist="echo -e '\033[1mbrew:\033[0m' && brew list -1"
 alias brewupg="brew upgrade && brew upgrade --cask && brewclean"
 alias brc=brewcheck
 alias brl=brewlist
 alias brn=brewclean
 alias bru=brewupg
+alias bri=brew_install_or_upgrade
 
 # git
 alias gitconf="git config --global --list | sort"
-alias gitsub='git submodule update --init --recursive'
-alias gitprune='git remote prune origin'
-alias gittag='git describe --abbrev=0'
-alias githead='git rev-parse HEAD'
 alias gitfetch="git fetch --jobs=8 --all --prune --tags --prune-tags"
+alias githead='git rev-parse HEAD'
+alias gitprune='git remote prune origin'
+alias gitsub='git submodule update --init --recursive'
+alias gittag='git describe --abbrev=0'
 alias gitup='gitfetch && git pull --rebase'
 
 alias gconf=gitconf
@@ -172,8 +173,6 @@ alias less="bat"
 alias cat="bat -pp"
 alias find='echo -e "\033[33mUse fd instead!\033[0m" >&2; command find'
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-
-alias awsid=aws_id
 
 # yt-dlp aka youtube-dl
 alias ytd="yt-dlp --extract-audio --audio-format wav"
@@ -236,7 +235,24 @@ print_error_and_exit() {
     exit "${2:-1}"
 }
 
-aws_id() {
+VENV_DIR="$HOME/.venv"
+
+# activate Python virtual env
+act() {
+    # try to get venv name from first argument, otherwise default to 'venv'
+    local NAME=${1:-venv}
+    if [ -e "$(pwd)/$NAME"/bin/activate ]; then
+        echo "Activating $(pwd)/$NAME"
+        source "$NAME/bin/activate"
+    elif [ -e "$VENV_DIR/$NAME/bin/activate" ]; then
+        echo "Activating $VENV_DIR/$NAME"
+        source "$VENV_DIR/$NAME/bin/activate"
+    else
+        print_error "Could not find venv '$NAME'"
+    fi
+}
+
+awsid() {
     if [ -n "$(command -v vault)" ]; then
         vault id
     else
@@ -244,23 +260,9 @@ aws_id() {
     fi
 }
 
+# Rename .aiff file extension to .aif
 aiffrename() {
     find . -type f -name "*.aiff" -print -exec bash -c 'mv "$0" "${0%.aiff}.aif"' {} \;
-}
-
-# activate Python virtual env
-act() {
-    # try to get venv name from first argument, otherwise default to 'venv'
-    local NAME=${1:-venv}
-    if [ -e "$HOME/venv/$NAME/bin/activate" ]; then
-        echo "Activating $HOME/venv/$NAME"
-        source "$HOME/venv/$NAME/bin/activate"
-    elif [ -e "$NAME"/bin/activate ]; then
-        echo "Activating $(pwd)/$NAME"
-        source "$NAME/bin/activate"
-    else
-        print_error "Could not find venv '$NAME'"
-    fi
 }
 
 brew_install_or_upgrade() {
@@ -270,13 +272,6 @@ brew_install_or_upgrade() {
         brew install "$1"
     fi
 }
-
-bri() {
-    brew_install_or_upgrade "$1"
-}
-
-# always list dir after cd
-#cd() { builtin cd "$@"; ll; }
 
 cargo_update() {
     if [ -e Cargo.toml ]; then
@@ -288,18 +283,21 @@ cargo_update() {
     fi
 }
 
+# always list dir after cd
+#cd() { builtin cd "$@"; ll; }
+
 # cd to current top finder window in shell
 cdf() {
     local window_path
     window_path=$(
-        /usr/bin/osascript << EOT
+        /usr/bin/osascript <<EOT
         tell application "Finder"
             try
-                set currFolder to (folder of the front window as alias)
+                set currentWorkingDirectory to (folder of the front window as alias)
                     on error
-                set currFolder to (path to desktop folder as alias)
+                set currentWorkingDirectory to (path to desktop folder as alias)
             end try
-            POSIX path of currFolder
+            POSIX path of currentWorkingDirectory
         end tell
 EOT
     )
@@ -400,22 +398,28 @@ repo_update() {
         git status
         if git diff --quiet && git diff --cached --quiet; then
             branch=$(git branch --show-current)
+            if git show-ref --verify --quiet refs/heads/main; then
+                main_branch="main"
+            elif git show-ref --verify --quiet refs/heads/master; then
+                main_branch="master"
+            else
+                echo "Neither 'main' nor 'master' branch exists in this repository."
+                main_branch="$branch"
+            fi
             print_yellow "Current branch: $branch"
             git pull --rebase
-            if [ -n "$(git branch --quiet --list master)" ] && [ "$branch" != "master" ]; then
-                print_yellow "Switching to master"
-                git switch master
-            elif [ -n "$(git branch --quiet --list main)" ] && [ "$branch" != "main" ]; then
-                print_yellow "Switching to main"
-                git switch main
+            if [ "$branch" != "$main_branch" ]; then
+                print_yellow "Switching to $main_branch"
+                git switch "$main_branch"
             fi
             git pull --rebase
             if [ -n "$(git branch --quiet --list dev)" ] && [ "$branch" != "dev" ]; then
+                print_yellow "Switching to dev"
                 git switch dev
                 git pull --rebase
             fi
             if [ "$(git branch --show-current)" != "$branch" ]; then
-                print_yellow "Switching back to: $branch"
+                print_yellow "Switching back to $branch"
                 git switch "$branch"
             fi
         else
@@ -423,6 +427,8 @@ repo_update() {
         fi
         if [ -e .pre-commit-config.yaml ]; then
             pre-commit autoupdate
+            git add .pre-commit-config.yaml
+            git commit -m "pre-commit update"
         fi
         # Find Cargo.toml in the current directory or one level deeper
         for dir in $(find "$directory" -maxdepth 2 -type f -name Cargo.toml -exec dirname {} \;); do
@@ -431,19 +437,23 @@ repo_update() {
                 echo "Updating Rust dependencies in $(pwd)"
                 cargo clean
                 cargo update
+                git add Cargo.lock
+                git commit -m "cargo update"
             fi
         done
         cd "$directory"
         # Find pyproject.toml in the current directory or one level deeper
         for dir in $(find "$directory" -maxdepth 2 -type f -name pyproject.toml -exec dirname {} \;); do
-            cd "$dir" > /dev/null
-            if poetry check > /dev/null 2>&1; then
+            cd "$dir" >/dev/null
+            if poetry check >/dev/null 2>&1; then
                 echo "Updating Python dependencies in $(pwd)"
                 poetry update
+                git add pyproject.toml poetry.lock
+                git commit -m "poetry update"
             fi
         done
         cd "$directory"
-        if [ -n "$(git status --porcelain)" ]; then
+        if [ -n "$(git status --porcelain)" ] || [ -n "$(git log "$main_branch" --not origin/"$main_branch")" ]; then
             smerge "$directory"
         fi
     done
@@ -476,9 +486,9 @@ toaif() {
 venv() {
     # try to get venv name from first argument, otherwise default to 'venv'
     local NAME=${1:-venv}
-    mkdir -p "$HOME/venv"
-    python3 -m venv --clear "$HOME/venv/$NAME"
-    source "$HOME/venv/$NAME/bin/activate"
+    mkdir -p "$VENV_DIR"
+    python3 -m venv --clear "$VENV_DIR/$NAME"
+    source "$VENV_DIR/$NAME/bin/activate"
 }
 
 # Go up one or more directories, up to user home
