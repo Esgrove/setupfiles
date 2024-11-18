@@ -354,7 +354,6 @@ brew_install_or_upgrade python@3.13
 brew_install_or_upgrade python@3.9
 brew_install_or_upgrade qt
 brew_install_or_upgrade r
-brew_install_or_upgrade readline
 brew_install_or_upgrade ripgrep
 brew_install_or_upgrade ruby
 brew_install_or_upgrade rustup
@@ -372,7 +371,6 @@ brew_install_or_upgrade typst
 brew_install_or_upgrade wget
 brew_install_or_upgrade wrk
 brew_install_or_upgrade xcbeautify
-brew_install_or_upgrade xz
 brew_install_or_upgrade yarn
 brew_install_or_upgrade yazi
 brew_install_or_upgrade zig
@@ -388,8 +386,6 @@ brew_cask_install_or_upgrade docker
 brew_cask_install_or_upgrade dotnet-sdk
 brew_cask_install_or_upgrade dropbox
 brew_cask_install_or_upgrade firefox
-brew_cask_install_or_upgrade font-commit-mono
-brew_cask_install_or_upgrade font-jetbrains-mono
 brew_cask_install_or_upgrade google-chrome
 brew_cask_install_or_upgrade google-cloud-sdk
 brew_cask_install_or_upgrade ilok-license-manager
@@ -415,6 +411,12 @@ brew_cask_install_or_upgrade vlc
 brew_cask_install_or_upgrade warp
 brew_cask_install_or_upgrade zed
 brew_cask_install_or_upgrade zoom
+
+print_magenta "Installing fonts..."
+brew_cask_install_or_upgrade font-commit-mono
+brew_cask_install_or_upgrade font-jetbrains-mono
+brew_cask_install_or_upgrade font-roboto
+brew_cask_install_or_upgrade font-roboto-mono
 
 print_magenta "Finish brewing..."
 brew cleanup -ns
