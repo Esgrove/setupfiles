@@ -45,20 +45,24 @@ press_enter_to_continue() {
 }
 
 brew_install_or_upgrade() {
-    if brew ls --versions "$1" > /dev/null; then
-        brew upgrade "$1"
+    local name="$1"
+    brew info "$name"
+    if brew ls --versions "$name" > /dev/null; then
+        brew upgrade "$name"
     else
-        print_magenta "Installing $1"
-        brew install "$1"
+        print_magenta "Installing $name"
+        brew install "$name"
     fi
 }
 
 brew_cask_install_or_upgrade() {
-    if brew ls --versions "$1" > /dev/null; then
-        brew upgrade --cask "$1"
+    local name="$1"
+    brew info "$name"
+    if brew ls --versions "$name" > /dev/null; then
+        brew upgrade --cask "$name"
     else
-        print_magenta "Installing $1"
-        brew install --cask "$1"
+        print_magenta "Installing $name"
+        brew install --cask "$name"
     fi
 }
 
@@ -88,6 +92,7 @@ print_green "Setting up a Mac for $GIT_NAME <$GIT_EMAIL>"
 
 # Print hardware info
 system_profiler SPHardwareDataType | sed '1,4d' | awk '{$1=$1; print}'
+system_profiler SPSoftwareDataType | sed '1,4d' | awk '{$1=$1; print}'
 
 echo "Platform: $(uname -mp), CPU: $CPU_NAME"
 if is_apple_silicon; then
@@ -292,6 +297,7 @@ brew_install_or_upgrade deno
 brew_install_or_upgrade docker
 brew_install_or_upgrade docker-completion
 brew_install_or_upgrade docker-credential-helper-ecr
+brew_install_or_upgrade erdtree
 brew_install_or_upgrade fastlane
 brew_install_or_upgrade fd   # https://github.com/sharkdp/fd
 brew_install_or_upgrade ffmpeg
@@ -341,12 +347,12 @@ brew_install_or_upgrade pnpm
 brew_install_or_upgrade postgresql
 brew_install_or_upgrade pre-commit
 brew_install_or_upgrade protobuf
+brew_install_or_upgrade python
 brew_install_or_upgrade python@3.11
 brew_install_or_upgrade python@3.12
 brew_install_or_upgrade python@3.13
 brew_install_or_upgrade python@3.9
 brew_install_or_upgrade qt
-brew_install_or_upgrade qt@5
 brew_install_or_upgrade r
 brew_install_or_upgrade readline
 brew_install_or_upgrade ripgrep
@@ -373,7 +379,11 @@ brew_install_or_upgrade zig
 brew_install_or_upgrade zsh
 
 print_magenta "Installing apps..."
-brew tap homebrew/cask-drivers
+brew_cask_install_or_upgrade affinity-designer
+brew_cask_install_or_upgrade affinity-photo
+brew_cask_install_or_upgrade affinity-publisher
+brew_cask_install_or_upgrade chatgpt
+brew_cask_install_or_upgrade discord
 brew_cask_install_or_upgrade docker
 brew_cask_install_or_upgrade dotnet-sdk
 brew_cask_install_or_upgrade dropbox
@@ -415,19 +425,23 @@ if brew ls --versions llvm; then
     ln -s "$(brew --prefix)/opt/llvm/bin/clang-tidy" "$(brew --prefix)/bin/clang-tidy"
 fi
 
-print_magenta "Install Rust"
+print_magenta "Install Rust..."
 rustup-init -y
 source "$HOME/.cargo/env"
 "$HOME/.cargo/bin/rustup" --version
-"$HOME/.cargo/bin/rustup" update
 "$HOME/.cargo/bin/rustc" --version
+"$HOME/.cargo/bin/rustup" update
+
+print_magenta "Install Rust packages..."
+cargo install cargo-tarpaulin
+cargo install cross --git https://github.com/cross-rs/cross
+cargo install nitor-vault
 
 print_magenta "Installing Python packages..."
 "$(brew --prefix)/bin/python3" --version
 echo "$(uv --version) from $(which uv)"
 
 uv tool install aws-mfa
-uv tool install cmakelang
 uv tool install coverage
 uv tool install maturin
 uv tool install nameless-deploy-tools
