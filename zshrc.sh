@@ -34,6 +34,8 @@ zstyle ':omz:update' mode auto        # update automatically without asking
 # Uncomment the following line to change how often to auto-update (in days).
 zstyle ':omz:update' frequency 7
 
+zstyle ':completion:*' menu select
+
 # Uncomment the following line if pasting URLs and other text is messed up.
 # DISABLE_MAGIC_FUNCTIONS="true"
 
@@ -75,7 +77,14 @@ HIST_STAMPS="dd.mm.yyyy"
 # Add wisely, as too many plugins slow down shell startup.
 
 # z: https://github.com/agkozak/zsh-z
-plugins=(poetry)
+plugins=(
+    docker
+    gh
+    kubectl
+    poetry
+    rust
+    vault
+)
 
 # shellcheck disable=SC1091
 source "$ZSH/oh-my-zsh.sh"
@@ -94,23 +103,26 @@ else
     export EDITOR='nano'
 fi
 
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
+# tab completion
+autoload -U compinit && compinit
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 
-alias zshconfig="code ~/.zshrc"
-alias ohmyzsh="code ~/.oh-my-zsh"
-alias zprofile="code ~/.zprofile"
-alias bprofile="code ~/.profile"
+alias zshconfig="zed ~/.zshrc"
+alias ohmyzsh="zed ~/.oh-my-zsh"
+alias zprofile="zed ~/.zprofile"
+alias bprofile="zed ~/.profile"
+alias awsdir="zed ~/.aws/"
+alias awsconf='zed ~/.aws/config'
+alias awscred='zed ~/.aws/credentials'
 
 # homebrew
 alias brewcheck="brew update && echo -e '\033[1mbrew:\033[0m' && brew outdated"
 alias brewclean="brew cleanup -ns && brew cleanup -s"
-alias brewlist="echo -e '\033[1mbrew:\033[0m' && brew list && echo '\033[1mcask:\033[0m' && brew list --cask"
+alias brewlist="echo -e '\033[1mbrew:\033[0m' && brew list"
 alias brewupg="brew upgrade && brew upgrade --cask && brewclean"
 alias brc=brewcheck
 alias brl=brewlist
@@ -123,32 +135,45 @@ alias gitsub='git submodule update --init --recursive'
 alias gitprune='git remote prune origin'
 alias gittag='git describe --abbrev=0'
 alias githead='git rev-parse HEAD'
+alias gitfetch="git fetch --jobs=8 --all --prune --tags --prune-tags"
+alias gitup='gitfetch && git pull --rebase'
 
 alias gconf=gitconf
-alias gsub=gitsub
-alias gprune=gitprune
-alias gtag=gittag
+alias gfetch=gitfetch
 alias ghead=githead
+alias gim=git_main
+alias giu=gitup
+alias gprune=gitprune
+alias gsub=gitsub
+alias gtag=gittag
 
 alias reup=repo_update
 
 # general
 alias c='clear'
-alias cleanDS="find . -type f -name '*.DS_Store' -print -delete"
 alias calendar="cal -y || python -m calendar"
-alias ncalendar="ncal -wy -s FI"
+alias cleanDS="find . -type f -name '*.DS_Store' -print -delete"
 alias dev="cd ~/Developer && ll"
-alias fetch="git fetch --jobs=8 --all --prune --tags --prune-tags"
+alias ip='curl -s https://checkip.amazonaws.com'
+alias kbc='kubectl'
 alias l='ls -Aho'
 alias ll='ls -ho'
+alias ncalendar="ncal -wy -s FI"
 alias num='echo $(ls -1 | wc -l)'
 alias o='open .'
-alias outdated="brc && echo -e '\033[1mPython:\033[0m' && pynot"
+alias outdated="brc && echo -e '\033[1mPython:\033[0m' && uv self update && uv tool upgrade --all && softwareupdate -l"
 alias path='echo -e ${PATH//:/\\n}'
 alias reload='source ~/.zshrc'
 alias trd="tre -d"
 alias tre="tree -C -I 'node_modules|venv|__pycache__'"
 alias xdir='open ~/Library/Developer/Xcode/DerivedData'
+
+alias less="bat"
+alias cat="bat -pp"
+alias find='echo -e "\033[33mUse fd instead!\033[0m" >&2; command find'
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+
+alias awsid=aws_id
 
 # yt-dlp aka youtube-dl
 alias ytd="yt-dlp --extract-audio --audio-format wav"
@@ -164,8 +189,6 @@ alias pirq="python3 -m pip install -r requirements.txt"
 alias piu="python3 -m pip install --upgrade"
 alias piup="python3 -m pip install --upgrade pip setuptools wheel"
 alias pyfreeze="python3 -m pip freeze > requirements.txt"
-alias pyinst='pyenv install --list | grep -Ev "dev|a" | grep -E \\s+3\.'
-alias pylist="pyenv versions"
 alias pynot="python3 -m pip list --outdated --not-required"
 alias pyout="python3 -m pip list --outdated"
 alias pyupg="python3 -m pip list --not-required --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install --upgrade"
@@ -213,6 +236,18 @@ print_error_and_exit() {
     exit "${2:-1}"
 }
 
+aws_id() {
+    if [ -n "$(command -v vault)" ]; then
+        vault id
+    else
+        aws sts get-caller-identity | jq .
+    fi
+}
+
+aiffrename() {
+    find . -type f -name "*.aiff" -print -exec bash -c 'mv "$0" "${0%.aiff}.aif"' {} \;
+}
+
 # activate Python virtual env
 act() {
     # try to get venv name from first argument, otherwise default to 'venv'
@@ -226,36 +261,6 @@ act() {
     else
         print_error "Could not find venv '$NAME'"
     fi
-}
-
-# Create new Python virtual env
-venv() {
-    # try to get venv name from first argument, otherwise default to 'venv'
-    local NAME=${1:-venv}
-    python3 -m venv --clear "$HOME/venv/$NAME"
-    source "$HOME/venv/$NAME/bin/activate"
-}
-
-aiffrename() {
-    find . -type f -name "*.aiff" -print -exec bash -c 'mv "$0" "${0%.aiff}.aif"' {} \;
-}
-
-toaif() {
-    local input
-    input=$1
-    if [ -z "$input" ]; then
-        echo "Give audio file path to convert"
-        exit 1
-    fi
-    output="${input%.*}.aif"
-    echo "Converting to: $output"
-    ffmpeg -v error \
-        -n -i "$input" \
-        -codec:a pcm_s16be \
-        -map_metadata 0 \
-        -write_id3v2 1 \
-        -id3v2_version 4 \
-        "$output"
 }
 
 brew_install_or_upgrade() {
@@ -272,6 +277,16 @@ bri() {
 
 # always list dir after cd
 #cd() { builtin cd "$@"; ll; }
+
+cargo_update() {
+    if [ -e Cargo.toml ]; then
+        echo "Updating Rust dependencies in $(pwd)"
+        cargo clean
+        cargo update
+        git add Cargo.lock Cargo.toml
+        git commit -m "cargo update"
+    fi
+}
 
 # cd to current top finder window in shell
 cdf() {
@@ -320,6 +335,15 @@ cdx() {
     fi
 }
 
+git_main() {
+    # Check if the 'main' branch exists in the local repository
+    if git show-ref --verify --quiet refs/heads/main; then
+        git switch main
+    else
+        git switch master
+    fi
+}
+
 # remove Dropbox conflicted copies
 conflicted() {
     find "$HOME/Dropbox/" -path "*(*'s conflicted copy [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]*" -print -exec rm -f {} \;
@@ -332,7 +356,28 @@ eject() {
 
 # Search history
 hist() {
-    history | grep "$1"
+    history | grep "$@"
+}
+
+open_repos() {
+    local root="$HOME/Developer"
+    if [ -n "$1" ]; then
+        root="$(readlink -f "$1")"
+    fi
+    pushd "$root" >/dev/null || print_error_and_exit "Failed to cd to: $root"
+    # sort directories
+    for directory in $(find ./* -type d -maxdepth 0 | sort -f | xargs); do
+        print_magenta "Opening $(basename "$directory")"
+        pushd "$directory" >/dev/null || :
+        if ! git rev-parse --git-dir >/dev/null 2>&1; then
+            print_yellow "Not a git repository, skipping..."
+            popd >/dev/null || :
+            continue
+        fi
+        smerge "$directory"
+        popd >/dev/null || :
+    done
+    popd >/dev/null || :
 }
 
 # Update all git repos under ~/Developer or given root path
@@ -405,13 +450,35 @@ repo_update() {
     cd "$cwd"
 }
 
-# Zip given file
-zipf() {
-    zip -r "$1".zip "$1"
-}
-
 tags() {
     ffprobe -v quiet -print_format json -show_format "$@"
+}
+
+toaif() {
+    local input
+    input=$1
+    if [ -z "$input" ]; then
+        echo "Give audio file path to convert"
+        exit 1
+    fi
+    output="${input%.*}.aif"
+    echo "Converting to: $output"
+    ffmpeg -v error \
+        -n -i "$input" \
+        -codec:a pcm_s16be \
+        -map_metadata 0 \
+        -write_id3v2 1 \
+        -id3v2_version 4 \
+        "$output"
+}
+
+# Create new Python virtual env
+venv() {
+    # try to get venv name from first argument, otherwise default to 'venv'
+    local NAME=${1:-venv}
+    mkdir -p "$HOME/venv"
+    python3 -m venv --clear "$HOME/venv/$NAME"
+    source "$HOME/venv/$NAME/bin/activate"
 }
 
 # Go up one or more directories, up to user home
@@ -431,4 +498,9 @@ up() {
         fi
     done
     pwd
+}
+
+# Zip given file
+zipf() {
+    zip -r "$1".zip "$1"
 }
