@@ -46,13 +46,13 @@ press_enter_to_continue() {
 
 brew_install_or_upgrade() {
     local name="$1"
-    brew info "$name"
     if brew ls --versions "$name" > /dev/null; then
         if ! brew upgrade "$name"; then
             print_yellow "Failed to upgrade $name, continuing..."
         fi
     else
         print_magenta "Installing $name"
+        brew info "$name"
         if ! brew install "$name"; then
             print_yellow "Failed to install $name, continuing..."
         fi
