@@ -45,7 +45,8 @@ GIT_NAME="Akseli Lukkarila"
 GIT_EMAIL="akseli.lukkarila@nitor.com"
 SSH_KEY="$HOME/.ssh/id_ed25519"
 GPG_KEY="nitor-gpg-private-key.asc"
-GPG_KEY_ID="4265756857739FFEB20E3256BADFF60407D07F63"
+GPG_KEY_ID="BADFF60407D07F63"
+GPG_KEY_FINGERPRINT="4265756857739FFEB20E3256BADFF60407D07F63"
 SHELL_PROFILE="$HOME/.zprofile"
 # Computer ID to use in GitHub
 # For example: Nitor MacBookPro18,1 2022-12-30
@@ -708,14 +709,14 @@ if [ -e "$GPG_KEY" ]; then
     gpg --import "$GPG_KEY"
 
     # Verify the key matches the expected ID
-    if gpg --list-keys "$GPG_KEY_ID"; then
+    if gpg --list-keys "$GPG_KEY_FINGERPRINT"; then
         print_green "GPG key matches the key ID"
     else
-        print_red "Imported GPG key does not match the expected key ID: $GPG_KEY_ID"
+        print_red "Imported GPG key does not match the expected key ID: $GPG_KEY_FINGERPRINT"
         exit 1
     fi
 
-    git config --global user.signingkey "$GPG_KEY_ID"
+    git config --global user.signingkey "$GPG_KEY_FINGERPRINT"
     git config --global commit.gpgsign true
 
     if [ -n "$(command -v gh)" ]; then
@@ -723,8 +724,12 @@ if [ -e "$GPG_KEY" ]; then
             echo "Authorizing GitHub CLI..."
             gh auth login --web --hostname github.com --git-protocol https --scopes admin:public_key,admin:gpg_key,admin:ssh_signing_key
         fi
-        echo "Adding GPG key to GitHub"
-        gpg --armor --export "$GPG_KEY_ID" | gh gpg-key add -
+        if ! gh gpg-key list | grep -q "$GPG_KEY_ID"; then
+            echo "Adding GPG key to GitHub"
+            gpg --armor --export "$GPG_KEY_FINGERPRINT" | gh gpg-key add -
+        else
+            print_yellow "GPG key already added to GitHub, skipping..."
+        fi
     fi
 else
     # https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key
