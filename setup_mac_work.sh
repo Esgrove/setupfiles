@@ -414,7 +414,6 @@ brew_cask_install_or_upgrade dropbox
 brew_cask_install_or_upgrade firefox
 brew_cask_install_or_upgrade google-chrome
 brew_cask_install_or_upgrade google-cloud-sdk
-brew_cask_install_or_upgrade ilok-license-manager
 brew_cask_install_or_upgrade iterm2
 brew_cask_install_or_upgrade jetbrains-toolbox
 brew_cask_install_or_upgrade libreoffice
@@ -462,6 +461,9 @@ print_magenta "Install Rust packages..."
 cargo install cargo-tarpaulin                                   # https://github.com/xd009642/tarpaulin
 cargo install cross --git https://github.com/cross-rs/cross
 cargo install nitor-vault
+
+print_magenta "Install uv..."
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
 print_magenta "Installing Python packages..."
 "$(brew --prefix)/bin/python3" --version
