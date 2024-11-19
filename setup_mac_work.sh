@@ -44,7 +44,7 @@ done
 GIT_NAME="Akseli Lukkarila"
 GIT_EMAIL="akseli.lukkarila@nitor.com"
 SSH_KEY="$HOME/.ssh/id_ed25519"
-GPG_KEY="$HOME/nitor-gpg-private-key.asc"
+GPG_KEY="nitor-gpg-private-key.asc"
 GPG_KEY_ID="4265756857739FFEB20E3256BADFF60407D07F63"
 SHELL_PROFILE="$HOME/.zprofile"
 # Computer ID to use in GitHub
@@ -518,10 +518,11 @@ cargo install cargo-tarpaulin                                   # https://github
 cargo install cross --git https://github.com/cross-rs/cross
 cargo install nitor-vault
 
-print_magenta "Install uv..."
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-source $HOME/.local/bin/env
+if [ -z "$(command -v uv)" ]; then
+    print_magenta "Install uv..."
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    source $HOME/.local/bin/env
+fi
 
 print_magenta "Installing Python packages..."
 "$(brew --prefix)/bin/python3" --version
@@ -538,9 +539,11 @@ uv tool install pytest
 uv tool install ruff
 uv tool install yt-dlp
 
-print_magenta "Installing nvm..."
-# https://github.com/nvm-sh/nvm
-PROFILE=/dev/null bash -c 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash'
+if [ -z "$(command -v nvm)" ]; then
+    print_magenta "Installing nvm..."
+    # https://github.com/nvm-sh/nvm
+    PROFILE=/dev/null bash -c 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash'
+fi
 
 print_magenta "Setup brew Ruby..."
 if ! grep -q "$(brew --prefix ruby)/bin" < "$SHELL_PROFILE"; then
@@ -646,7 +649,7 @@ else
     ssh-keygen -t ed25519 -C "$GIT_EMAIL" -f "$SSH_KEY"
     eval "$(ssh-agent -s)"
     ssh-add --apple-use-keychain "$SSH_KEY"
-    echo "Setting ssh config..."
+    echo "Setting SSH config..."
     echo "
 Host *
   AddKeysToAgent yes
@@ -655,15 +658,22 @@ Host *
     cat ~/.ssh/config
 fi
 
-print_magenta "Adding ssh key to GitHub..."
+print_magenta "Adding SSH key to GitHub..."
 if [ ! -e "$SSH_KEY.pub" ]; then
     print_error_and_exit "Public key not found: $SSH_KEY.pub"
 fi
 # use GitHub CLI if available
 if [ -n "$(command -v gh)" ]; then
-    echo "Adding ssh key with name: $COMPUTER_ID"
-    gh auth login --web --hostname github.com --git-protocol https --scopes admin:public_key,admin:gpg_key
-    gh ssh-key add "$SSH_KEY.pub" --title "$COMPUTER_ID"
+    if ! gh auth status --active; then
+        echo "Authorizing GitHub CLI..."
+        gh auth login --web --hostname github.com --git-protocol https --scopes admin:public_key,admin:gpg_key,admin:ssh_signing_key
+    fi
+    if ! gh ssh-key list | grep -q "$COMPUTER_ID"; then
+        echo "Adding SSH key with name: $COMPUTER_ID"
+        gh ssh-key add "$SSH_KEY.pub" --title "$COMPUTER_ID"
+    else
+        print_yellow "SSH key already added to GitHub, skipping..."
+    fi
 else
     print_yellow "Opening github.com/settings/keys, add the new SSH key to your profile there"
     echo "It has been copied to the clipboard so you can just paste directly ;)"
@@ -677,11 +687,24 @@ fi
 if [ -e "$GPG_KEY" ]; then
     print_green "Found gpg key $GPG_KEY, importing..."
     gpg --import "$GPG_KEY"
+
+    # Verify the key matches the expected ID
+    if gpg --list-keys "$GPG_KEY_ID"; then
+        print_green "GPG key matches the key ID"
+    else
+        print_red "Imported GPG key does not match the expected key ID: $GPG_KEY_ID"
+        exit 1
+    fi
+
     git config --global user.signingkey "$GPG_KEY_ID"
     git config --global commit.gpgsign true
+
     if [ -n "$(command -v gh)" ]; then
-        echo "Adding gpg key to GitHub"
-        gh auth status
+        if ! gh auth status --active; then
+            echo "Authorizing GitHub CLI..."
+            gh auth login --web --hostname github.com --git-protocol https --scopes admin:public_key,admin:gpg_key,admin:ssh_signing_key
+        fi
+        echo "Adding GPG key to GitHub"
         gpg --armor --export "$GPG_KEY_ID" | gh gpg-key add -
     fi
 else
