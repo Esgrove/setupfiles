@@ -48,13 +48,13 @@ brew_install_or_upgrade() {
     local name="$1"
     if brew ls --versions "$name" > /dev/null; then
         if ! brew upgrade --formula "$name"; then
-            print_yellow "Failed to upgrade $name, continuing..."
+            print_red "Failed to upgrade $name, continuing..."
         fi
     else
         print_magenta "Installing $name"
         brew info "$name"
         if ! brew install --formula "$name"; then
-            print_yellow "Failed to install $name, continuing..."
+            print_red "Failed to install $name, continuing..."
         fi
     fi
 }
@@ -63,13 +63,13 @@ brew_cask_install_or_upgrade() {
     local name="$1"
     if brew ls --versions "$name" > /dev/null; then
         if ! brew upgrade --cask "$name"; then
-            print_yellow "Failed to upgrade cask $name, continuing..."
+            print_red "Failed to upgrade cask $name, continuing..."
         fi
     else
         print_magenta "Installing $name"
         brew info "$name"
         if ! brew install --cask "$name"; then
-            print_yellow "Failed to install cask $name, continuing..."
+            print_red "Failed to install cask $name, continuing..."
         fi
     fi
 }
