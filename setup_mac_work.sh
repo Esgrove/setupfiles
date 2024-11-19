@@ -61,7 +61,7 @@ brew_install_or_upgrade() {
 
 brew_cask_install_or_upgrade() {
     local name="$1"
-    if brew ls --versions "$name" > /dev/null; then
+    if brew ls --cask --versions "$name" > /dev/null; then
         if ! brew upgrade --cask "$name"; then
             print_red "Failed to upgrade cask $name, continuing..."
         fi
