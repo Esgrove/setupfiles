@@ -18,7 +18,8 @@ OPTIONS: All options are optional
         Skip writing macOS settings.
 
     -v | --verbose
-        Display commands being executed."
+        Display commands being executed.
+"
 
 SKIP_BREW=false
 SKIP_SETTINGS=false
@@ -775,8 +776,8 @@ cd "$HOME/Developer"
 echo "Cloning to $(pwd)"
 
 if ! grep -q "github.com" ~/.ssh/known_hosts; then
-  echo "Adding GitHub to known_hosts..."
-  ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts
+    echo "Adding GitHub to known_hosts..."
+    ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts
 fi
 
 # Note to self: get full list of repos using
