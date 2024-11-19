@@ -545,6 +545,25 @@ if [ -z "$(command -v nvm)" ]; then
     PROFILE=/dev/null bash -c 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash'
 fi
 
+nvm_dir='export NVM_DIR="$HOME/.nvm"'
+if ! grep -q "$nvm_dir" < "$SHELL_PROFILE"; then
+    echo "Adding NVM dir to $SHELL_PROFILE"
+    echo "$nvm_dir" >> "$SHELL_PROFILE"
+fi
+nvm_load='[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"'
+if ! grep -q "$nvm_load" < "$SHELL_PROFILE"; then
+    echo "Adding NVM load to $SHELL_PROFILE"
+    echo "$nvm_load" >> "$SHELL_PROFILE"
+fi
+nvm_completion='[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"'
+if ! grep -q "$nvm_completion" < "$SHELL_PROFILE"; then
+    echo "Adding NVM shell completions to $SHELL_PROFILE"
+    echo "$nvm_completion" >> "$SHELL_PROFILE"
+fi
+
+# shellcheck disable=SC1090
+source "$SHELL_PROFILE"
+
 print_magenta "Setup brew Ruby..."
 if ! grep -q "$(brew --prefix ruby)/bin" < "$SHELL_PROFILE"; then
     echo "Adding brew ruby to path: $(brew --prefix ruby)/bin"
