@@ -199,6 +199,15 @@ defaults write com.apple.finder OpenWindowForNewRemovableDisk -bool true
 # Four-letter codes for the other view modes: `icnv`, `clmv`, `glyv`
 defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
 
+# Set Finder to display home directory by default
+defaults write com.apple.finder NewWindowTarget -string "PfHm"
+
+# Show home folder in Finder's sidebar
+defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
+
+# Set Finder to not show "Recent Tags" in the sidebar
+defaults write com.apple.finder ShowRecentTags -bool false
+
 # Expand the following File Info panes:
 # "General", "Open with", and "Sharing & Permissions"
 defaults write com.apple.finder FXInfoPanesExpanded -dict \
