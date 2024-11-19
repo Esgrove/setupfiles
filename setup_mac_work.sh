@@ -47,13 +47,13 @@ press_enter_to_continue() {
 brew_install_or_upgrade() {
     local name="$1"
     if brew ls --versions "$name" > /dev/null; then
-        if ! brew upgrade "$name"; then
+        if ! brew upgrade --formula "$name"; then
             print_yellow "Failed to upgrade $name, continuing..."
         fi
     else
         print_magenta "Installing $name"
         brew info "$name"
-        if ! brew install "$name"; then
+        if ! brew install --formula "$name"; then
             print_yellow "Failed to install $name, continuing..."
         fi
     fi
@@ -393,7 +393,7 @@ brew_install_or_upgrade shfmt              # https://github.com/mvdan/sh
 brew_install_or_upgrade swiftformat        # https://github.com/nicklockwood/SwiftFormat
 brew_install_or_upgrade swiftlint          # https://github.com/realm/SwiftLint
 brew_install_or_upgrade taglib             # https://github.com/taglib/taglib
-brew_install_or_upgrade terraform          # https://github.com/hashicorp/terraform
+brew_install_or_upgrade hashicorp/tap/terraform  # https://github.com/hashicorp/terraform
 brew_install_or_upgrade tex-fmt            # https://github.com/WGUNDERWOOD/tex-fmt
 brew_install_or_upgrade tflint             # https://github.com/terraform-linters/tflint
 brew_install_or_upgrade tree
