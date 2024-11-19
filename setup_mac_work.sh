@@ -48,7 +48,8 @@ SSH_KEY="$HOME/.ssh/id_ed25519"
 GPG_KEY="$HOME/nitor-gpg-private-key.asc"
 GPG_KEY_ID="BADFF60407D07F63"
 GPG_KEY_FINGERPRINT="4265756857739FFEB20E3256BADFF60407D07F63"
-SHELL_PROFILE="$HOME/.zprofile"
+# Always loaded, regardless of whether the shell is a login shell, interactive shell, or non-interactive shell.
+SHELL_PROFILE="$HOME/.zshenv"
 # Computer ID to use in GitHub
 # For example: Nitor MacBookPro18,1 2022-12-30
 COMPUTER_ID="Nitor $(sysctl hw.model | awk '{print $2}') $(date +%Y-%m-%d)"
@@ -122,7 +123,7 @@ git_clone() {
     if [ -d "$repo_name" ]; then
         print_yellow "Repository '$repo_name' already exists, skipping clone..."
     else
-        echo "Cloning $repo_name"
+        print_magenta "Cloning $repo_name"
         git clone "$repo_url"
     fi
 }
@@ -133,6 +134,23 @@ set_macos_settings() {
 
     print_magenta "Modifying macOS settings..."
     print_yellow "NOTE: a restart is required for the settings to take effect!"
+
+    # Ask for the administrator password upfront
+    sudo -v
+
+    # Keep-alive: update existing sudo time stamp until the script has finished
+    while true; do
+        sudo -n true
+        sleep 60
+        kill -0 "$$" || exit
+    done 2> /dev/null &
+
+    # Remove unneeded apps
+    sudo rm -rf /Applications/GarageBand.app
+    sudo rm -rf /Applications/iMovie.app
+    sudo rm -rf /Applications/Keynote.app
+    sudo rm -rf /Applications/Numbers.app
+    sudo rm -rf /Applications/Pages.app
 
     # Show hidden files in Finder
     defaults write com.apple.finder AppleShowAllFiles -bool true
@@ -439,23 +457,6 @@ fi
 
 press_enter_to_continue
 
-# Ask for the administrator password upfront
-sudo -v
-
-# Keep-alive: update existing sudo time stamp until the script has finished
-while true; do
-    sudo -n true
-    sleep 60
-    kill -0 "$$" || exit
-done 2> /dev/null &
-
-# Remove unneeded apps
-sudo rm -rf /Applications/GarageBand.app
-sudo rm -rf /Applications/iMovie.app
-sudo rm -rf /Applications/Keynote.app
-sudo rm -rf /Applications/Numbers.app
-sudo rm -rf /Applications/Pages.app
-
 if [ "$SKIP_SETTINGS" = false ]; then
     set_macos_settings
 else
@@ -554,6 +555,9 @@ uv tool install pytest
 uv tool install ruff
 uv tool install yt-dlp
 
+# shellcheck disable=SC1090
+source "$SHELL_PROFILE"
+
 if [ -z "$(command -v nvm)" ]; then
     print_magenta "Installing nvm..."
     # https://github.com/nvm-sh/nvm
@@ -561,17 +565,17 @@ if [ -z "$(command -v nvm)" ]; then
 fi
 
 nvm_dir='export NVM_DIR="$HOME/.nvm"'
-if ! grep -q "$nvm_dir" < "$SHELL_PROFILE"; then
+if ! grep -Fq "$nvm_dir" < "$SHELL_PROFILE"; then
     echo "Adding NVM dir to $SHELL_PROFILE"
     echo "$nvm_dir" >> "$SHELL_PROFILE"
 fi
 nvm_load='[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"'
-if ! grep -q "$nvm_load" < "$SHELL_PROFILE"; then
+if ! grep -Fq "$nvm_load" < "$SHELL_PROFILE"; then
     echo "Adding NVM load to $SHELL_PROFILE"
     echo "$nvm_load" >> "$SHELL_PROFILE"
 fi
 nvm_completion='[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"'
-if ! grep -q "$nvm_completion" < "$SHELL_PROFILE"; then
+if ! grep -Fq "$nvm_completion" < "$SHELL_PROFILE"; then
     echo "Adding NVM shell completions to $SHELL_PROFILE"
     echo "$nvm_completion" >> "$SHELL_PROFILE"
 fi
@@ -583,9 +587,9 @@ print_magenta "Setup brew Ruby..."
 if ! grep -q "$(brew --prefix ruby)/bin" < "$SHELL_PROFILE"; then
     echo "Adding brew ruby to path: $(brew --prefix ruby)/bin"
     echo "export PATH=\"$(brew --prefix ruby)/bin:\$PATH\"" >> "$SHELL_PROFILE"
+    # shellcheck disable=SC1090
+    source "$SHELL_PROFILE"
 fi
-# shellcheck disable=SC1090
-source "$SHELL_PROFILE"
 
 BREW_RUBY="$(brew --prefix ruby)/bin/ruby"
 
@@ -594,9 +598,9 @@ if ! echo "$PATH" | grep -q "$(brew --prefix)/lib/ruby/gems/$RUBY_API_VERSION/bi
     # gem binaries go to here by default, so add it to path
     echo "Adding ruby gems to path: $(brew --prefix)/lib/ruby/gems/$RUBY_API_VERSION/bin"
     echo "export PATH=\$PATH:$(brew --prefix)/lib/ruby/gems/$RUBY_API_VERSION/bin" >> "$SHELL_PROFILE"
+    # shellcheck disable=SC1090
+    source "$SHELL_PROFILE"
 fi
-# shellcheck disable=SC1090
-source "$SHELL_PROFILE"
 
 print_magenta "Checking brew Ruby version..."
 echo "ruby: $(which ruby) $(ruby --version)"
@@ -732,7 +736,7 @@ if [ -e "$GPG_KEY" ]; then
             exit 1
         fi
     else
-        print_green "GPG already imported, skipping..."
+        print_yellow "GPG already imported, skipping..."
     fi
 
     git config --global user.signingkey "$GPG_KEY_FINGERPRINT"
@@ -815,7 +819,7 @@ git_clone "git@github.com:NitorCreations/vault.git"
 
 print_magenta "Configuring Nitor package repositories..."
 cd repository-conf
-./configure_repos.py
+./configure-repos.py
 
 cd ../nameless-deploy-tools
 ./faster_register_complete.sh
