@@ -113,6 +113,19 @@ brew_cask_install_or_upgrade() {
     fi
 }
 
+git_clone() {
+    local repo_url="$1"
+    local repo_name
+    repo_name=$(basename -s .git "$repo_url")
+
+    if [ -d "$repo_name" ]; then
+        print_yellow "Repository '$repo_name' already exists, skipping clone..."
+    else
+        echo "Cloning $repo_name"
+        git clone "$repo_url"
+    fi
+}
+
 set_macos_settings() {
     # macOS settings mostly from:
     # https://github.com/mathiasbynens/dotfiles/blob/66ba9b3cc0ca1b29f04b8e39f84e5b034fdb24b6/.macos
@@ -761,34 +774,39 @@ print_magenta "Cloning repositories..."
 cd "$HOME/Developer"
 echo "Cloning to $(pwd)"
 
+if ! grep -q "github.com" ~/.ssh/known_hosts; then
+  echo "Adding GitHub to known_hosts..."
+  ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts
+fi
+
 # Note to self: get full list of repos using
 # > gh repo list --json url | jq -r '.[].url'
 # get ssh clone urls with:
 # > for file in $(gh repo list --json nameWithOwner --jq '.[].nameWithOwner'); do echo \"git@github.com:$file\"; done
-git clone "git@github.com:Esgrove/AudioBatch"
-git clone "git@github.com:Esgrove/axum-example"
-git clone "git@github.com:Esgrove/bandcamp-dl"
-git clone "git@github.com:Esgrove/cli-tools"
-git clone "git@github.com:Esgrove/Esgrove"
-git clone "git@github.com:Esgrove/fastapi-template"
-git clone "git@github.com:Esgrove/fdo-dj-opas"
-git clone "git@github.com:Esgrove/fdo-randomizer"
-git clone "git@github.com:Esgrove/fixed_deque"
-git clone "git@github.com:Esgrove/JUCE"
-git clone "git@github.com:Esgrove/othellogame"
-git clone "git@github.com:Esgrove/playlist-formatter"
-git clone "git@github.com:Esgrove/recordpool-dl"
-git clone "git@github.com:Esgrove/track-rename"
+git_clone "git@github.com:Esgrove/AudioBatch"
+git_clone "git@github.com:Esgrove/axum-example"
+git_clone "git@github.com:Esgrove/bandcamp-dl"
+git_clone "git@github.com:Esgrove/cli-tools"
+git_clone "git@github.com:Esgrove/Esgrove"
+git_clone "git@github.com:Esgrove/fastapi-template"
+git_clone "git@github.com:Esgrove/fdo-dj-opas"
+git_clone "git@github.com:Esgrove/fdo-randomizer"
+git_clone "git@github.com:Esgrove/fixed_deque"
+git_clone "git@github.com:Esgrove/JUCE"
+git_clone "git@github.com:Esgrove/othellogame"
+git_clone "git@github.com:Esgrove/playlist-formatter"
+git_clone "git@github.com:Esgrove/recordpool-dl"
+git_clone "git@github.com:Esgrove/track-rename"
 
-git clone "git@github.com:NitorCreations/aws-infra.git"
-git clone "git@github.com:NitorCreations/indoor-location-mist-websocket.git"
-git clone "git@github.com:NitorCreations/ironbank-web.git"
-git clone "git@github.com:NitorCreations/ironbank.git"
-git clone "git@github.com:NitorCreations/nameless-deploy-tools.git"
-git clone "git@github.com:NitorCreations/nitor-devel-backend.git"
-git clone "git@github.com:NitorCreations/pynitor.git"
-git clone "git@github.com:NitorCreations/repository-conf.git"
-git clone "git@github.com:NitorCreations/vault.git"
+git_clone "git@github.com:NitorCreations/aws-infra.git"
+git_clone "git@github.com:NitorCreations/indoor-location-mist-websocket.git"
+git_clone "git@github.com:NitorCreations/ironbank-web.git"
+git_clone "git@github.com:NitorCreations/ironbank.git"
+git_clone "git@github.com:NitorCreations/nameless-deploy-tools.git"
+git_clone "git@github.com:NitorCreations/nitor-devel-backend.git"
+git_clone "git@github.com:NitorCreations/pynitor.git"
+git_clone "git@github.com:NitorCreations/repository-conf.git"
+git_clone "git@github.com:NitorCreations/vault.git"
 
 print_magenta "Configuring Nitor package repositories..."
 cd repository-conf
@@ -804,15 +822,15 @@ cd ../nameless-deploy-tools
 # - PyPI token
 #   https://pypi.org/manage/account/
 
+print_magenta "Install oh-my-zsh:"
+# https://github.com/ohmyzsh/ohmyzsh
+curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
+
 print_green "Installation done!"
 
 print_magenta "Next steps:"
 print_magenta "Use brew zsh:"
 print_yellow "sudo chsh -s $(brew --prefix)/bin/zsh"
-
-print_magenta "Install oh-my-zsh:"
-# https://github.com/ohmyzsh/ohmyzsh
-print_yellow 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"'
 
 print_magenta "Poetry tab completion for Oh My Zsh:"
 print_yellow 'mkdir "$ZSH_CUSTOM/plugins/poetry"'
