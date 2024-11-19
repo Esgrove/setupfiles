@@ -293,6 +293,7 @@ fi
 print_magenta "Installing tools and libraries..."
 brew tap hashicorp/tap
 brew tap oven-sh/bun
+brew tap cargo-lambda/cargo-lambda
 
 brew_install_or_upgrade zsh                # https://github.com/zsh-users/zsh
 
