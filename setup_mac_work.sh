@@ -720,15 +720,19 @@ fi
 
 # GPG key
 if [ -e "$GPG_KEY" ]; then
-    print_green "Found gpg key $GPG_KEY, importing..."
-    gpg --import "$GPG_KEY"
-
-    # Verify the key matches the expected ID
-    if gpg --list-keys "$GPG_KEY_FINGERPRINT"; then
-        print_green "GPG key matches the key ID"
+    print_green "Found GPG key $GPG_KEY"
+    if ! gpg --list-keys "$GPG_KEY_FINGERPRINT"; then
+        echo "Importing key..."
+        gpg --import "$GPG_KEY"
+        # Verify the key matches the expected ID
+        if gpg --list-keys "$GPG_KEY_FINGERPRINT"; then
+            print_green "GPG key matches the key ID"
+        else
+            print_red "Imported GPG key does not match the expected key ID: $GPG_KEY_FINGERPRINT"
+            exit 1
+        fi
     else
-        print_red "Imported GPG key does not match the expected key ID: $GPG_KEY_FINGERPRINT"
-        exit 1
+        print_green "GPG already imported, skipping..."
     fi
 
     git config --global user.signingkey "$GPG_KEY_FINGERPRINT"
