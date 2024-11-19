@@ -229,6 +229,17 @@ sudo nvram SystemAudioVolume=" "
 #sudo nvram SystemAudioVolume=%00
 #sudo nvram SystemAudioVolume=0
 
+touch "$SHELL_PROFILE"
+
+# Create developer dir
+mkdir -p "$HOME/Developer"
+
+# Create AWS CLI dir
+mkdir -p "$HOME/.aws"
+
+# Create config dir
+mkdir -p "$HOME/.config"
+
 # Install homebrew if needed
 if [ -z "$(command -v brew)" ]; then
     print_magenta "Installing homebrew..."
@@ -256,7 +267,6 @@ if is_apple_silicon; then
 fi
 
 # UTF8
-touch "$SHELL_PROFILE"
 if ! grep -q "export LC_ALL=en_US.UTF-8" < "$SHELL_PROFILE"; then
     echo "Adding 'export LC_ALL=en_US.UTF-8' to $SHELL_PROFILE"
     echo "export LC_ALL=en_US.UTF-8" >> "$SHELL_PROFILE"
@@ -265,15 +275,6 @@ if ! grep -q "export LANG=en_US.UTF-8" < "$SHELL_PROFILE"; then
     echo "Adding 'export LANG=en_US.UTF-8' to $SHELL_PROFILE"
     echo "export LANG=en_US.UTF-8" >> "$SHELL_PROFILE"
 fi
-
-# Create developer dir
-mkdir -p "$HOME/Developer"
-
-# Create AWS CLI dir
-mkdir -p "$HOME/.aws"
-
-# Create config dir
-mkdir -p "$HOME/.config
 
 print_magenta "Installing tools and libraries..."
 brew tap hashicorp/tap
@@ -402,11 +403,9 @@ brew_cask_install_or_upgrade jetbrains-toolbox
 brew_cask_install_or_upgrade libreoffice
 brew_cask_install_or_upgrade logi-options+
 brew_cask_install_or_upgrade microsoft-office
-brew_cask_install_or_upgrade microsoft-teams
 brew_cask_install_or_upgrade monodraw
 brew_cask_install_or_upgrade obs
 brew_cask_install_or_upgrade powershell
-brew_cask_install_or_upgrade r
 brew_cask_install_or_upgrade reaper
 brew_cask_install_or_upgrade slack-cli
 brew_cask_install_or_upgrade spotify
