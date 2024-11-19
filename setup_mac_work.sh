@@ -424,6 +424,7 @@ brew_cask_install_or_upgrade monodraw
 brew_cask_install_or_upgrade obs
 brew_cask_install_or_upgrade powershell
 brew_cask_install_or_upgrade reaper
+brew_cask_install_or_upgrade slack
 brew_cask_install_or_upgrade slack-cli
 brew_cask_install_or_upgrade spotify
 brew_cask_install_or_upgrade sublime-merge
