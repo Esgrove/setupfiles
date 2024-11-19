@@ -448,7 +448,7 @@ brew cleanup -s
 
 if brew ls --versions llvm; then
     # link clang-tidy to path
-    ln -s "$(brew --prefix)/opt/llvm/bin/clang-tidy" "$(brew --prefix)/bin/clang-tidy"
+    ln -f -s "$(brew --prefix)/opt/llvm/bin/clang-tidy" "$(brew --prefix)/bin/clang-tidy"
 fi
 
 print_magenta "Install Rust..."
