@@ -438,6 +438,7 @@ brew_cask_install_or_upgrade zoom
 print_magenta "Installing fonts..."
 brew_cask_install_or_upgrade font-commit-mono
 brew_cask_install_or_upgrade font-jetbrains-mono
+brew_cask_install_or_upgrade font-jetbrains-mono-nerd-font
 brew_cask_install_or_upgrade font-roboto
 brew_cask_install_or_upgrade font-roboto-mono
 
