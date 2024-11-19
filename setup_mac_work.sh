@@ -48,10 +48,14 @@ brew_install_or_upgrade() {
     local name="$1"
     brew info "$name"
     if brew ls --versions "$name" > /dev/null; then
-        brew upgrade "$name"
+        if ! brew upgrade "$name"; then
+            print_yellow "Failed to upgrade $name, continuing..."
+        fi
     else
         print_magenta "Installing $name"
-        brew install "$name"
+        if ! brew install "$name"; then
+            print_yellow "Failed to install $name, continuing..."
+        fi
     fi
 }
 
@@ -59,10 +63,14 @@ brew_cask_install_or_upgrade() {
     local name="$1"
     brew info "$name"
     if brew ls --versions "$name" > /dev/null; then
-        brew upgrade --cask "$name"
+        if ! brew upgrade --cask "$name"; then
+            print_yellow "Failed to upgrade cask $name, continuing..."
+        fi
     else
         print_magenta "Installing $name"
-        brew install --cask "$name"
+        if ! brew install --cask "$name"; then
+            print_yellow "Failed to install cask $name, continuing..."
+        fi
     fi
 }
 
@@ -202,9 +210,6 @@ defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
 # Set Finder to display home directory by default
 defaults write com.apple.finder NewWindowTarget -string "PfHm"
 
-# Show home folder in Finder's sidebar
-defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
-
 # Set Finder to not show "Recent Tags" in the sidebar
 defaults write com.apple.finder ShowRecentTags -bool false
 
@@ -289,30 +294,33 @@ print_magenta "Installing tools and libraries..."
 brew tap hashicorp/tap
 brew tap oven-sh/bun
 
-brew_install_or_upgrade autoconf
-brew_install_or_upgrade automake
-brew_install_or_upgrade gcc
-brew_install_or_upgrade git                # https://github.com/git/git
-brew_install_or_upgrade git-lfs            # https://github.com/git-lfs/git-lfs
-brew_install_or_upgrade jemalloc           # https://github.com/jemalloc/jemalloc
-brew_install_or_upgrade llvm               # https://github.com/llvm/llvm-project
-brew_install_or_upgrade pkgconf            # https://github.com/pkgconf/pkgconf
-brew_install_or_upgrade wget
 brew_install_or_upgrade zsh                # https://github.com/zsh-users/zsh
 
 # Libraries
+brew_install_or_upgrade autoconf
+brew_install_or_upgrade automake
+brew_install_or_upgrade ffmpeg             # https://github.com/FFmpeg/FFmpeg
 brew_install_or_upgrade flac               # https://github.com/xiph/flac
 brew_install_or_upgrade fmt                # https://github.com/fmtlib/fmt
+brew_install_or_upgrade git                # https://github.com/git/git
+brew_install_or_upgrade git-lfs            # https://github.com/git-lfs/git-lfs
+brew_install_or_upgrade harfbuzz           # https://github.com/harfbuzz/harfbuzz
+brew_install_or_upgrade jemalloc           # https://github.com/jemalloc/jemalloc
+brew_install_or_upgrade make
 brew_install_or_upgrade openssl@3
+brew_install_or_upgrade pkgconf            # https://github.com/pkgconf/pkgconf
 brew_install_or_upgrade qt                 # https://github.com/qt/qtbase
+brew_install_or_upgrade wget
 
 # Programming languages and compilers
 brew_install_or_upgrade clojure            # https://github.com/clojure/clojure
+brew_install_or_upgrade gcc
 brew_install_or_upgrade ghc                # https://gitlab.haskell.org/ghc/ghc
 brew_install_or_upgrade go                 # https://github.com/golang/go
 brew_install_or_upgrade groovy             # https://github.com/apache/groovy
 brew_install_or_upgrade julia              # https://github.com/JuliaLang/julia
 brew_install_or_upgrade kotlin             # https://github.com/JetBrains/kotlin
+brew_install_or_upgrade llvm               # https://github.com/llvm/llvm-project
 brew_install_or_upgrade lua                # https://github.com/lua/lua
 brew_install_or_upgrade protobuf           # https://github.com/protocolbuffers/protobuf
 brew_install_or_upgrade python             # https://github.com/python/cpython
@@ -332,12 +340,12 @@ brew_cask_install_or_upgrade dotnet-sdk    # https://github.com/dotnet/sdk
 brew_cask_install_or_upgrade temurin       # https://adoptium.net
 
 # Managers and build tools
+brew_install_or_upgrade cmake              # https://github.com/Kitware/CMake
 brew_install_or_upgrade gradle             # https://github.com/gradle/gradle
 brew_install_or_upgrade leiningen          # https://github.com/technomancy/leiningen
-brew_install_or_upgrade pnpm               # https://github.com/pnpm/pnpm
-brew_install_or_upgrade cmake              # https://github.com/Kitware/CMake
 brew_install_or_upgrade meson              # https://github.com/mesonbuild/meson
 brew_install_or_upgrade ninja              # https://github.com/ninja-build/ninja
+brew_install_or_upgrade pnpm               # https://github.com/pnpm/pnpm
 
 # Databases
 brew_install_or_upgrade postgresql         # https://github.com/postgres/postgres
@@ -357,14 +365,12 @@ brew_install_or_upgrade coreutils          # https://github.com/coreutils/coreut
 brew_install_or_upgrade erdtree            # https://github.com/solidiquis/erdtree
 brew_install_or_upgrade fastlane           # https://github.com/fastlane/fastlane
 brew_install_or_upgrade fd                 # https://github.com/sharkdp/fd
-brew_install_or_upgrade ffmpeg             # https://github.com/FFmpeg/FFmpeg
 brew_install_or_upgrade fzf                # https://github.com/junegunn/fzf
 brew_install_or_upgrade gh                 # https://github.com/cli/cli
 brew_install_or_upgrade ghostscript        # https://www.ghostscript.com
 brew_install_or_upgrade gnupg              # https://github.com/gpg/gnupg
 brew_install_or_upgrade golangci-lint      # https://github.com/golangci/golangci-lint
 brew_install_or_upgrade gti                # https://github.com/rwos/gti
-brew_install_or_upgrade harfbuzz           # https://github.com/harfbuzz/harfbuzz
 brew_install_or_upgrade helm               # https://github.com/helm/helm
 brew_install_or_upgrade htop               # https://github.com/htop-dev/htop
 brew_install_or_upgrade hyperfine          # https://github.com/sharkdp/hyperfine
