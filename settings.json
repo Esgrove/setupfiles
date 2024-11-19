@@ -1,0 +1,66 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run the `open default settings` command
+// from the command palette or from `Zed` application menu.
+{
+  "assistant": {
+    "default_model": {
+      "provider": "copilot_chat",
+      "model": "gpt-4o"
+    },
+    "version": "2"
+  },
+  "theme": "Andromeda",
+  "base_keymap": "JetBrains",
+  "ui_font_size": 15,
+  "buffer_font_size": 13,
+  "buffer_font_family": "JetBrains Mono",
+  "buffer_font_features": {
+    // Enable ligatures:
+    "calt": true
+  },
+  "wrap_guides": [120],
+  "tabs": {
+    "git_status": true
+  },
+  "preferred_line_length": 120,
+  "ensure_final_newline_on_save": true,
+  "show_whitespaces": "all",
+  "git": {
+    "inline_blame": {
+      "enabled": false
+    }
+  },
+  "format_on_save": "on",
+  "lsp": {
+    "rust-analyzer": {
+      "initialization_options": {
+        "check": {
+          "command": "clippy"
+        }
+      }
+    }
+  },
+  "languages": {
+    "Python": {
+      "language_servers": ["ruff"],
+      "format_on_save": "on",
+      "formatter": [
+        {
+          "code_actions": {
+            "source.fixAll.ruff": true
+          }
+        },
+        {
+          "language_server": {
+            "name": "ruff"
+          }
+        }
+      ]
+    }
+  }
+}
