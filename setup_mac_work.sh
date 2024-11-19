@@ -44,7 +44,7 @@ done
 GIT_NAME="Akseli Lukkarila"
 GIT_EMAIL="akseli.lukkarila@nitor.com"
 SSH_KEY="$HOME/.ssh/id_ed25519"
-GPG_KEY="nitor-gpg-private-key.asc"
+GPG_KEY="$HOME/nitor-gpg-private-key.asc"
 GPG_KEY_ID="BADFF60407D07F63"
 GPG_KEY_FINGERPRINT="4265756857739FFEB20E3256BADFF60407D07F63"
 SHELL_PROFILE="$HOME/.zprofile"
@@ -688,7 +688,8 @@ if [ -n "$(command -v gh)" ]; then
         echo "Authorizing GitHub CLI..."
         gh auth login --web --hostname github.com --git-protocol https --scopes admin:public_key,admin:gpg_key,admin:ssh_signing_key
     fi
-    if ! gh ssh-key list | grep -q "$COMPUTER_ID"; then
+    ssh_public_key="$(awk '{print $2}' ~/.ssh/id_ed25519.pub)"
+    if ! gh ssh-key list | grep -q "$ssh_public_key"; then
         echo "Adding SSH key with name: $COMPUTER_ID"
         gh ssh-key add "$SSH_KEY.pub" --title "$COMPUTER_ID"
     else
