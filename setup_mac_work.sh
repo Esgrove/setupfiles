@@ -542,15 +542,17 @@ print_magenta "Installing nvm..."
 # https://github.com/nvm-sh/nvm
 PROFILE=/dev/null bash -c 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash'
 
-print_magenta "Setup PATH..."
-if ! grep -q "$(brew --prefix)/opt/ruby/bin" < "$SHELL_PROFILE"; then
-    echo "Adding brew ruby to path: $(brew --prefix)/opt/ruby/bin"
-    echo "export PATH=\"$(brew --prefix)/opt/ruby/bin:\$PATH\"" >> "$SHELL_PROFILE"
+print_magenta "Setup brew Ruby..."
+if ! grep -q "$(brew --prefix ruby)/bin" < "$SHELL_PROFILE"; then
+    echo "Adding brew ruby to path: $(brew --prefix ruby)/bin"
+    echo "export PATH=\"$(brew --prefix ruby)/bin:\$PATH\"" >> "$SHELL_PROFILE"
 fi
 # shellcheck disable=SC1090
 source "$SHELL_PROFILE"
 
-RUBY_API_VERSION=$(ruby -e 'print Gem.ruby_api_version')
+BREW_RUBY="$(brew --prefix ruby)/bin/ruby"
+
+RUBY_API_VERSION=$("$BREW_RUBY" -e 'print Gem.ruby_api_version')
 if ! echo "$PATH" | grep -q "$(brew --prefix)/lib/ruby/gems/$RUBY_API_VERSION/bin"; then
     # gem binaries go to here by default, so add it to path
     echo "Adding ruby gems to path: $(brew --prefix)/lib/ruby/gems/$RUBY_API_VERSION/bin"
