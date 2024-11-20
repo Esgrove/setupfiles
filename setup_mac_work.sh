@@ -834,9 +834,11 @@ cd ../nameless-deploy-tools
 # - PyPI token
 #   https://pypi.org/manage/account/
 
-print_magenta "Install oh-my-zsh:"
-# https://github.com/ohmyzsh/ohmyzsh
-curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
+if [ ! -e "$HOME/.oh-my-zsh" ]; then
+    print_magenta "Install oh-my-zsh:"
+    # https://github.com/ohmyzsh/ohmyzsh
+    curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
+fi
 
 if [ -e zshrc.sh ]; then
     print_magenta "Copying .zshrc..."
