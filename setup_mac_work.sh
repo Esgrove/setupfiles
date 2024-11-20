@@ -458,6 +458,10 @@ print_green "Setting up a Mac for $GIT_NAME <$GIT_EMAIL>"
 system_profiler SPHardwareDataType | sed '1,4d' | awk '{$1=$1; print}'
 system_profiler SPSoftwareDataType | sed '1,4d' | awk '{$1=$1; print}'
 
+print_magenta "Serial number:"
+system_profiler SPHardwareDataType | awk '/Serial Number/{print $NF}'
+echo ""
+
 echo "Platform: $(uname -mp), CPU: $CPU_NAME"
 if is_apple_silicon; then
     if [ "$(uname -m)" = "x86_64" ]; then
