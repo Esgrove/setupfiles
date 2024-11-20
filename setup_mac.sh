@@ -55,6 +55,30 @@ SHELL_PROFILE="$HOME/.zshenv"
 # For example: Esgrove MacBookPro18,1 2022-12-30
 COMPUTER_ID="$GIT_NAME $(sysctl hw.model | awk '{print $2}') $(date +%Y-%m-%d)"
 
+# Set Apple Silicon variable
+if [ -z "$ARM" ]; then
+    # This method works regardless if this script is run in a Rosetta (x86) terminal process
+    CPU_NAME="$(/usr/sbin/sysctl -n machdep.cpu.brand_string)"
+    if [[ $CPU_NAME =~ "Apple" ]]; then
+        ARM=true
+        PROCESSOR=$(echo "$CPU_NAME" | awk '{print $2}')
+    else
+        ARM=false
+        PROCESSOR="Intel"
+    fi
+fi
+
+# Function to check if on Apple Silicon or not
+is_apple_silicon() {
+    if [ "$ARM" = true ]; then
+        return
+    elif [ -z "$ARM" ]; then
+        print_error_and_exit "Architecture is not set"
+    fi
+
+    false
+}
+
 print_bold() {
     printf "\e[1m%s\e[0m\n" "$1"
 }
@@ -152,6 +176,17 @@ set_macos_settings() {
     sudo rm -rf /Applications/Keynote.app
     sudo rm -rf /Applications/Numbers.app
     sudo rm -rf /Applications/Pages.app
+
+    FIRST_NAME=$(echo "$GIT_NAME" | cut -d' ' -f1)
+    COMPUTER_NAME="$FIRST_NAME $PROCESSOR"
+    HOST_NAME="$(echo -n "$COMPUTER_NAME" | tr '[:upper:]' '[:lower:]' | tr '[:space:]' '-')"
+
+    echo "Setting computer name: '$COMPUTER_NAME'"
+    sudo scutil --set ComputerName "$COMPUTER_NAME"
+
+    echo "Setting host name:     '$HOST_NAME'"
+    sudo scutil --set HostName "$HOST_NAME"
+    sudo scutil --set LocalHostName "$HOST_NAME"
 
     # Show hidden files in Finder
     defaults write com.apple.finder AppleShowAllFiles -bool true
@@ -341,28 +376,6 @@ brew_install() {
     print_magenta "Finish brewing..."
     brew cleanup -ns
     brew cleanup -s
-}
-
-# Set Apple Silicon variable
-if [ -z "$ARM" ]; then
-    # This method works regardless if this script is run in a Rosetta (x86) terminal process
-    CPU_NAME="$(/usr/sbin/sysctl -n machdep.cpu.brand_string)"
-    if [[ $CPU_NAME =~ "Apple" ]]; then
-        ARM=true
-    else
-        ARM=false
-    fi
-fi
-
-# Function to check if on Apple Silicon or not
-is_apple_silicon() {
-    if [ "$ARM" = true ]; then
-        return
-    elif [ -z "$ARM" ]; then
-        print_error_and_exit "Architecture is not set"
-    fi
-
-    false
 }
 
 print_green "Setting up a Mac for $GIT_NAME <$GIT_EMAIL>"

@@ -179,10 +179,12 @@ set_macos_settings() {
 
     FIRST_NAME=$(echo "$GIT_NAME" | cut -d' ' -f1)
     COMPUTER_NAME="$FIRST_NAME $PROCESSOR"
-    HOST_NAME="$(echo "$COMPUTER_NAME" | tr '[:upper:]' '[:lower:]' | tr '[:space:]' '-')"
+    HOST_NAME="$(echo -n "$COMPUTER_NAME" | tr '[:upper:]' '[:lower:]' | tr '[:space:]' '-')"
 
-    echo "Setting computer name: '$COMPUTER_NAME' and host name: '$HOST_NAME'"
+    echo "Setting computer name: '$COMPUTER_NAME'"
     sudo scutil --set ComputerName "$COMPUTER_NAME"
+
+    echo "Setting host name:     '$HOST_NAME'"
     sudo scutil --set HostName "$HOST_NAME"
     sudo scutil --set LocalHostName "$HOST_NAME"
 
