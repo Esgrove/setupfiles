@@ -6,6 +6,7 @@ set -eo pipefail
 USAGE="Usage: $0 [OPTIONS]
 
 Setup new Nitor work Mac.
+This script is safe to run multiple times.
 
 OPTIONS: All options are optional
     -h | --help
@@ -530,6 +531,8 @@ fi
 "$HOME/.cargo/bin/rustup" update
 
 print_magenta "Install Rust packages..."
+# Prefer brew over cargo install so don't need to compile,
+# and updates are handled by brew
 cargo install cargo-tarpaulin                                   # https://github.com/xd009642/tarpaulin
 cargo install cross --git https://github.com/cross-rs/cross
 cargo install nitor-vault
@@ -835,6 +838,11 @@ print_magenta "Install oh-my-zsh:"
 # https://github.com/ohmyzsh/ohmyzsh
 curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
 
+if [ -e zshrc.sh ]; then
+    print_magenta "Copying .zshrc..."
+    cp zshrc.sh ~/.zshrc
+fi
+
 print_green "Installation done!"
 
 print_magenta "Next steps:"
@@ -847,7 +855,7 @@ print_yellow 'poetry completions zsh > "$HOME/.oh-my-zsh/custom/plugins/poetry/_
 
 print_magenta "Vault tab completion for Oh My Zsh:"
 print_yellow 'mkdir "$ZSH_CUSTOM/plugins/vault"'
-print_yellow 'vault completion zsh > "$$HOME/.oh-my-zsh/custom/plugins/vault/_vault"'
+print_yellow 'vault completion zsh > "$HOME/.oh-my-zsh/custom/plugins/vault/_vault"'
 
 print_magenta "Restart"
 print_yellow "sudo shutdown -r now"

@@ -81,10 +81,10 @@ plugins=(
     docker
     gh
     kubectl
+    nvm
     poetry
     rust
     vault
-    nvm
 )
 
 zstyle ':omz:plugins:nvm' lazy yes
@@ -114,9 +114,9 @@ autoload -U compinit && compinit
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 
-alias zshconfig="zed ~/.zshrc"
 alias ohmyzsh="zed ~/.oh-my-zsh"
-alias zprofile="zed ~/.zprofile"
+alias zshconfig="zed ~/.zshrc"
+alias zprofile="zed ~/.zshenv"
 alias bprofile="zed ~/.profile"
 alias awsdir="zed ~/.aws/"
 alias awsconf='zed ~/.aws/config'
