@@ -489,6 +489,16 @@ fi
 
 touch "$SHELL_PROFILE"
 
+if ! grep -q "^autoload -U +X bashcompinit && bashcompinit" "$SHELL_PROFILE"; then
+    echo "Adding 'autoload -U +X bashcompinit && bashcompinit' to $SHELL_PROFILE"
+    echo "autoload -U +X bashcompinit && bashcompinit" >> "$SHELL_PROFILE"
+fi
+
+if ! grep -q "^autoload -U +X compinit && compinit" "$SHELL_PROFILE"; then
+    echo "Adding 'autoload -U +X compinit && compinit' to $SHELL_PROFILE"
+    echo "autoload -U +X compinit && compinit" >> "$SHELL_PROFILE"
+fi
+
 # Create developer dir
 mkdir -p "$HOME/Developer"
 
