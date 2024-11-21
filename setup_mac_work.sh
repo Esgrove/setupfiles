@@ -455,6 +455,11 @@ brew_install() {
 
 print_green "Setting up a Mac for $GIT_NAME <$GIT_EMAIL>"
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+echo "Running in directory: $(pwd)"
+echo ""
+
 # Print hardware info
 system_profiler SPHardwareDataType | sed '1,4d' | awk '{$1=$1; print}'
 system_profiler SPSoftwareDataType | sed '1,4d' | awk '{$1=$1; print}'
@@ -493,6 +498,9 @@ mkdir -p "$HOME/.aws"
 # Create config dir
 mkdir -p "$HOME/.config"
 
+export HOMEBREW_NO_INSTALL_CLEANUP=1
+export HOMEBREW_NO_AUTO_UPDATE=1
+
 # Install homebrew if needed
 if [ -z "$(command -v brew)" ]; then
     print_magenta "Installing homebrew..."
@@ -500,6 +508,7 @@ if [ -z "$(command -v brew)" ]; then
 else
     print_magenta "Brew already installed, updating..."
     brew update
+    brew upgrade
 fi
 
 # Add homebrew to PATH, this is not done on M1 Macs automatically
@@ -543,7 +552,7 @@ fi
 if [ -z "$(command -v uv)" ]; then
     print_magenta "Install uv..."
     curl -LsSf https://astral.sh/uv/install.sh | sh
-    source $HOME/.local/bin/env
+    source "$HOME/.local/bin/env"
 else
     uv self update
 fi
@@ -765,6 +774,9 @@ if [ -e "$GPG_KEY" ]; then
     git config --global user.signingkey "$GPG_KEY_FINGERPRINT"
     git config --global commit.gpgsign true
 
+    gpgconf --kill gpg-agent
+    gpgconf --launch gpg-agent
+
     if [ -n "$(command -v gh)" ]; then
         if ! gh auth status --active; then
             echo "Authorizing GitHub CLI..."
@@ -858,12 +870,16 @@ if [ ! -e "$HOME/.oh-my-zsh" ]; then
     print_magenta "Install oh-my-zsh:"
     # https://github.com/ohmyzsh/ohmyzsh
     curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
+elif [ -n "$(command -v omz)" ]; then
+    omz update
 fi
 
 if [ -e zshrc.sh ]; then
     print_magenta "Copying .zshrc..."
     diff -y ~/.zshrc zshrc.sh
     cp zshrc.sh ~/.zshrc
+else
+    print_yellow "zshrc.sh not found, skipping copy..."
 fi
 
 mkdir -p "$HOME/.oh-my-zsh/custom/plugins/poetry"
