@@ -609,7 +609,7 @@ source "$SHELL_PROFILE"
 print_magenta "Setup brew Ruby..."
 if ! grep -q "$(brew --prefix ruby)/bin" < "$SHELL_PROFILE"; then
     echo "Adding brew ruby to path: $(brew --prefix ruby)/bin"
-    echo "export PATH=\"\$PATH:$(brew --prefix ruby)/bin\"" >> "$SHELL_PROFILE"
+    echo "export PATH=\"\$(brew --prefix ruby)/bin:$PATH\"" >> "$SHELL_PROFILE"
     # shellcheck disable=SC1090
     source "$SHELL_PROFILE"
 fi
@@ -620,7 +620,7 @@ RUBY_API_VERSION=$("$BREW_RUBY" -e 'print Gem.ruby_api_version')
 if ! echo "$PATH" | grep -q "$(brew --prefix)/lib/ruby/gems/$RUBY_API_VERSION/bin"; then
     # gem binaries go to here by default, so add it to path
     echo "Adding ruby gems to path: $(brew --prefix)/lib/ruby/gems/$RUBY_API_VERSION/bin"
-    echo "export PATH=\"\$PATH:$(brew --prefix)/lib/ruby/gems/$RUBY_API_VERSION/bin\"" >> "$SHELL_PROFILE"
+    echo "export PATH=\"\$(brew --prefix)/lib/ruby/gems/$RUBY_API_VERSION/bin:$PATH\"" >> "$SHELL_PROFILE"
     # shellcheck disable=SC1090
     source "$SHELL_PROFILE"
 fi
@@ -862,6 +862,7 @@ fi
 
 if [ -e zshrc.sh ]; then
     print_magenta "Copying .zshrc..."
+    diff -y ~/.zshrc zshrc.sh
     cp zshrc.sh ~/.zshrc
 fi
 
