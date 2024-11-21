@@ -153,6 +153,43 @@ git_clone() {
     fi
 }
 
+add_aws_profiles() {
+    print_magenta "Setting up Nitor AWS profiles"
+
+    profiles=(
+        "nitor-infra 832585949989"
+        "nitor-core 293246570391"
+        "nitor-ironbank 182013582186"
+    )
+
+    region="eu-west-1"
+    sso_region="eu-north-1"
+    sso_start_url="https://nitor.awsapps.com/start"
+    sso_role_name="AdministratorAccess"
+
+    mkdir -p "$HOME/.aws"
+    aws_config="$HOME/.aws/config"
+    touch "$aws_config"
+
+    for profile in "${profiles[@]}"; do
+        name=$(echo "$profile" | awk '{print $1}')
+        account_id=$(echo "$profile" | awk '{print $2}')
+
+        if grep -q "\[profile $name\]" "$aws_config"; then
+            print_yellow "Profile '$name' already exists, skipping..."
+        else
+            echo "[profile $name]" >> "$aws_config"
+            echo "region=$region" >> "$aws_config"
+            echo "sso_region=$sso_region" >> "$aws_config"
+            echo "sso_start_url=$sso_start_url" >> "$aws_config"
+            echo "sso_account_id=$account_id" >> "$aws_config"
+            echo "sso_role_name=$sso_role_name" >> "$aws_config"
+            echo "" >> "$aws_config"
+            echo "Added profile '$name'"
+        fi
+    done
+}
+
 set_macos_settings() {
     # macOS settings mostly from:
     # https://github.com/mathiasbynens/dotfiles/blob/66ba9b3cc0ca1b29f04b8e39f84e5b034fdb24b6/.macos
@@ -359,54 +396,55 @@ brew_install() {
     brew_install_or_upgrade sqlite             # https://github.com/sqlite/sqlite
 
     # CLI tools etc
-    brew_install_or_upgrade aria2              # https://github.com/aria2/aria2
-    brew_install_or_upgrade awscli             # https://github.com/aws/aws-cli
-    brew_install_or_upgrade azure-cli          # https://github.com/Azure/azure-cli
-    brew_install_or_upgrade bat                # https://github.com/sharkdp/bat
-    brew_install_or_upgrade cargo-lambda       # https://github.com/cargo-lambda/cargo-lambda
-    brew_install_or_upgrade cargo-nextest      # https://github.com/nextest-rs/nextest
-    brew_install_or_upgrade ccache             # https://github.com/ccache/ccache
-    brew_install_or_upgrade checkov            # https://github.com/bridgecrewio/checkov
-    brew_install_or_upgrade clang-format       # https://github.com/llvm/llvm-project
-    brew_install_or_upgrade coreutils          # https://github.com/coreutils/coreutils
-    brew_install_or_upgrade erdtree            # https://github.com/solidiquis/erdtree
-    brew_install_or_upgrade fastlane           # https://github.com/fastlane/fastlane
-    brew_install_or_upgrade fd                 # https://github.com/sharkdp/fd
-    brew_install_or_upgrade fzf                # https://github.com/junegunn/fzf
-    brew_install_or_upgrade gh                 # https://github.com/cli/cli
-    brew_install_or_upgrade ghostscript        # https://www.ghostscript.com
-    brew_install_or_upgrade gnupg              # https://github.com/gpg/gnupg
-    brew_install_or_upgrade golangci-lint      # https://github.com/golangci/golangci-lint
-    brew_install_or_upgrade gti                # https://github.com/rwos/gti
-    brew_install_or_upgrade helm               # https://github.com/helm/helm
-    brew_install_or_upgrade htop               # https://github.com/htop-dev/htop
-    brew_install_or_upgrade hyperfine          # https://github.com/sharkdp/hyperfine
-    brew_install_or_upgrade imagemagick        # https://github.com/ImageMagick/ImageMagick
-    brew_install_or_upgrade jq                 # https://github.com/jqlang/jq
-    brew_install_or_upgrade ktlint             # https://github.com/pinterest/ktlint
-    brew_install_or_upgrade kubernetes-cli     # https://github.com/kubernetes/kubectl
-    brew_install_or_upgrade localstack-cli     # https://github.com/localstack/localstack
-    brew_install_or_upgrade minikube           # https://github.com/kubernetes/minikube
-    brew_install_or_upgrade nghttp2            # https://github.com/nghttp2/nghttp2
-    brew_install_or_upgrade pandoc             # https://github.com/jgm/pandoc
-    brew_install_or_upgrade pinentry-mac       # https://github.com/GPGTools/pinentry-mac
-    brew_install_or_upgrade pre-commit         # https://github.com/pre-commit/pre-commit
-    brew_install_or_upgrade ripgrep            # https://github.com/BurntSushi/ripgrep
-    brew_install_or_upgrade sccache            # https://github.com/mozilla/sccache
-    brew_install_or_upgrade shellcheck         # https://github.com/koalaman/shellcheck
-    brew_install_or_upgrade shfmt              # https://github.com/mvdan/sh
-    brew_install_or_upgrade swiftformat        # https://github.com/nicklockwood/SwiftFormat
-    brew_install_or_upgrade swiftlint          # https://github.com/realm/SwiftLint
-    brew_install_or_upgrade taglib             # https://github.com/taglib/taglib
-    brew_install_or_upgrade hashicorp/tap/terraform  # https://github.com/hashicorp/terraform
-    brew_install_or_upgrade tex-fmt            # https://github.com/WGUNDERWOOD/tex-fmt
-    brew_install_or_upgrade tflint             # https://github.com/terraform-linters/tflint
+    brew_install_or_upgrade aria2                      # https://github.com/aria2/aria2
+    brew_install_or_upgrade awscli                     # https://github.com/aws/aws-cli
+    brew_install_or_upgrade azure-cli                  # https://github.com/Azure/azure-cli
+    brew_install_or_upgrade bat                        # https://github.com/sharkdp/bat
+    brew_install_or_upgrade cargo-lambda               # https://github.com/cargo-lambda/cargo-lambda
+    brew_install_or_upgrade cargo-nextest              # https://github.com/nextest-rs/nextest
+    brew_install_or_upgrade ccache                     # https://github.com/ccache/ccache
+    brew_install_or_upgrade checkov                    # https://github.com/bridgecrewio/checkov
+    brew_install_or_upgrade clang-format               # https://github.com/llvm/llvm-project
+    brew_install_or_upgrade coreutils                  # https://github.com/coreutils/coreutils
+    brew_install_or_upgrade erdtree                    # https://github.com/solidiquis/erdtree
+    brew_install_or_upgrade fastlane                   # https://github.com/fastlane/fastlane
+    brew_install_or_upgrade fd                         # https://github.com/sharkdp/fd
+    brew_install_or_upgrade fzf                        # https://github.com/junegunn/fzf
+    brew_install_or_upgrade gh                         # https://github.com/cli/cli
+    brew_install_or_upgrade ghostscript                # https://www.ghostscript.com
+    brew_install_or_upgrade gnupg                      # https://github.com/gpg/gnupg
+    brew_install_or_upgrade golangci-lint              # https://github.com/golangci/golangci-lint
+    brew_install_or_upgrade gti                        # https://github.com/rwos/gti
+    brew_install_or_upgrade helm                       # https://github.com/helm/helm
+    brew_install_or_upgrade htop                       # https://github.com/htop-dev/htop
+    brew_install_or_upgrade hyperfine                  # https://github.com/sharkdp/hyperfine
+    brew_install_or_upgrade imagemagick                # https://github.com/ImageMagick/ImageMagick
+    brew_install_or_upgrade jq                         # https://github.com/jqlang/jq
+    brew_install_or_upgrade ktlint                     # https://github.com/pinterest/ktlint
+    brew_install_or_upgrade kubernetes-cli             # https://github.com/kubernetes/kubectl
+    brew_install_or_upgrade localstack-cli             # https://github.com/localstack/localstack
+    brew_install_or_upgrade minikube                   # https://github.com/kubernetes/minikube
+    brew_install_or_upgrade nghttp2                    # https://github.com/nghttp2/nghttp2
+    brew_install_or_upgrade pandoc                     # https://github.com/jgm/pandoc
+    brew_install_or_upgrade pinentry-mac               # https://github.com/GPGTools/pinentry-mac
+    brew_install_or_upgrade pre-commit                 # https://github.com/pre-commit/pre-commit
+    brew_install_or_upgrade ripgrep                    # https://github.com/BurntSushi/ripgrep
+    brew_install_or_upgrade sccache                    # https://github.com/mozilla/sccache
+    brew_install_or_upgrade shellcheck                 # https://github.com/koalaman/shellcheck
+    brew_install_or_upgrade shfmt                      # https://github.com/mvdan/sh
+    brew_install_or_upgrade swiftformat                # https://github.com/nicklockwood/SwiftFormat
+    brew_install_or_upgrade swiftlint                  # https://github.com/realm/SwiftLint
+    brew_install_or_upgrade taglib                     # https://github.com/taglib/taglib
+    brew_install_or_upgrade hashicorp/tap/terraform    # https://github.com/hashicorp/terraform
+    brew_install_or_upgrade hashicorp/tap/packer       # https://github.com/hashicorp/packer
+    brew_install_or_upgrade tex-fmt                    # https://github.com/WGUNDERWOOD/tex-fmt
+    brew_install_or_upgrade tflint                     # https://github.com/terraform-linters/tflint
     brew_install_or_upgrade tree
-    brew_install_or_upgrade typst              # https://github.com/typst/typst
-    brew_install_or_upgrade wrk                # https://github.com/wg/wrk
-    brew_install_or_upgrade xcbeautify         # https://github.com/thii/xcbeautify
-    brew_install_or_upgrade yarn               # https://github.com/yarnpkg/yarn
-    brew_install_or_upgrade yazi               # https://github.com/sxyazi/yazi
+    brew_install_or_upgrade typst                      # https://github.com/typst/typst
+    brew_install_or_upgrade wrk                        # https://github.com/wg/wrk
+    brew_install_or_upgrade xcbeautify                 # https://github.com/thii/xcbeautify
+    brew_install_or_upgrade yarn                       # https://github.com/yarnpkg/yarn
+    brew_install_or_upgrade yazi                       # https://github.com/sxyazi/yazi
 
     print_magenta "Installing apps..."
     brew_cask_install_or_upgrade affinity-designer
@@ -502,14 +540,14 @@ fi
 # Create developer dir
 mkdir -p "$HOME/Developer"
 
-# Create AWS CLI dir
-mkdir -p "$HOME/.aws"
-
 # Create config dir
 mkdir -p "$HOME/.config"
 
+add_aws_profiles
+
 export HOMEBREW_NO_INSTALL_CLEANUP=1
 export HOMEBREW_NO_AUTO_UPDATE=1
+export HOMEBREW_NO_ENV_HINTS=1
 
 # Install homebrew if needed
 if [ -z "$(command -v brew)" ]; then
@@ -548,6 +586,11 @@ if ! grep -q "export LANG=en_US.UTF-8" < "$SHELL_PROFILE"; then
     echo "export LANG=en_US.UTF-8" >> "$SHELL_PROFILE"
 fi
 
+if ! grep -q "export HOMEBREW_NO_ENV_HINTS=1" < "$SHELL_PROFILE"; then
+    echo "Adding 'export HOMEBREW_NO_ENV_HINTS=1' to $SHELL_PROFILE"
+    echo "export HOMEBREW_NO_ENV_HINTS=1" >> "$SHELL_PROFILE"
+fi
+
 if [ "$SKIP_BREW" = false ]; then
     brew_install
 else
@@ -571,6 +614,7 @@ print_magenta "Installing Python packages..."
 "$(brew --prefix)/bin/python3" --version
 echo "$(uv --version) from $(which uv)"
 
+uv tool install --upgrade ansible
 uv tool install --upgrade aws-mfa
 uv tool install --upgrade coverage
 uv tool install --upgrade maturin
@@ -581,6 +625,11 @@ uv tool install --upgrade pygments
 uv tool install --upgrade pytest
 uv tool install --upgrade ruff
 uv tool install --upgrade yt-dlp
+
+if ! grep -q 'eval "$(nameless-dt-register-complete --nep-function)"' "$SHELL_PROFILE"; then
+    echo "Adding ndt nep function to $SHELL_PROFILE"
+    echo 'eval "$(nameless-dt-register-complete --nep-function)"' >> "$SHELL_PROFILE"
+fi
 
 if [ -z "$(command -v cargo)" ]; then
     print_magenta "Install Rust..."
