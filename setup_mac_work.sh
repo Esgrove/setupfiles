@@ -872,9 +872,6 @@ mkdir -p "$HOME/.oh-my-zsh/custom/plugins/poetry"
 mkdir -p "$HOME/.oh-my-zsh/custom/plugins/vault"
 "$HOME/.cargo/bin/vault" completion zsh > "$HOME/.oh-my-zsh/custom/plugins/vault/_vault"
 
-# Precompile the completion cache
-compinit -C
-
 print_green "Installation done!"
 
 print_magenta "Next steps:"
