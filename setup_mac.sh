@@ -49,8 +49,8 @@ SSH_KEY="$HOME/.ssh/id_ed25519"
 GPG_KEY="$HOME/esgrove-gpg-private-key.asc"
 GPG_KEY_ID="9A95370F12C4825C"
 GPG_KEY_FINGERPRINT="2696E274A2E739B7A5B6FB589A95370F12C4825C"
-# Always loaded, regardless of whether the shell is a login shell, interactive shell, or non-interactive shell.
-SHELL_PROFILE="$HOME/.zshenv"
+# zshenv is always loaded, regardless of whether the shell is a login shell, interactive shell, or non-interactive shell.
+ZSH_ENV="$HOME/.zshenv"
 # Computer ID to use in GitHub
 # For example: Esgrove MacBookPro18,1 2022-12-30
 COMPUTER_ID="$GIT_NAME $(sysctl hw.model | awk '{print $2}') $(date +%Y-%m-%d)"
@@ -412,7 +412,7 @@ else
     print_yellow "Skipping macOS settings..."
 fi
 
-touch "$SHELL_PROFILE"
+touch "$ZSH_ENV"
 
 # Create developer dir
 mkdir -p "$HOME/Developer"
@@ -437,9 +437,9 @@ fi
 if is_apple_silicon; then
     echo "Loading brew paths..."
     eval "$(/opt/homebrew/bin/brew shellenv)"
-    if ! grep -q 'eval "$(/opt/homebrew/bin/brew shellenv)"' < "$SHELL_PROFILE"; then
+    if ! grep -q 'eval "$(/opt/homebrew/bin/brew shellenv)"' < "$ZSH_ENV"; then
         echo "Adding homebrew to PATH for Apple Silicon..."
-        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$SHELL_PROFILE"
+        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$ZSH_ENV"
     fi
     # Check if Rosetta 2 process is found
     if /usr/bin/pgrep oahd > /dev/null; then
@@ -451,13 +451,13 @@ if is_apple_silicon; then
 fi
 
 # UTF8
-if ! grep -q "export LC_ALL=en_US.UTF-8" < "$SHELL_PROFILE"; then
-    echo "Adding 'export LC_ALL=en_US.UTF-8' to $SHELL_PROFILE"
-    echo "export LC_ALL=en_US.UTF-8" >> "$SHELL_PROFILE"
+if ! grep -q "export LC_ALL=en_US.UTF-8" < "$ZSH_ENV"; then
+    echo "Adding 'export LC_ALL=en_US.UTF-8' to $ZSH_ENV"
+    echo "export LC_ALL=en_US.UTF-8" >> "$ZSH_ENV"
 fi
-if ! grep -q "export LANG=en_US.UTF-8" < "$SHELL_PROFILE"; then
-    echo "Adding 'export LANG=en_US.UTF-8' to $SHELL_PROFILE"
-    echo "export LANG=en_US.UTF-8" >> "$SHELL_PROFILE"
+if ! grep -q "export LANG=en_US.UTF-8" < "$ZSH_ENV"; then
+    echo "Adding 'export LANG=en_US.UTF-8' to $ZSH_ENV"
+    echo "export LANG=en_US.UTF-8" >> "$ZSH_ENV"
 fi
 
 if [ "$SKIP_BREW" = false ]; then
@@ -493,7 +493,7 @@ fi
 "$HOME/.cargo/bin/rustup" update
 
 # shellcheck disable=SC1090
-source "$SHELL_PROFILE"
+source "$ZSH_ENV"
 
 echo "Creating global gitignore..."
 echo "__pycache__/
