@@ -540,6 +540,29 @@ if brew ls --versions llvm; then
     ln -f -s "$(brew --prefix)/opt/llvm/bin/clang-tidy" "$(brew --prefix)/bin/clang-tidy"
 fi
 
+if [ -z "$(command -v uv)" ]; then
+    print_magenta "Install uv..."
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    source $HOME/.local/bin/env
+else
+    uv self update
+fi
+
+print_magenta "Installing Python packages..."
+"$(brew --prefix)/bin/python3" --version
+echo "$(uv --version) from $(which uv)"
+
+uv tool install --upgrade aws-mfa
+uv tool install --upgrade coverage
+uv tool install --upgrade maturin
+uv tool install --upgrade nameless-deploy-tools
+uv tool install --upgrade nitor-vault
+uv tool install --upgrade poetry
+uv tool install --upgrade pygments
+uv tool install --upgrade pytest
+uv tool install --upgrade ruff
+uv tool install --upgrade yt-dlp
+
 if [ -z "$(command -v cargo)" ]; then
     print_magenta "Install Rust..."
     rustup-init -y
@@ -554,27 +577,6 @@ print_magenta "Install Rust packages..."
 cargo install cargo-tarpaulin                                   # https://github.com/xd009642/tarpaulin
 cargo install cross --git https://github.com/cross-rs/cross
 cargo install nitor-vault
-
-if [ -z "$(command -v uv)" ]; then
-    print_magenta "Install uv..."
-    curl -LsSf https://astral.sh/uv/install.sh | sh
-    source $HOME/.local/bin/env
-fi
-
-print_magenta "Installing Python packages..."
-"$(brew --prefix)/bin/python3" --version
-echo "$(uv --version) from $(which uv)"
-
-uv tool install aws-mfa
-uv tool install coverage
-uv tool install maturin
-uv tool install nameless-deploy-tools
-uv tool install nitor-vault
-uv tool install poetry
-uv tool install pygments
-uv tool install pytest
-uv tool install ruff
-uv tool install yt-dlp
 
 # shellcheck disable=SC1090
 source "$SHELL_PROFILE"

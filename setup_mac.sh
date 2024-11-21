@@ -463,6 +463,24 @@ else
     print_yellow "Skipping brew package installs..."
 fi
 
+if [ -z "$(command -v uv)" ]; then
+    print_magenta "Install uv..."
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    source "$HOME/.local/bin/env"
+else
+    uv self update
+fi
+
+print_magenta "Installing Python packages..."
+"$(brew --prefix)/bin/python3" --version
+echo "$(uv --version) from $(which uv)"
+
+uv tool install --upgrade poetry
+uv tool install --upgrade pygments
+uv tool install --upgrade pytest
+uv tool install --upgrade ruff
+uv tool install --upgrade yt-dlp
+
 if [ -z "$(command -v cargo)" ]; then
     print_magenta "Install Rust..."
     rustup-init -y
@@ -470,22 +488,6 @@ if [ -z "$(command -v cargo)" ]; then
     "$HOME/.cargo/bin/rustc" --version
 fi
 "$HOME/.cargo/bin/rustup" update
-
-if [ -z "$(command -v uv)" ]; then
-    print_magenta "Install uv..."
-    curl -LsSf https://astral.sh/uv/install.sh | sh
-    source "$HOME/.local/bin/env"
-fi
-
-print_magenta "Installing Python packages..."
-"$(brew --prefix)/bin/python3" --version
-echo "$(uv --version) from $(which uv)"
-
-uv tool install poetry
-uv tool install pygments
-uv tool install pytest
-uv tool install ruff
-uv tool install yt-dlp
 
 # shellcheck disable=SC1090
 source "$SHELL_PROFILE"
