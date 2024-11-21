@@ -543,8 +543,6 @@ mkdir -p "$HOME/Developer"
 # Create config dir
 mkdir -p "$HOME/.config"
 
-add_aws_profiles
-
 export HOMEBREW_NO_INSTALL_CLEANUP=1
 export HOMEBREW_NO_AUTO_UPDATE=1
 export HOMEBREW_NO_ENV_HINTS=1
@@ -601,6 +599,13 @@ if brew ls --versions llvm; then
     # link clang-tidy to path
     ln -f -s "$(brew --prefix)/opt/llvm/bin/clang-tidy" "$(brew --prefix)/bin/clang-tidy"
 fi
+
+if [ -z "$(command -v aws)" ]; then
+    echo "Configuring default aws region..."
+    aws configure set region eu-west-1
+fi
+
+add_aws_profiles
 
 if [ -z "$(command -v uv)" ]; then
     print_magenta "Install uv..."
