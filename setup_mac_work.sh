@@ -419,6 +419,7 @@ brew_install() {
     brew_cask_install_or_upgrade firefox
     brew_cask_install_or_upgrade google-chrome
     brew_cask_install_or_upgrade google-cloud-sdk
+    brew_cask_install_or_upgrade intune-company-portal
     brew_cask_install_or_upgrade iterm2
     brew_cask_install_or_upgrade jetbrains-toolbox
     brew_cask_install_or_upgrade libreoffice
