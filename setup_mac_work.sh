@@ -863,10 +863,10 @@ if [ -e zshrc.sh ]; then
     cp zshrc.sh ~/.zshrc
 fi
 
-mkdir "$HOME/.oh-my-zsh/custom/plugins/poetry"
+mkdir -p "$HOME/.oh-my-zsh/custom/plugins/poetry"
 "$HOME/.local/bin/poetry" completions zsh > "$HOME/.oh-my-zsh/custom/plugins/poetry/_poetry"
 
-mkdir "$HOME/.oh-my-zsh/custom/plugins/vault"
+mkdir -p "$HOME/.oh-my-zsh/custom/plugins/vault"
 "$HOME/.cargo/bin/vault" completion zsh > "$HOME/.oh-my-zsh/custom/plugins/vault/_vault"
 
 # Precompile the completion cache
