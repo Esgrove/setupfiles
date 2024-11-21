@@ -49,8 +49,10 @@ SSH_KEY="$HOME/.ssh/id_ed25519"
 GPG_KEY="$HOME/nitor-gpg-private-key.asc"
 GPG_KEY_ID="BADFF60407D07F63"
 GPG_KEY_FINGERPRINT="4265756857739FFEB20E3256BADFF60407D07F63"
-# Always loaded, regardless of whether the shell is a login shell, interactive shell, or non-interactive shell.
-SHELL_PROFILE="$HOME/.zshenv"
+# zshenv is always loaded, regardless of whether the shell is a login shell, interactive shell, or non-interactive shell.
+ZSH_ENV="$HOME/.zshenv"
+# zprofile is oaded once during login shells.
+ZSH_PROFILE="$HOME/.zprofile"
 # Computer ID to use in GitHub
 # For example: Nitor MacBookPro18,1 2022-12-30
 COMPUTER_ID="Nitor $(sysctl hw.model | awk '{print $2}') $(date +%Y-%m-%d)"
@@ -525,7 +527,7 @@ else
     print_yellow "Skipping macOS settings..."
 fi
 
-touch "$SHELL_PROFILE"
+touch "$ZSH_ENV"
 
 # Create developer dir
 mkdir -p "$HOME/Developer"
@@ -551,9 +553,9 @@ fi
 if is_apple_silicon; then
     echo "Loading brew paths..."
     eval "$(/opt/homebrew/bin/brew shellenv)"
-    if ! grep -q 'eval "$(/opt/homebrew/bin/brew shellenv)"' < "$SHELL_PROFILE"; then
+    if ! grep -q 'eval "$(/opt/homebrew/bin/brew shellenv)"' < "$ZSH_ENV"; then
         echo "Adding homebrew to PATH for Apple Silicon..."
-        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$SHELL_PROFILE"
+        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$ZSH_ENV"
     fi
     # Check if Rosetta 2 process is found
     if /usr/bin/pgrep oahd > /dev/null; then
@@ -565,18 +567,18 @@ if is_apple_silicon; then
 fi
 
 # UTF8
-if ! grep -q "export LC_ALL=en_US.UTF-8" < "$SHELL_PROFILE"; then
-    echo "Adding 'export LC_ALL=en_US.UTF-8' to $SHELL_PROFILE"
-    echo "export LC_ALL=en_US.UTF-8" >> "$SHELL_PROFILE"
+if ! grep -q "export LC_ALL=en_US.UTF-8" < "$ZSH_ENV"; then
+    echo "Adding 'export LC_ALL=en_US.UTF-8' to $ZSH_ENV"
+    echo "export LC_ALL=en_US.UTF-8" >> "$ZSH_ENV"
 fi
-if ! grep -q "export LANG=en_US.UTF-8" < "$SHELL_PROFILE"; then
-    echo "Adding 'export LANG=en_US.UTF-8' to $SHELL_PROFILE"
-    echo "export LANG=en_US.UTF-8" >> "$SHELL_PROFILE"
+if ! grep -q "export LANG=en_US.UTF-8" < "$ZSH_ENV"; then
+    echo "Adding 'export LANG=en_US.UTF-8' to $ZSH_ENV"
+    echo "export LANG=en_US.UTF-8" >> "$ZSH_ENV"
 fi
 
-if ! grep -q "export HOMEBREW_NO_ENV_HINTS=1" < "$SHELL_PROFILE"; then
-    echo "Adding 'export HOMEBREW_NO_ENV_HINTS=1' to $SHELL_PROFILE"
-    echo "export HOMEBREW_NO_ENV_HINTS=1" >> "$SHELL_PROFILE"
+if ! grep -q "export HOMEBREW_NO_ENV_HINTS=1" < "$ZSH_ENV"; then
+    echo "Adding 'export HOMEBREW_NO_ENV_HINTS=1' to $ZSH_ENV"
+    echo "export HOMEBREW_NO_ENV_HINTS=1" >> "$ZSH_ENV"
 fi
 
 if [ "$SKIP_BREW" = false ]; then
@@ -621,9 +623,9 @@ uv tool install --upgrade pytest
 uv tool install --upgrade ruff
 uv tool install --upgrade yt-dlp
 
-if ! grep -q 'eval "$(nameless-dt-register-complete --nep-function)"' "$SHELL_PROFILE"; then
-    echo "Adding ndt nep function to $SHELL_PROFILE"
-    echo 'eval "$(nameless-dt-register-complete --nep-function)"' >> "$SHELL_PROFILE"
+if ! grep -q 'eval "$(nameless-dt-register-complete --nep-function)"' "$ZSH_PROFILE"; then
+    echo "Adding ndt nep function to $ZSH_PROFILE"
+    echo 'eval "$(nameless-dt-register-complete --nep-function)"' >> "$ZSH_PROFILE"
 fi
 
 if [ -z "$(command -v cargo)" ]; then
@@ -642,7 +644,7 @@ cargo install cross --git https://github.com/cross-rs/cross
 cargo install nitor-vault
 
 # shellcheck disable=SC1090
-source "$SHELL_PROFILE"
+source "$ZSH_ENV"
 
 if [ -z "$(command -v nvm)" ]; then
     print_magenta "Installing nvm..."
@@ -651,30 +653,30 @@ if [ -z "$(command -v nvm)" ]; then
 fi
 
 nvm_dir='export NVM_DIR="$HOME/.nvm"'
-if ! grep -Fq "$nvm_dir" < "$SHELL_PROFILE"; then
-    echo "Adding NVM dir to $SHELL_PROFILE"
-    echo "$nvm_dir" >> "$SHELL_PROFILE"
+if ! grep -Fq "$nvm_dir" < "$ZSH_ENV"; then
+    echo "Adding NVM dir to $ZSH_ENV"
+    echo "$nvm_dir" >> "$ZSH_ENV"
 fi
 nvm_load='[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"'
-if ! grep -Fq "$nvm_load" < "$SHELL_PROFILE"; then
-    echo "Adding NVM load to $SHELL_PROFILE"
-    echo "$nvm_load" >> "$SHELL_PROFILE"
+if ! grep -Fq "$nvm_load" < "$ZSH_ENV"; then
+    echo "Adding NVM load to $ZSH_ENV"
+    echo "$nvm_load" >> "$ZSH_ENV"
 fi
 nvm_completion='[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"'
-if ! grep -Fq "$nvm_completion" < "$SHELL_PROFILE"; then
-    echo "Adding NVM shell completions to $SHELL_PROFILE"
-    echo "$nvm_completion" >> "$SHELL_PROFILE"
+if ! grep -Fq "$nvm_completion" < "$ZSH_ENV"; then
+    echo "Adding NVM shell completions to $ZSH_ENV"
+    echo "$nvm_completion" >> "$ZSH_ENV"
 fi
 
 # shellcheck disable=SC1090
-source "$SHELL_PROFILE"
+source "$ZSH_ENV"
 
 print_magenta "Setup brew Ruby..."
-if ! grep -q "$(brew --prefix ruby)/bin" < "$SHELL_PROFILE"; then
+if ! grep -q "$(brew --prefix ruby)/bin" < "$ZSH_ENV"; then
     echo "Adding brew ruby to path: $(brew --prefix ruby)/bin"
-    echo "export PATH=\"\$(brew --prefix ruby)/bin:$PATH\"" >> "$SHELL_PROFILE"
+    echo "export PATH=\"\$(brew --prefix ruby)/bin:$PATH\"" >> "$ZSH_ENV"
     # shellcheck disable=SC1090
-    source "$SHELL_PROFILE"
+    source "$ZSH_ENV"
 fi
 
 BREW_RUBY="$(brew --prefix ruby)/bin/ruby"
@@ -683,9 +685,9 @@ RUBY_API_VERSION=$("$BREW_RUBY" -e 'print Gem.ruby_api_version')
 if ! echo "$PATH" | grep -q "$(brew --prefix)/lib/ruby/gems/$RUBY_API_VERSION/bin"; then
     # gem binaries go to here by default, so add it to path
     echo "Adding ruby gems to path: $(brew --prefix)/lib/ruby/gems/$RUBY_API_VERSION/bin"
-    echo "export PATH=\"\$(brew --prefix)/lib/ruby/gems/$RUBY_API_VERSION/bin:$PATH\"" >> "$SHELL_PROFILE"
+    echo "export PATH=\"\$(brew --prefix)/lib/ruby/gems/$RUBY_API_VERSION/bin:$PATH\"" >> "$ZSH_ENV"
     # shellcheck disable=SC1090
-    source "$SHELL_PROFILE"
+    source "$ZSH_ENV"
 fi
 
 print_magenta "Checking brew Ruby version..."

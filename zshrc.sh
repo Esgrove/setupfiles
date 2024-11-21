@@ -1,6 +1,9 @@
 #!/bin/bash
 # Mac zsh profile for oh-my-zsh
 
+echo -n "Loading .zshrc"
+start_time=$(/opt/homebrew/bin/gdate +%s%N)
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
@@ -107,7 +110,8 @@ else
 fi
 
 # tab completion
-autoload -U compinit && compinit
+autoload -U +X bashcompinit && bashcompinit
+autoload -U +X compinit && compinit
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
@@ -517,3 +521,9 @@ up() {
 zipf() {
     zip -r "$1".zip "$1"
 }
+
+# Calculate the elapsed time in milliseconds
+end_time=$(/opt/homebrew/bin/gdate +%s%N)
+elapsed_time_ms=$(( (end_time - start_time) / 1000000 ))
+elapsed_time_s=$(awk "BEGIN {printf \"%.3f\", $elapsed_time_ms / 1000}")
+echo "    $elapsed_time_s s"
