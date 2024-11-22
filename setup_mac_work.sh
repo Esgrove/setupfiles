@@ -553,9 +553,9 @@ fi
 if is_apple_silicon; then
     echo "Loading brew paths..."
     eval "$(/opt/homebrew/bin/brew shellenv)"
-    if ! grep -q 'eval "$(/opt/homebrew/bin/brew shellenv)"' < "$ZSH_ENV"; then
-        echo "Adding homebrew to PATH for Apple Silicon..."
-        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$ZSH_ENV"
+    if ! grep -q 'eval "$(/opt/homebrew/bin/brew shellenv)"' "$ZSH_PROFILE"; then
+        echo "Adding homebrew load to $ZSH_PROFILE"
+        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$ZSH_PROFILE"
     fi
     # Check if Rosetta 2 process is found
     if /usr/bin/pgrep oahd > /dev/null; then
@@ -567,16 +567,16 @@ if is_apple_silicon; then
 fi
 
 # UTF8
-if ! grep -q "export LC_ALL=en_US.UTF-8" < "$ZSH_ENV"; then
+if ! grep -q "export LC_ALL=en_US.UTF-8" "$ZSH_ENV"; then
     echo "Adding 'export LC_ALL=en_US.UTF-8' to $ZSH_ENV"
     echo "export LC_ALL=en_US.UTF-8" >> "$ZSH_ENV"
 fi
-if ! grep -q "export LANG=en_US.UTF-8" < "$ZSH_ENV"; then
+if ! grep -q "export LANG=en_US.UTF-8" "$ZSH_ENV"; then
     echo "Adding 'export LANG=en_US.UTF-8' to $ZSH_ENV"
     echo "export LANG=en_US.UTF-8" >> "$ZSH_ENV"
 fi
 
-if ! grep -q "export HOMEBREW_NO_ENV_HINTS=1" < "$ZSH_ENV"; then
+if ! grep -q "export HOMEBREW_NO_ENV_HINTS=1" "$ZSH_ENV"; then
     echo "Adding 'export HOMEBREW_NO_ENV_HINTS=1' to $ZSH_ENV"
     echo "export HOMEBREW_NO_ENV_HINTS=1" >> "$ZSH_ENV"
 fi
@@ -590,6 +590,12 @@ fi
 if brew ls --versions llvm; then
     # link clang-tidy to path
     ln -f -s "$(brew --prefix)/opt/llvm/bin/clang-tidy" "$(brew --prefix)/bin/clang-tidy"
+fi
+
+dotnet_tools="export PATH=\"\$PATH:$HOME/.dotnet/tools\""
+if ! grep -q "$dotnet_tools" "$ZSH_ENV"; then
+    echo "Adding .NET tools path to $ZSH_ENV"
+    echo "$dotnet_tools" >> "$ZSH_ENV"
 fi
 
 if [ -z "$(command -v aws)" ]; then
@@ -653,17 +659,17 @@ if [ -z "$(command -v nvm)" ]; then
 fi
 
 nvm_dir='export NVM_DIR="$HOME/.nvm"'
-if ! grep -Fq "$nvm_dir" < "$ZSH_ENV"; then
+if ! grep -Fq "$nvm_dir" "$ZSH_ENV"; then
     echo "Adding NVM dir to $ZSH_ENV"
     echo "$nvm_dir" >> "$ZSH_ENV"
 fi
 nvm_load='[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"'
-if ! grep -Fq "$nvm_load" < "$ZSH_ENV"; then
+if ! grep -Fq "$nvm_load" "$ZSH_ENV"; then
     echo "Adding NVM load to $ZSH_ENV"
     echo "$nvm_load" >> "$ZSH_ENV"
 fi
 nvm_completion='[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"'
-if ! grep -Fq "$nvm_completion" < "$ZSH_ENV"; then
+if ! grep -Fq "$nvm_completion" "$ZSH_ENV"; then
     echo "Adding NVM shell completions to $ZSH_ENV"
     echo "$nvm_completion" >> "$ZSH_ENV"
 fi
@@ -672,7 +678,7 @@ fi
 source "$ZSH_ENV"
 
 print_magenta "Setup brew Ruby..."
-if ! grep -q "$(brew --prefix ruby)/bin" < "$ZSH_ENV"; then
+if ! grep -q "$(brew --prefix ruby)/bin" "$ZSH_ENV"; then
     echo "Adding brew ruby to path: $(brew --prefix ruby)/bin"
     echo "export PATH=\"\$(brew --prefix ruby)/bin:$PATH\"" >> "$ZSH_ENV"
     # shellcheck disable=SC1090
