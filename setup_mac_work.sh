@@ -51,7 +51,7 @@ GPG_KEY_ID="BADFF60407D07F63"
 GPG_KEY_FINGERPRINT="4265756857739FFEB20E3256BADFF60407D07F63"
 # zshenv is always loaded, regardless of whether the shell is a login shell, interactive shell, or non-interactive shell.
 ZSH_ENV="$HOME/.zshenv"
-# zprofile is oaded once during login shells.
+# zprofile is loaded once for login shell.
 ZSH_PROFILE="$HOME/.zprofile"
 # Computer ID to use in GitHub
 # For example: Nitor MacBookPro18,1 2022-12-30
@@ -528,6 +528,17 @@ else
 fi
 
 touch "$ZSH_ENV"
+touch "$ZSH_PROFILE"
+
+if ! grep -q "^autoload -U +X bashcompinit && bashcompinit" "$ZSH_PROFILE"; then
+    echo "Adding 'autoload -U +X bashcompinit && bashcompinit' to $ZSH_PROFILE"
+    echo "autoload -U +X bashcompinit && bashcompinit" >> "$ZSH_PROFILE"
+fi
+
+if ! grep -q "^autoload -U +X compinit && compinit" "$ZSH_PROFILE"; then
+    echo "Adding 'autoload -U +X compinit && compinit' to $ZSH_PROFILE"
+    echo "autoload -U +X compinit && compinit" >> "$ZSH_PROFILE"
+fi
 
 # Create developer dir
 mkdir -p "$HOME/Developer"
@@ -554,6 +565,7 @@ if is_apple_silicon; then
     echo "Loading brew paths..."
     eval "$(/opt/homebrew/bin/brew shellenv)"
     if ! grep -q 'eval "$(/opt/homebrew/bin/brew shellenv)"' "$ZSH_PROFILE"; then
+        # This needs to go to .zprofile so brew paths are first in path before /usr/bin etc
         echo "Adding homebrew load to $ZSH_PROFILE"
         echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$ZSH_PROFILE"
     fi
@@ -662,16 +674,6 @@ nvm_dir='export NVM_DIR="$HOME/.nvm"'
 if ! grep -Fq "$nvm_dir" "$ZSH_ENV"; then
     echo "Adding NVM dir to $ZSH_ENV"
     echo "$nvm_dir" >> "$ZSH_ENV"
-fi
-nvm_load='[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"'
-if ! grep -Fq "$nvm_load" "$ZSH_ENV"; then
-    echo "Adding NVM load to $ZSH_ENV"
-    echo "$nvm_load" >> "$ZSH_ENV"
-fi
-nvm_completion='[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"'
-if ! grep -Fq "$nvm_completion" "$ZSH_ENV"; then
-    echo "Adding NVM shell completions to $ZSH_ENV"
-    echo "$nvm_completion" >> "$ZSH_ENV"
 fi
 
 # shellcheck disable=SC1090
