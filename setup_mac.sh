@@ -237,6 +237,9 @@ set_macos_settings() {
     # Display full POSIX path as Finder window title
     #defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
 
+    # Show battery percentage
+    defaults write com.apple.menuextra.battery ShowPercent -string "YES"
+
     # Keep folders on top when sorting by name
     defaults write com.apple.finder _FXSortFoldersFirst -bool true
 
