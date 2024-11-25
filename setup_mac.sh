@@ -51,6 +51,8 @@ GPG_KEY_ID="9A95370F12C4825C"
 GPG_KEY_FINGERPRINT="2696E274A2E739B7A5B6FB589A95370F12C4825C"
 # zshenv is always loaded, regardless of whether the shell is a login shell, interactive shell, or non-interactive shell.
 ZSH_ENV="$HOME/.zshenv"
+# zprofile is loaded once for login shell.
+ZSH_PROFILE="$HOME/.zprofile"
 # Computer ID to use in GitHub
 # For example: Esgrove MacBookPro18,1 2022-12-30
 COMPUTER_ID="$GIT_NAME $(sysctl hw.model | awk '{print $2}') $(date +%Y-%m-%d)"
@@ -299,9 +301,7 @@ brew_install() {
     # Libraries
     brew_install_or_upgrade ffmpeg             # https://github.com/FFmpeg/FFmpeg
     brew_install_or_upgrade flac               # https://github.com/xiph/flac
-    brew_install_or_upgrade fmt                # https://github.com/fmtlib/fmt
     brew_install_or_upgrade git                # https://github.com/git/git
-    brew_install_or_upgrade openssl@3
     brew_install_or_upgrade wget
 
     # Programming languages and compilers
@@ -311,9 +311,7 @@ brew_install() {
     # CLI tools etc
     brew_install_or_upgrade aria2              # https://github.com/aria2/aria2
     brew_install_or_upgrade bat                # https://github.com/sharkdp/bat
-    brew_install_or_upgrade cargo-nextest      # https://github.com/nextest-rs/nextest
     brew_install_or_upgrade ccache             # https://github.com/ccache/ccache
-    brew_install_or_upgrade clang-format       # https://github.com/llvm/llvm-project
     brew_install_or_upgrade coreutils          # https://github.com/coreutils/coreutils
     brew_install_or_upgrade erdtree            # https://github.com/solidiquis/erdtree
     brew_install_or_upgrade fd                 # https://github.com/sharkdp/fd
@@ -326,16 +324,12 @@ brew_install() {
     brew_install_or_upgrade imagemagick        # https://github.com/ImageMagick/ImageMagick
     brew_install_or_upgrade jq                 # https://github.com/jqlang/jq
     brew_install_or_upgrade pinentry-mac       # https://github.com/GPGTools/pinentry-mac
-    brew_install_or_upgrade pre-commit         # https://github.com/pre-commit/pre-commit
     brew_install_or_upgrade ripgrep            # https://github.com/BurntSushi/ripgrep
-    brew_install_or_upgrade sccache            # https://github.com/mozilla/sccache
     brew_install_or_upgrade shellcheck         # https://github.com/koalaman/shellcheck
     brew_install_or_upgrade shfmt              # https://github.com/mvdan/sh
-    brew_install_or_upgrade taglib             # https://github.com/taglib/taglib
     brew_install_or_upgrade tex-fmt            # https://github.com/WGUNDERWOOD/tex-fmt
     brew_install_or_upgrade tree
     brew_install_or_upgrade typst              # https://github.com/typst/typst
-    brew_install_or_upgrade yarn               # https://github.com/yarnpkg/yarn
     brew_install_or_upgrade yazi               # https://github.com/sxyazi/yazi
 
     print_magenta "Installing apps..."
@@ -413,6 +407,17 @@ else
 fi
 
 touch "$ZSH_ENV"
+touch "$ZSH_PROFILE"
+
+if ! grep -q "^autoload -U +X bashcompinit && bashcompinit" "$ZSH_PROFILE"; then
+    echo "Adding 'autoload -U +X bashcompinit && bashcompinit' to $ZSH_PROFILE"
+    echo "autoload -U +X bashcompinit && bashcompinit" >> "$ZSH_PROFILE"
+fi
+
+if ! grep -q "^autoload -U +X compinit && compinit" "$ZSH_PROFILE"; then
+    echo "Adding 'autoload -U +X compinit && compinit' to $ZSH_PROFILE"
+    echo "autoload -U +X compinit && compinit" >> "$ZSH_PROFILE"
+fi
 
 # Create developer dir
 mkdir -p "$HOME/Developer"
@@ -422,6 +427,7 @@ mkdir -p "$HOME/.config"
 
 export HOMEBREW_NO_INSTALL_CLEANUP=1
 export HOMEBREW_NO_AUTO_UPDATE=1
+export HOMEBREW_NO_ENV_HINTS=1
 
 # Install homebrew if needed
 if [ -z "$(command -v brew)" ]; then
@@ -437,9 +443,10 @@ fi
 if is_apple_silicon; then
     echo "Loading brew paths..."
     eval "$(/opt/homebrew/bin/brew shellenv)"
-    if ! grep -q 'eval "$(/opt/homebrew/bin/brew shellenv)"' < "$ZSH_ENV"; then
-        echo "Adding homebrew to PATH for Apple Silicon..."
-        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$ZSH_ENV"
+    if ! grep -q 'eval "$(/opt/homebrew/bin/brew shellenv)"' "$ZSH_PROFILE"; then
+        # This needs to go to .zprofile so brew paths are first in path before /usr/bin etc
+        echo "Adding homebrew load to $ZSH_PROFILE"
+        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$ZSH_PROFILE"
     fi
     # Check if Rosetta 2 process is found
     if /usr/bin/pgrep oahd > /dev/null; then
@@ -451,19 +458,30 @@ if is_apple_silicon; then
 fi
 
 # UTF8
-if ! grep -q "export LC_ALL=en_US.UTF-8" < "$ZSH_ENV"; then
+if ! grep -q "export LC_ALL=en_US.UTF-8" "$ZSH_ENV"; then
     echo "Adding 'export LC_ALL=en_US.UTF-8' to $ZSH_ENV"
     echo "export LC_ALL=en_US.UTF-8" >> "$ZSH_ENV"
 fi
-if ! grep -q "export LANG=en_US.UTF-8" < "$ZSH_ENV"; then
+if ! grep -q "export LANG=en_US.UTF-8" "$ZSH_ENV"; then
     echo "Adding 'export LANG=en_US.UTF-8' to $ZSH_ENV"
     echo "export LANG=en_US.UTF-8" >> "$ZSH_ENV"
+fi
+
+if ! grep -q "export HOMEBREW_NO_ENV_HINTS=1" "$ZSH_ENV"; then
+    echo "Adding 'export HOMEBREW_NO_ENV_HINTS=1' to $ZSH_ENV"
+    echo "export HOMEBREW_NO_ENV_HINTS=1" >> "$ZSH_ENV"
 fi
 
 if [ "$SKIP_BREW" = false ]; then
     brew_install
 else
     print_yellow "Skipping brew package installs..."
+fi
+
+dotnet_tools="export PATH=\"\$PATH:$HOME/.dotnet/tools\""ß
+if ! grep -q "$dotnet_tools" "$ZSH_ENV"; then
+    echo "Adding .NET tools path to $ZSH_ENV"
+    echo "$dotnet_tools" >> "$ZSH_ENV"
 fi
 
 if [ -z "$(command -v uv)" ]; then
@@ -526,8 +544,6 @@ Thumbs.db" > ~/.gitignore
 
 print_magenta "Setting up git..."
 git --version
-git-lfs --version
-git lfs install --system
 
 git config --global advice.detachedHead false
 git config --global core.autocrlf input
