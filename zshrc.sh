@@ -109,19 +109,16 @@ else
     export EDITOR='nano'
 fi
 
-# tab completion
-autoload -U +X bashcompinit && bashcompinit
-autoload -U +X compinit && compinit
-
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 
 alias ohmyzsh="zed ~/.oh-my-zsh"
-alias zshconfig="zed ~/.zshrc"
-alias zprofile="zed ~/.zshenv"
-alias bprofile="zed ~/.profile"
+alias zconf="zed ~/.zshrc"
+alias zprof="zed ~/.zprofile"
+alias zenv="zed ~/.zshenv"
+
 alias awsdir="zed ~/.aws/"
 alias awsconf='zed ~/.aws/config'
 alias awscred='zed ~/.aws/credentials'
