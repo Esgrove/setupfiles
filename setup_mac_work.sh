@@ -682,7 +682,7 @@ source "$ZSH_ENV"
 print_magenta "Setup brew Ruby..."
 if ! grep -q "$(brew --prefix ruby)/bin" "$ZSH_ENV"; then
     echo "Adding brew ruby to path: $(brew --prefix ruby)/bin"
-    echo "export PATH=\"\$(brew --prefix ruby)/bin:$PATH\"" >> "$ZSH_ENV"
+    echo "export PATH=\"$(brew --prefix ruby)/bin:\$PATH\"" >> "$ZSH_ENV"
     # shellcheck disable=SC1090
     source "$ZSH_ENV"
 fi
@@ -693,7 +693,7 @@ RUBY_API_VERSION=$("$BREW_RUBY" -e 'print Gem.ruby_api_version')
 if ! echo "$PATH" | grep -q "$(brew --prefix)/lib/ruby/gems/$RUBY_API_VERSION/bin"; then
     # gem binaries go to here by default, so add it to path
     echo "Adding ruby gems to path: $(brew --prefix)/lib/ruby/gems/$RUBY_API_VERSION/bin"
-    echo "export PATH=\"\$(brew --prefix)/lib/ruby/gems/$RUBY_API_VERSION/bin:$PATH\"" >> "$ZSH_ENV"
+    echo "export PATH=\"$(brew --prefix)/lib/ruby/gems/$RUBY_API_VERSION/bin:\$PATH\"" >> "$ZSH_ENV"
     # shellcheck disable=SC1090
     source "$ZSH_ENV"
 fi
