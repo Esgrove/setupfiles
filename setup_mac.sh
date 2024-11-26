@@ -706,7 +706,6 @@ fi
 
 if [ -e zshrc.sh ]; then
     print_magenta "Copying .zshrc..."
-    diff -y ~/.zshrc zshrc.sh
     cp zshrc.sh ~/.zshrc
 else
     print_yellow "zshrc.sh not found, skipping copy..."
@@ -714,9 +713,6 @@ fi
 
 mkdir -p "$HOME/.oh-my-zsh/custom/plugins/poetry"
 "$HOME/.local/bin/poetry" completions zsh > "$HOME/.oh-my-zsh/custom/plugins/poetry/_poetry"
-
-mkdir -p "$HOME/.oh-my-zsh/custom/plugins/vault"
-"$HOME/.cargo/bin/vault" completion zsh > "$HOME/.oh-my-zsh/custom/plugins/vault/_vault"
 
 print_green "Installation done!"
 
