@@ -949,11 +949,20 @@ else
     print_yellow "zshrc.sh not found, skipping copy..."
 fi
 
+echo "Adding shell completion for poetry..."
 mkdir -p "$HOME/.oh-my-zsh/custom/plugins/poetry"
 "$HOME/.local/bin/poetry" completions zsh > "$HOME/.oh-my-zsh/custom/plugins/poetry/_poetry"
 
+echo "Adding shell completion for nitor-vault..."
 mkdir -p "$HOME/.oh-my-zsh/custom/plugins/vault"
 "$HOME/.cargo/bin/vault" completion zsh > "$HOME/.oh-my-zsh/custom/plugins/vault/_vault"
+
+XCODE_THEME="VS Dark Theme.xccolortheme"
+if [ -e "$XCODE_THEME" ]
+    echo "Copying Xcode theme..."
+    mkdir -p ~/Library/Developer/Xcode/UserData/FontAndColorThemes/
+    cp "VS Dark Theme.xccolortheme" ~/Library/Developer/Xcode/UserData/FontAndColorThemes/
+fi
 
 print_green "Installation done!"
 
