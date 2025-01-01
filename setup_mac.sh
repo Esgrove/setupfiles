@@ -346,6 +346,7 @@ brew_install() {
     brew_cask_install_or_upgrade iterm2
     brew_cask_install_or_upgrade libreoffice
     brew_cask_install_or_upgrade logi-options+
+    brew_cask_install_or_upgrade meta
     brew_cask_install_or_upgrade spotify
     brew_cask_install_or_upgrade sublime-merge
     brew_cask_install_or_upgrade suspicious-package
