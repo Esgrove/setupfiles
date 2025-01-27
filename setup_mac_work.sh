@@ -841,6 +841,7 @@ if [ -e "$GPG_KEY" ]; then
 
     git config --global user.signingkey "$GPG_KEY_FINGERPRINT"
     git config --global commit.gpgsign true
+    git config --global tag.gpgsign true
 
     gpgconf --kill gpg-agent
     gpgconf --launch gpg-agent
