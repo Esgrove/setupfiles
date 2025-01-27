@@ -342,6 +342,7 @@ brew_install() {
     brew_cask_install_or_upgrade chatgpt
     brew_cask_install_or_upgrade dropbox
     brew_cask_install_or_upgrade firefox
+    brew_cask_install_or_upgrade ghostty
     brew_cask_install_or_upgrade google-chrome
     brew_cask_install_or_upgrade iterm2
     brew_cask_install_or_upgrade libreoffice

@@ -460,6 +460,7 @@ brew_install() {
     brew_cask_install_or_upgrade docker
     brew_cask_install_or_upgrade dropbox
     brew_cask_install_or_upgrade firefox
+    brew_cask_install_or_upgrade ghostty
     brew_cask_install_or_upgrade google-chrome
     brew_cask_install_or_upgrade google-cloud-sdk
     brew_cask_install_or_upgrade intune-company-portal
