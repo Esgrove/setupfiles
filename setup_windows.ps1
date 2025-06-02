@@ -121,10 +121,6 @@ Invoke-CommandOrThrow choco install visualstudio2022community --package-paramete
 # https://community.chocolatey.org/packages/visualstudio2022buildtools
 # Invoke-CommandOrThrow choco install visualstudio2022buildtools --package-parameters '--add Microsoft.VisualStudio.Workload.VCTools;includeRecommended --add Microsoft.VisualStudio.Component.VC.ATL'
 
-# Winget for reference, choco still seems the better choice for now (12/2022)...
-#winget install -e --id Git.Git --source winget
-#winget install -e --id Kitware.CMake
-
 winget install -e --id Microsoft.AzureCLI
 winget install -e --id Swift.Toolchain
 
@@ -134,29 +130,31 @@ Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 
 Update-Path
 
-scoop install 7zip
-scoop install ccache
+scoop install 7zip          # https://www.7-zip.org/
+scoop install bat           # https://github.com/sharkdp/bat
+scoop install ccache        # https://github.com/ccache/ccache
 scoop install cmake
 scoop install dotnet-sdk
-scoop install fd
-scoop install ffmpeg
-scoop install fzf
-scoop install gh
-scoop install ghostscript
+scoop install erdtree       # https://github.com/solidiquis/erdtree
+scoop install fd            # https://github.com/sharkdp/fd
+scoop install ffmpeg        # https://ffmpeg.org/
+scoop install fzf           # https://github.com/junegunn/fzf
+scoop install gh            # https://github.com/cli/cli
+scoop install ghostscript   # https://www.ghostscript.com
 scoop install git
 scoop install go
 scoop install gradle
-scoop install gradle
-scoop install jq
+scoop install imagemagick   # https://github.com/ImageMagick/ImageMagick
+scoop install jq            # https://github.com/jqlang/jq
 scoop install ninja
 scoop install openssl
 scoop install python
-scoop install ripgrep
+scoop install ripgrep       # https://github.com/BurntSushi/ripgrep
 scoop install rustup
-scoop install shellcheck
-scoop install shfmt
-scoop install wget
-scoop install yazi
+scoop install shellcheck    # https://github.com/koalaman/shellcheck
+scoop install shfmt         # https://github.com/mvdan/sh
+scoop install wget          # https://www.gnu.org/software/wget/
+scoop install yazi          # https://github.com/sxyazi/yazi
 
 scoop bucket add extras
 scoop install extras/firefox

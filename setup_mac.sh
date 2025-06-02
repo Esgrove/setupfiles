@@ -323,7 +323,7 @@ brew_install() {
     brew_install_or_upgrade ghostscript        # https://www.ghostscript.com
     brew_install_or_upgrade gnupg              # https://github.com/gpg/gnupg
     brew_install_or_upgrade gti                # https://github.com/rwos/gti
-    brew_install_or_upgrade htop               # https://github.com/htop-dev/htop
+    brew_install_or_upgrade btop               # https://github.com/aristocratos/btop
     brew_install_or_upgrade imagemagick        # https://github.com/ImageMagick/ImageMagick
     brew_install_or_upgrade jq                 # https://github.com/jqlang/jq
     brew_install_or_upgrade pinentry-mac       # https://github.com/GPGTools/pinentry-mac

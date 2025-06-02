@@ -421,7 +421,7 @@ brew_install() {
     brew_install_or_upgrade golangci-lint              # https://github.com/golangci/golangci-lint
     brew_install_or_upgrade gti                        # https://github.com/rwos/gti
     brew_install_or_upgrade helm                       # https://github.com/helm/helm
-    brew_install_or_upgrade htop                       # https://github.com/htop-dev/htop
+    brew_install_or_upgrade btop                       # https://github.com/aristocratos/btop
     brew_install_or_upgrade hyperfine                  # https://github.com/sharkdp/hyperfine
     brew_install_or_upgrade imagemagick                # https://github.com/ImageMagick/ImageMagick
     brew_install_or_upgrade jq                         # https://github.com/jqlang/jq
