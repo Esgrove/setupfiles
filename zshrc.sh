@@ -128,6 +128,7 @@ alias brewcheck="brew update && echo -e '\033[1mbrew:\033[0m' && brew outdated"
 alias brewclean="brew cleanup -ns && brew cleanup -s"
 alias brewlist="echo -e '\033[1mbrew:\033[0m' && brew list -1"
 alias brewupg="brew upgrade && brew upgrade --cask && brewclean"
+
 alias brc=brewcheck
 alias brl=brewlist
 alias brn=brewclean

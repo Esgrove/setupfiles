@@ -1,30 +1,51 @@
 #!/bin/bash
 # Windows Bash profile
 
+echo -n "Loading .bashrc"
+start_time=$(date +%s%N)
+
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export TERM="xterm-256color"
 
-alias bprofile="code ~/.profile"
+# Append to the history file, don't overwrite it
+shopt -s histappend
 
-export PATH="$PATH:/c/ProgramData/chocolatey/bin/"
-export PATH="$HOME/AppData/Roaming/pypoetry/venv/Scripts:$PATH"
+# After each command, save and reload the history
+PROMPT_COMMAND='history -a; history -c; history -r'
+
+# Set the maximum number of lines contained in the history file
+HISTFILESIZE=10000
+
+# Set the maximum number of commands to remember in the command history
+HISTSIZE=1000
+
+VENV_DIR="$HOME/.venv"
+
+alias bconf="code ~/.bashrc"
+alias bprof="code ~/.profile"
+alias benv="code ~/.bash_profile"
 
 # Add alias for python3 since Windows defaults to just 'python'
 alias python3=python
 
 # git
 alias gitconf="git config --global --list | sort"
-alias gitsub='git submodule update --init --recursive'
-alias gitprune='git remote prune origin'
-alias gittag='git describe --abbrev=0'
+alias gitfetch="git fetch --jobs=8 --all --prune --tags --prune-tags"
 alias githead='git rev-parse HEAD'
+alias gitprune='git remote prune origin'
+alias gitsub='git submodule update --init --recursive'
+alias gittag='git describe --abbrev=0'
+alias gitup='gitfetch && git pull --rebase'
 
 alias gconf=gitconf
-alias gsub=gitsub
-alias gprune=gitprune
-alias gtag=gittag
+alias gfetch=gitfetch
 alias ghead=githead
+alias gim=git_main
+alias giu=gitup
+alias gprune=gitprune
+alias gsub=gitsub
+alias gtag=gittag
 
 # general
 alias c='clear'
@@ -48,46 +69,6 @@ alias pyfreeze="python -m pip freeze > requirements.txt"
 alias pynot="python -m pip list --outdated --not-required"
 alias pyout="python -m pip list --outdated"
 alias pyupg="python -m pip list --not-required --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install --upgrade"
-
-# Print message with bold
-print_bold() {
-    printf "\e[1m%s\e[0m\n" "$1"
-}
-
-# Print a message with red color
-print_red() {
-    printf "\e[1;49;31m%s\e[0m\n" "$1"
-}
-
-# Print a message with green color
-print_green() {
-    printf "\e[1;49;32m%s\e[0m\n" "$1"
-}
-
-# Print a message with yellow color
-print_yellow() {
-    printf "\e[1;49;33m%s\e[0m\n" "$1"
-}
-
-# Print a message with magenta color
-print_magenta() {
-    printf "\e[1;49;35m%s\e[0m\n" "$1"
-}
-
-print_error() {
-    print_red "ERROR: $1"
-}
-
-print_warn() {
-    print_yellow "WARNING: $1"
-}
-
-# Print an error and exit
-print_error_and_exit() {
-    print_red "ERROR: $1"
-    # use exit code if given as argument, otherwise default to 1
-    exit "${2:-1}"
-}
 
 # cd to code dir
 cdc() {
@@ -141,39 +122,14 @@ act() {
 venv() {
     # try to get venv name from first argument, otherwise default to 'venv'
     local NAME=${1:-venv}
-    python3 -m venv --clear "$HOME/venv/$NAME"
-    source "$HOME/venv/$NAME/Scripts/activate"
+    mkdir -p "$VENV_DIR"
+    echo "Creating venv to $VENV_DIR/$NAME"
+    python -m venv --clear "$VENV_DIR/$NAME"
+    source "$VENV_DIR/$NAME/Scripts/activate"
 }
 
-# Run ssh-agent automatically when you open bash.
-# https://docs.github.com/en/authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases#auto-launching-ssh-agent-on-git-for-windows
-env=~/.ssh/agent.env
-
-agent_load_env() {
-    test -f "$env" && . "$env" >| /dev/null
-}
-
-agent_start() {
-    (
-        umask 077
-        ssh-agent >| "$env"
-    )
-    . "$env" >| /dev/null
-}
-
-agent_load_env
-
-# agent_run_state: 0=agent running w/ key; 1=agent w/o key; 2=agent not running
-agent_run_state=$(
-    ssh-add -l >| /dev/null 2>&1
-    echo $?
-)
-
-if [ ! "$SSH_AUTH_SOCK" ] || [ $agent_run_state = 2 ]; then
-    agent_start
-    ssh-add
-elif [ "$SSH_AUTH_SOCK" ] && [ $agent_run_state = 1 ]; then
-    ssh-add
-fi
-
-unset env
+# Calculate the elapsed time in milliseconds
+end_time=$(date +%s%N)
+elapsed_time_ms=$(((end_time - start_time) / 1000000))
+elapsed_time_s=$(awk "BEGIN {printf \"%.3f\", $elapsed_time_ms / 1000}")
+echo "       $elapsed_time_s s"

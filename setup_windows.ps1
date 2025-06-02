@@ -138,7 +138,9 @@ scoop install 7zip
 scoop install ccache
 scoop install cmake
 scoop install dotnet-sdk
+scoop install fd
 scoop install ffmpeg
+scoop install fzf
 scoop install gh
 scoop install ghostscript
 scoop install git
@@ -154,6 +156,7 @@ scoop install rustup
 scoop install shellcheck
 scoop install shfmt
 scoop install wget
+scoop install yazi
 
 scoop bucket add extras
 scoop install extras/firefox
